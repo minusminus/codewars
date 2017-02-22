@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * https://www.codewars.com/kata/roman-numerals-encoder
+ * https://www.codewars.com/kata/roman-numerals-decoder
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +30,7 @@ namespace RomanNumerals
             return res;
         }
 
-        private static long[] _powers = new long[4] {1000, 100, 10, 1};
+        //private static long[] _powers = new long[4] {1000, 100, 10, 1};
 
         private static readonly string[,] ToRoman = new string[4,10]
         {
