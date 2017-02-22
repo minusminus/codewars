@@ -25,5 +25,15 @@ namespace N_RomanNumerals
             _testNumerals.Encode(1).ShouldBe("I");
             _testNumerals.Encode(0).ShouldBe("");
         }
+
+        [Test]
+        public void TestDecoding()
+        {
+            _testNumerals.Decode("MMXVII").ShouldBe(2017, "MMXVII");
+            _testNumerals.Decode("MCMLIV").ShouldBe(1954, "MCMLIV");
+            _testNumerals.Decode("MCMXC").ShouldBe(1990, "MCMXC");
+            _testNumerals.Decode("CMXC").ShouldBe(990, "CMXC");
+            _testNumerals.Decode("I").ShouldBe(1, "I");
+        }
     }
 }

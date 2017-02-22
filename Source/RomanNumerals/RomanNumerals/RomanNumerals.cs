@@ -39,19 +39,63 @@ namespace RomanNumerals
         public string Encode(long val)
         {
             if (val <= 0) return "";
+
             int digitscnt = DigitsCount(val);
             long[] tbl = NumberToTbl(val, digitscnt);
 
             string res = "";
             for (int i = 0; i < digitscnt; i++)
                 res += ToRoman[digitscnt - i - 1, tbl[i]];
-
             return res;
         }
 
+        private static readonly Dictionary<char, int> RomanVal = new Dictionary<char, int>()
+        {
+            {'M', 1000},
+            {'D', 500},
+            {'C', 100},
+            {'L', 50},
+            {'X', 10},
+            {'V', 5},
+            {'I', 1}
+        };
+
+        private static readonly  Dictionary<string, int> RomanValDbls = new Dictionary<string, int>()
+        {
+            {"IV", 4},
+            {"IX", 9},
+            {"XL", 40},
+            {"XC", 90},
+            {"CD", 400},
+            {"CM", 900}
+        };
+
         public long Decode(string val)
         {
-            return 0;
+            long res = 0;
+            int i = 0;
+            while (i < val.Length)
+            {
+                if (i == val.Length - 1)
+                {
+                    //last char
+                    res += RomanVal[val[i]];
+                    break;
+                }
+                int v1 = RomanVal[val[i]];
+                int v2 = RomanVal[val[i + 1]];
+                if (v1 < v2)
+                {
+                    res += RomanValDbls[val[i].ToString() + val[i + 1].ToString()];
+                    i += 2;
+                }
+                else
+                {
+                    res += RomanVal[val[i]];
+                    i += 1;
+                }
+            }
+            return res;
         }
     }
 }
