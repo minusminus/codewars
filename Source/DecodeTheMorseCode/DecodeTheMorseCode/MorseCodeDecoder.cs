@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*
+ * res += (s == "|" ? " " : MorseCode.Get(s));
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,7 +93,12 @@ namespace DecodeTheMorseCode
 
         public string Decode(string morseCode)
         {
-            return "";
+            string[] tbl = morseCode.Trim().Replace("   ", " | ").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            string res = "";
+            foreach (string s in tbl)
+                res += (s == "|" ? ' ' : MorseCode[s]); //w kata wyglada to tak: res += (s == "|" ? " " : MorseCode.Get(s));
+            return res;
         }
 
     }
