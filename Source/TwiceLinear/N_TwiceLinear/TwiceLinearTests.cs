@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 
@@ -11,8 +12,16 @@ namespace N_TwiceLinear
 
         private void doTest(int n, int expected)
         {
-            //_test.DblLinear(n).ShouldBe(expected);
-            _test.DblLinearBruteforce(n).ShouldBe(expected);
+            _test.DblLinear(n).ShouldBe(expected);
+            //_test.DblLinearBruteforce(n).ShouldBe(expected);
+        }
+
+        private void doTestSW(int n, int expected)
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            _test.DblLinear(n).ShouldBe(expected);
+            sw.Stop();
+            Console.WriteLine($"elapsed: {sw.ElapsedMilliseconds} ms");
         }
 
         [Test]
@@ -21,7 +30,7 @@ namespace N_TwiceLinear
             doTest(10, 22);
             doTest(20, 57);
             doTest(30, 91);
-            doTest(40, 175);
+            doTest(50, 175);
         }
 
         [Test]
@@ -39,6 +48,14 @@ namespace N_TwiceLinear
             doTest(9, 21);
             doTest(10, 22);
             doTest(11, 27);
+        }
+
+        [Test]
+        public void TestLargeNumbers()
+        {
+            //doTestSW(1000, 8488);
+            //doTestSW(10000, 157654);
+            doTestSW(20000, 377625);
         }
     }
 }
