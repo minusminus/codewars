@@ -12,14 +12,17 @@ namespace N_TwiceLinear
 
         private void doTest(int n, int expected)
         {
-            _test.DblLinear(n).ShouldBe(expected);
-            //_test.DblLinearBruteforce(n).ShouldBe(expected);
+            //_test.DblLinear(n).ShouldBe(expected);
+            //_test.DblLinear_SortedSet(n).ShouldBe(expected);
+            _test.DblLinear_2(n).ShouldBe(expected);
         }
 
         private void doTestSW(int n, int expected)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            _test.DblLinear(n).ShouldBe(expected);
+            //_test.DblLinear(n).ShouldBe(expected);
+            //_test.DblLinear_SortedSet(n).ShouldBe(expected);
+            _test.DblLinear_2(n).ShouldBe(expected);
             sw.Stop();
             Console.WriteLine($"elapsed: {sw.ElapsedMilliseconds} ms");
         }

@@ -127,5 +127,46 @@ namespace TwiceLinear
             res.Sort();
             return res[n];
         }
+
+        /// <summary>
+        /// Ze strony
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public int DblLinear_SortedSet(int n)
+        {
+            SortedSet<int> u = new SortedSet<int> { 1 };
+
+            while (n > 0)
+            {
+                u.Add(2 * u.Min + 1);
+                u.Add(3 * u.Min + 1);
+
+                u.Remove(u.Min);
+                n--;
+            }
+            return u.Min;
+        }
+
+        /// <summary>
+        /// Ze strony.
+        /// Obrzydliwie szybkie i proste!
+        /// Rozwinięty pomysł minimum, zapisujacy do tablicy kolejne minimalne posortowane wartosci.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public int DblLinear_2(int n)
+        {
+            var h = new int[++n];
+            int x2 = 1, x3 = 1;
+            int i = 0, j = 0;
+            for (int index = 0; index < n; index++)
+            {
+                h[index] = x2 < x3 ? x2 : x3;
+                if (h[index] == x2) x2 = 2 * h[i++] + 1;
+                if (h[index] == x3) x3 = 3 * h[j++] + 1;
+            }
+            return h[--n];
+        }
     }
 }
