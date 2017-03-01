@@ -53,9 +53,18 @@ namespace N_TwiceLinear
         [Test]
         public void TestLargeNumbers()
         {
-            //doTestSW(1000, 8488);
-            //doTestSW(10000, 157654);
+            /*
+                elapsed: 0 ms
+                elapsed: 8 ms
+                elapsed: 25 ms
+                elapsed: 337 ms
+                elapsed: 4334 ms
+            */
+            doTestSW(1000, 8488);
+            doTestSW(10000, 157654);
             doTestSW(20000, 377625);
+            doTestSW(100000, 2911582);
+            doTestSW(1000000, 54381286);   //blad out of memory - zniknal po zastosowaniu halfmax
         }
     }
 }

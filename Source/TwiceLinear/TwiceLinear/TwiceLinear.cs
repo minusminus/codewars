@@ -59,6 +59,16 @@ namespace TwiceLinear
         //    return tbl[n - cntl];
         //}
 
+        /// <summary>
+        /// Dane do tablicy generowane są kolejnymi poziomami, zaczynając od pierwszego z elementem 1.
+        /// W kolejnych krokach generowane są nowe elementy tylko dla ostatniego poziomu (poprzednie już są wygenerowane).
+        /// Sprawdzanie, czy są powtórzenia w trakcie generowania bardzo mocno spowalnia - zostało usunięte.
+        /// Generowane są wszystkie liczby do osiągnięcia n:
+        /// - później dodawane do następnego poziomu są tylko te, które nie przekroszyły maks z dotychczas wygenerowanych
+        /// - po osiągnięciu n generowanie jest tylko dla liczb, które mogą zmieścić się poniżej maks (ta opcja ma mniej kodu)
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public int DblLinear(int n)
         {
             List<int> res = new List<int>();
@@ -66,6 +76,7 @@ namespace TwiceLinear
 
             int istart = 0;
             int vmax = res[0];
+            int halfmax = (int)Math.Ceiling((vmax - 1)/2.0f);
             while (true)
             {
                 List<int> tbl = new List<int>();
@@ -77,37 +88,42 @@ namespace TwiceLinear
                     {
                         v = f1(res[i]);
                         vmax = Math.Max(vmax, v);
-                        if (!tbl.Contains(v))
-                            tbl.Add(v);
+                        halfmax = (int)Math.Ceiling((vmax - 1) / 2.0f);
+                        tbl.Add(v);
                     }
                     else
                     {
-                        v = f1(res[i]);
-                        if ((v < vmax) && !tbl.Contains(v))
-                            tbl.Add(v);
+                        if (res[i] <= halfmax)
+                        {
+                            v = f1(res[i]);
+                            //if (v < vmax)
+                                tbl.Add(v);
+                        }
                     }
                     //f2
                     if (res.Count + tbl.Count <= n)
                     {
                         v = f2(res[i]);
                         vmax = Math.Max(vmax, v);
-                        if (!tbl.Contains(v))
-                            tbl.Add(v);
+                        halfmax = (int)Math.Ceiling((vmax - 1) / 2.0f);
+                        tbl.Add(v);
                     }
                     else
                     {
-                        v = f2(res[i]);
-                        if ((v < vmax) && !tbl.Contains(v))
-                            tbl.Add(v);
+                        if (res[i] <= halfmax)
+                        {
+                            v = f2(res[i]);
+                            //if (v < vmax)
+                                tbl.Add(v);
+                        }
                     }
                 }
                 if (tbl.Count == 0) break;
                 istart = res.Count;
                 res.AddRange(tbl);
-                res = res.Distinct().ToList();
             }
 
-            //res = res.Distinct().ToList();
+            res = res.Distinct().ToList();
             res.Sort();
             return res[n];
         }
