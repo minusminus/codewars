@@ -40,7 +40,6 @@ namespace PrimeNumbers
             for (int i = 2; i < bits.Count; i++)
                 if (!bits[i]) res.Add(i);
             return res;
-
         }
 
         public List<int> PrimesListToN(int n)

@@ -39,18 +39,19 @@ namespace N_PrimeNumbers
             long ts1 = sw.ElapsedMilliseconds;
             List<int> res = _pobj.GetPrimesListFromBits(bits);
             sw.Stop();
-            Console.WriteLine($"+ [{upperBound}] sieve: {ts1} ms, total: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"+ [{upperBound}] sieve: {ts1} ms, list: {sw.ElapsedMilliseconds - ts1} ms, total: {sw.ElapsedMilliseconds} ms");
         }
 
         [Test]
         public void SpeedPrimesListGen()
         {
+            IntSpeedPrimesListGen(10);
             IntSpeedPrimesListGen(10000);
-            IntSpeedPrimesListGen(100000);
             IntSpeedPrimesListGen(100000);
             IntSpeedPrimesListGen(1000000);
             IntSpeedPrimesListGen(10000000);
             IntSpeedPrimesListGen(100000000);
+            //IntSpeedPrimesListGen(1000000000);
         }
     }
 }
