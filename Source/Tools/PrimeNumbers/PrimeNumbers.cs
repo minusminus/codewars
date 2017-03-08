@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace NumberTheory
 {
+    /// <summary>
+    /// Klasa obsługi liczb pierwszych
+    /// </summary>
     public class PrimeNumbers
     {
         /// <summary>

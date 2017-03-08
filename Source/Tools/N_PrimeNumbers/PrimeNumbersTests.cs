@@ -5,7 +5,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Shouldly;
 
-namespace N_PrimeNumbers
+namespace N_NumberTheory
 {
     [TestFixture]
     public class PrimeNumbersTests
