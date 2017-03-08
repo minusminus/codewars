@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace NumberTheory
 {
     /// <summary>
-    /// Klasa obsługi liczb pierwszych
+    /// Klasa generujaca listy liczb pierwszych
     /// </summary>
-    public class PrimeNumbers
+    public class PrimeNumbersList
     {
         /// <summary>
         /// Funkcja oznaczająca liczby pierwsze w przedziale [0,upperBound].

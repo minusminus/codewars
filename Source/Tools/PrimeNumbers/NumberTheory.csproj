@@ -41,7 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NumbersTheory.cs" />
-    <Compile Include="PrimeNumbers.cs" />
+    <Compile Include="PrimeNumbersCheck.cs" />
+    <Compile Include="PrimeNumbersList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

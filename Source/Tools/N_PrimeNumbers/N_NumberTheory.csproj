@@ -44,9 +44,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrimeNumbersTests.cs" />
+    <Compile Include="PrimeNumbersListTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NumberTheoryTests.cs" />
+    <Compile Include="PrimeNumbersCheckTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

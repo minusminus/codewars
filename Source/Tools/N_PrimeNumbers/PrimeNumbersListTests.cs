@@ -8,9 +8,9 @@ using Shouldly;
 namespace N_NumberTheory
 {
     [TestFixture]
-    public class PrimeNumbersTests
+    public class PrimeNumbersListTests
     {
-        private NumberTheory.PrimeNumbers _pobj = new NumberTheory.PrimeNumbers();
+        private NumberTheory.PrimeNumbersList _pobj = new NumberTheory.PrimeNumbersList();
 
         private void IntTestPrimesList(int upperBound, List<int> correct)
         {
