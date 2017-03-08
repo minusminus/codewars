@@ -32,9 +32,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{327D032D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NumberTheory", "NumberTheory", "{4A2FB2CB-E2B7-45DE-AF52-24E5B6CA2398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimeNumbers", "Tools\PrimeNumbers\PrimeNumbers.csproj", "{3BA90219-97EB-44B6-AFA6-BB25E0FEA0CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumberTheory", "Tools\PrimeNumbers\NumberTheory.csproj", "{3BA90219-97EB-44B6-AFA6-BB25E0FEA0CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N_PrimeNumbers", "Tools\N_PrimeNumbers\N_PrimeNumbers.csproj", "{EEA24EEB-0488-4B31-B414-872B680A097F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N_NumberTheory", "Tools\N_PrimeNumbers\N_NumberTheory.csproj", "{EEA24EEB-0488-4B31-B414-872B680A097F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

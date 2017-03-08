@@ -10,7 +10,7 @@ namespace N_PrimeNumbers
     [TestFixture]
     public class PrimeNumbersTests
     {
-        private PrimeNumbers.PrimeNumbers _pobj = new PrimeNumbers.PrimeNumbers();
+        private NumberTheory.PrimeNumbers _pobj = new NumberTheory.PrimeNumbers();
 
         private void IntTestPrimesList(int upperBound, List<int> correct)
         {

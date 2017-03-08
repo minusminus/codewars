@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrimeNumbers
+namespace NumberTheory
 {
     public class PrimeNumbers
     {

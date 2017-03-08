@@ -48,9 +48,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PrimeNumbers\PrimeNumbers.csproj">
+    <ProjectReference Include="..\PrimeNumbers\NumberTheory.csproj">
       <Project>{3ba90219-97eb-44b6-afa6-bb25e0fea0ca}</Project>
-      <Name>PrimeNumbers</Name>
+      <Name>NumberTheory</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
