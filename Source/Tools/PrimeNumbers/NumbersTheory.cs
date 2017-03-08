@@ -72,5 +72,24 @@ namespace NumberTheory
             long g = GCDBinary(u, v);
             return (u*v)/g;
         }
+
+        /// <summary>
+        /// a^b mod q
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        public long ExpMod(long a, long b, int q)
+        {
+            long p = 1;
+            while (b > 0)
+            {
+                if ((b & 1) == 1) p = (a*p)%q;
+                a = (a*a)%q;
+                b /= 2;
+            }
+            return p;
+        }
     }
 }

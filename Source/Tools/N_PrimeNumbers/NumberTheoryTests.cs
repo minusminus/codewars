@@ -34,5 +34,20 @@ namespace N_NumberTheory
             _obj.LCM(42, 56).ShouldBe(168);
             _obj.LCM(192, 348).ShouldBe(5568);
         }
+
+        [Test]
+        public void TestExpMod()
+        {
+            _obj.ExpMod(2, 0, 10).ShouldBe(1);
+
+            _obj.ExpMod(1, 10, 10).ShouldBe(1);
+            _obj.ExpMod(2, 100, 10).ShouldBe(6);
+            _obj.ExpMod(3, 17, 123).ShouldBe(3);
+            _obj.ExpMod(123456789, 2, 321).ShouldBe(90);
+            _obj.ExpMod(1 << 32, (1 << 32) - 1, 999).ShouldBe(1);
+
+            _obj.ExpMod(2, 32, 10).ShouldBe(6);
+            _obj.ExpMod(2, 32, 2).ShouldBe(0);
+        }
     }
 }
