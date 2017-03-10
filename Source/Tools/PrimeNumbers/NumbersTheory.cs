@@ -18,7 +18,7 @@ namespace NumberTheory
         /// <param name="u"></param>
         /// <param name="v"></param>
         /// <returns></returns>
-        public long GCDBinary(long u, long v)
+        public static long GCDBinary(long u, long v)
         {
             int shift;
 
@@ -67,7 +67,7 @@ namespace NumberTheory
         /// <param name="u"></param>
         /// <param name="v"></param>
         /// <returns></returns>
-        public long LCM(long u, long v)
+        public static long LCM(long u, long v)
         {
             long g = GCDBinary(u, v);
             return (u*v)/g;
@@ -80,7 +80,7 @@ namespace NumberTheory
         /// <param name="b"></param>
         /// <param name="q"></param>
         /// <returns></returns>
-        public long ExpMod(long a, long b, int q)
+        public static long ExpMod(long a, long b, int q)
         {
             long p = 1;
             while (b > 0)
