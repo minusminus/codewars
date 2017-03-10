@@ -43,7 +43,7 @@ namespace N_NumberTheory
         }
 
         [Test]
-        public void TestAllPrimesTo1000()
+        public void TestAllPrimesMRCheckTo1000()
         {
             PrimeNumbersList gen = new PrimeNumbersList();
             BitArray nums = gen.EratosthenesSieve(1000);
