@@ -14,7 +14,7 @@ namespace NumberTheory
     {
         /// <summary>
         /// Funkcja oznaczająca liczby pierwsze w przedziale [0,upperBound].
-        /// Zwraca maske bitową liczb pierwszych.
+        /// Zwraca maske bitową liczb pierwszych (false - liczba pierwsza, true - nie).
         /// </summary>
         /// <param name="upperBound"></param>
         /// <returns></returns>
