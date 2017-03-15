@@ -17,6 +17,13 @@ namespace NumberTheory
         }
 
 
+        /// <summary>
+        /// Metoda wyznaczajaca dzielniki n.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="startx"></param>
+        /// <param name="c"></param>
+        /// <returns>Zwraca listę dzielników, każdy może wystąpic na niej tylko raz</returns>
         public List<long> GetPollardRhoFactorsList(long n, long startx, long c)
         {
             List<long> factors = new List<long>();
@@ -32,7 +39,9 @@ namespace NumberTheory
                 x = f(x, c, n);
                 y = f(f(y, c, n), c, n);
                 d = NumbersTheory.GCDBinary(Math.Abs(x - y), n);
-                if ((d > 1) && (d < n)) factors.Add(d);
+                if ((d > 1) && (d < n))
+                    if(!factors.Contains(d))
+                        factors.Add(d);
             }
 
             return factors;

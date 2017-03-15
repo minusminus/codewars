@@ -44,6 +44,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PrimeNumbersFactorsTests.cs" />
     <Compile Include="PrimeNumbersListTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NumberTheoryTests.cs" />
