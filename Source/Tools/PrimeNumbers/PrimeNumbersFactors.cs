@@ -16,7 +16,6 @@ namespace NumberTheory
             return (x*x + c)%n;
         }
 
-
         /// <summary>
         /// Metoda wyznaczajaca dzielniki n.
         /// </summary>
@@ -47,6 +46,27 @@ namespace NumberTheory
             return factors;
         }
 
+        private long GetFactorsCount(long n, long factor)
+        {
+            long res = 0;
+            while (n%factor == 0)
+            {
+                n /= factor;
+                res++;
+            }
+            return res;
+        }
+
+        private void UpdateFactorsList(Dictionary<long, long> primeFactors, long factor, long count)
+        {
+            //if (primeFactors.ContainsKey(factor))
+            //    primeFactors[factor] += count;
+            //else
+            //    primeFactors[factor] = count;
+            if (!primeFactors.ContainsKey(factor))
+                primeFactors[factor] = count;
+        }
+
         /// <summary>
         /// Metoda faktoryzacji na czynniki pierwsze z wykorzystaniem algorytmu Rho Pollarda
         /// 
@@ -57,28 +77,35 @@ namespace NumberTheory
         /// </summary>
         /// <param name="n"></param>
         /// <returns>zwraca słownik w postaci (czynnik, ilość)</returns>
-        public Dictionary<long, long> PollardRhoFactors(long n)
+        public Dictionary<long, long> PollardRhoPrimeFactors(long n)
         {
-            Dictionary<long, long> primeFactors = new Dictionary<long, long>();
-            Random gen = new Random();
             PrimeNumbersCheck pcheck = new PrimeNumbersCheck();
+            Dictionary<long, long> primeFactors = new Dictionary<long, long>();
+            if (pcheck.IsPrimeMRTest(n)) return primeFactors;
 
-            while (true)
+            Random gen = new Random();
+            List<long> toCheck = new List<long>() {n};
+            while (toCheck.Count > 0)
             {
-                if (pcheck.IsPrimeMRTest(n)) break;
+                long v = toCheck[0];
+                toCheck.RemoveAt(0);
 
-                long c = gen.Next(2, (int) n);
-                long startx = gen.Next(1, (int) n);
-                List<long> factors = GetPollardRhoFactorsList(n, startx, c);
+                long c = gen.Next(2, (int) v);
+                long startx = gen.Next(1, (int) v);
+                List<long> factors = GetPollardRhoFactorsList(v, startx, c);
                 foreach (long factor in factors)
                 {
-                    if (pcheck.IsPrimeMRTest(factor))
-                    {
-                        if (primeFactors.ContainsKey(factor))
-                            primeFactors[factor] += 1;
-                        else
-                            primeFactors[factor] = 1;
-                    }
+                    long df = n/factor;
+                    bool pf = pcheck.IsPrimeMRTest(factor);
+                    bool pdf = pcheck.IsPrimeMRTest(df);
+                    if (pf)
+                        UpdateFactorsList(primeFactors, factor, GetFactorsCount(n, factor));
+                    else if (!pdf)
+                        toCheck.Add(df);
+                    if (pdf)
+                        UpdateFactorsList(primeFactors, df, GetFactorsCount(n, df));
+                    else if (!pf)
+                        toCheck.Add(factor);
                 }
             }
             return primeFactors;
