@@ -31,6 +31,13 @@ namespace N_NumberTheory
         }
 
         [Test]
+        public void TestPrimesMillerRabinCheckBig()
+        {
+            _pobj.IsPrimeMRTest(123456789987654320).ShouldBeFalse();
+            _pobj.IsPrimeMRTest(1543209874845679).ShouldBeTrue();
+        }
+
+        [Test]
         public void SpecialTest()
         {
             _pobj.IsPrimeMRTest(5).ShouldBeTrue();
