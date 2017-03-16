@@ -30,6 +30,12 @@ namespace N_NumberTheory
         }
 
         [Test]
+        public void TestPollardRhoFactorsList2()
+        {
+            _pobj.GetPollardRhoFactorsList(16, 13, 6).ShouldBe(new List<long>() { 8 });
+        }
+
+        [Test]
         public void TestPollardRhoPrimeFactors()
         {
             //_pobj.PollardRhoPrimeFactors(55).ShouldBe(new Dictionary<long, long>() { {5, 1}, {11, 1} });
