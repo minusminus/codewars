@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Policy;
 using NumberTheory;
 using NUnit.Framework;
 using Shouldly;
@@ -71,5 +73,16 @@ namespace N_NumberTheory
         //{
         //    _pobj.PollardRhoPrimeFactors(123456789987654320).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 2, 4 }, { 5, 1 }, { 1543209874845679, 1 } });
         //}
+
+        [Test]
+        public void PollardRhoPrimeFactorsSpeedTest()
+        {
+            const int iterscnt = 100000;
+            Stopwatch sw = Stopwatch.StartNew();
+            for (int i = 0; i < iterscnt; i++)
+                _pobj.PollardRhoPrimeFactors(123456789);
+            sw.Stop();
+            Console.WriteLine($"{iterscnt} iterations, elapsed: {sw.ElapsedMilliseconds} ms, avg: {(double)sw.ElapsedMilliseconds/(double)iterscnt} ms");
+        }
     }
 }

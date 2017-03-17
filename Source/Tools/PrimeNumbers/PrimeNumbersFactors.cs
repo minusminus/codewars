@@ -15,7 +15,6 @@ namespace NumberTheory
         private long f(long x, long c, long n)
         {
             //return (x*x + c)%n;
-
             return (NumbersTheory.ExpMod(x, 2, n) + c)%n;
         }
 
@@ -28,6 +27,7 @@ namespace NumberTheory
         /// <returns>Zwraca listę dzielników, każdy może wystąpic na niej tylko raz</returns>
         public List<long> GetPollardRhoFactorsList(long n, long startx, long c)
         {
+            const int maxiters = 25;    //maksymalna ilosc iteracji algorytmu
             List<long> factors = new List<long>();
 
             long x = startx;
@@ -35,24 +35,20 @@ namespace NumberTheory
             long d = 1;
             int iters = 0;
 
-            while ((d != n) && (iters<25))
+            while ((d != n) && (iters < maxiters))
             {
                 x = f(x, c, n);
                 y = f(f(y, c, n), c, n);
                 d = NumbersTheory.GCDBinary(Math.Abs(x - y), n);
                 if ((d > 1) && (d < n))
                     if (!factors.Contains(d))
-                    {
                         factors.Add(d);
-                        //Console.WriteLine($"iteration {iters}, factor {d}");
-                    }
                 iters++;
             }
-            //Console.WriteLine($"++ PRho iterations = {iters}");
             return factors;
         }
 
-        private long GetFactorsCount(long n, long factor, out long newn)
+        private long GetFactorsPower(long n, long factor, out long newn)
         {
             long res = 0;
             while (n%factor == 0)
@@ -62,6 +58,33 @@ namespace NumberTheory
             }
             newn = n;
             return res;
+        }
+
+        /// <summary>
+        /// Liczy ilosc potege podzielnika, aktualizuje liczbe. 
+        /// Jezeli ostatnim podzielnikiem jest liczba pierwsza to zwraca true, w przeciwnym wypadku false.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="factor"></param>
+        /// <param name="newn"></param>
+        /// <param name="primeFactors"></param>
+        /// <param name="pcheck"></param>
+        /// <returns></returns>
+        private bool GetPrimeFactorsPowerAndUpdateList(long n, long factor, out long newn, Dictionary<long, long> primeFactors, PrimeNumbersCheck pcheck)
+        {
+            long cnt = GetFactorsPower(n, factor, out newn);
+            if (cnt > 0)
+            {
+                primeFactors[factor] = cnt;
+                //ostatni dzielnik jest liczba pierwsza
+                if (pcheck.IsPrimeMRTest(newn))
+                {
+                    primeFactors[newn] = 1;
+                    newn = 1;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private long RandomLong(long min, long max, Random gen)
@@ -86,10 +109,12 @@ namespace NumberTheory
         /// <returns>zwraca słownik w postaci (czynnik, ilość)</returns>
         public Dictionary<long, long> PollardRhoPrimeFactors(long n)
         {
-            //Console.WriteLine($"--- n={n} ---");
             PrimeNumbersCheck pcheck = new PrimeNumbersCheck();
             Dictionary<long, long> primeFactors = new Dictionary<long, long>();
             if (pcheck.IsPrimeMRTest(n)) return primeFactors;
+
+            //okreslenie poteg 2
+            if (GetPrimeFactorsPowerAndUpdateList(n, 2, out n, primeFactors, pcheck)) return primeFactors;
 
             Random gen = new Random();
             List<long> toCheck = new List<long>() {n};
@@ -106,26 +131,14 @@ namespace NumberTheory
                 //long startx = gen.Next(1, (int)v);
                 long c = RandomLong(2, v, gen);
                 long startx = RandomLong(1, v, gen);
-                //Console.WriteLine($"v={v}, x={startx}, c={c}");
                 List<long> factors = GetPollardRhoFactorsList(v, startx, c);
-                //foreach (long factor in factors) Console.Write($"{factor},");
-                //Console.WriteLine("");
                 foreach (long factor in factors)
                 {
                     if (pcheck.IsPrimeMRTest(factor))
                     {
                         if (!primeFactors.ContainsKey(factor))
                         {
-                            long cnt = GetFactorsCount(nv, factor, out nv);
-                            primeFactors[factor] = cnt;
-                            //Console.WriteLine($"=== {factor} ^ {cnt}");
-                            //ostatni dzielnik jest liczba pierwsza
-                            if (pcheck.IsPrimeMRTest(nv))
-                            {
-                                primeFactors[nv] = 1;
-                                nv = 1;
-                                break;
-                            }
+                            if (GetPrimeFactorsPowerAndUpdateList(nv, factor, out nv, primeFactors, pcheck)) break;
                         }
                     }
                     else
