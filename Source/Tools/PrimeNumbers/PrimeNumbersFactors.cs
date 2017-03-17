@@ -20,6 +20,7 @@ namespace NumberTheory
 
         /// <summary>
         /// Metoda wyznaczajaca dzielniki n.
+        /// Zwraca liste dzielnikow. Petla ograniczona do 25 iteracji.
         /// </summary>
         /// <param name="n"></param>
         /// <param name="startx"></param>
@@ -48,7 +49,37 @@ namespace NumberTheory
             return factors;
         }
 
-        private long GetFactorsPower(long n, long factor, out long newn)
+        /// <summary>
+        /// Metoda wyznaczajaca dzielniki n.
+        /// Zwraca pierwszy znaleziony dzielnik.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="startx"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public List<long> GetPollardRhoSingleFactor(long n, long startx, long c)
+        {
+            List<long> factors = new List<long>();
+
+            long x = startx;
+            long y = startx;
+            long d = 1;
+
+            while (d != n)
+            {
+                x = f(x, c, n);
+                y = f(f(y, c, n), c, n);
+                d = NumbersTheory.GCDBinary(Math.Abs(x - y), n);
+                if ((d > 1) && (d < n))
+                {
+                    factors.Add(d);
+                    break;
+                }
+            }
+            return factors;
+        }
+
+        private long GetFactorPower(long n, long factor, out long newn)
         {
             long res = 0;
             while (n%factor == 0)
@@ -70,9 +101,9 @@ namespace NumberTheory
         /// <param name="primeFactors"></param>
         /// <param name="pcheck"></param>
         /// <returns></returns>
-        private bool GetPrimeFactorsPowerAndUpdateList(long n, long factor, out long newn, Dictionary<long, long> primeFactors, PrimeNumbersCheck pcheck)
+        private bool GetPrimeFactorPowerAndUpdateList(long n, long factor, out long newn, Dictionary<long, long> primeFactors, PrimeNumbersCheck pcheck)
         {
-            long cnt = GetFactorsPower(n, factor, out newn);
+            long cnt = GetFactorPower(n, factor, out newn);
             if (cnt > 0)
             {
                 primeFactors[factor] = cnt;
@@ -104,6 +135,8 @@ namespace NumberTheory
         /// http://www.geeksforgeeks.org/pollards-rho-algorithm-prime-factorization/
         /// https://en.wikipedia.org/wiki/Pollard%27s_rho_algorithm
         /// https://pl.wikipedia.org/wiki/Algorytm_faktoryzacji_rho_Pollarda
+        /// 
+        /// opierajac sie na pierwszym znalezionym dzielniku dziala ok 2,5x szybciej niz w przypadku listy z ograniczona iloscia iteracji (1200ms do 3000ms)
         /// </summary>
         /// <param name="n"></param>
         /// <returns>zwraca słownik w postaci (czynnik, ilość)</returns>
@@ -114,7 +147,7 @@ namespace NumberTheory
             if (pcheck.IsPrimeMRTest(n)) return primeFactors;
 
             //okreslenie poteg 2
-            if (GetPrimeFactorsPowerAndUpdateList(n, 2, out n, primeFactors, pcheck)) return primeFactors;
+            if (GetPrimeFactorPowerAndUpdateList(n, 2, out n, primeFactors, pcheck)) return primeFactors;
 
             Random gen = new Random();
             List<long> toCheck = new List<long>() {n};
@@ -131,14 +164,15 @@ namespace NumberTheory
                 //long startx = gen.Next(1, (int)v);
                 long c = RandomLong(2, v, gen);
                 long startx = RandomLong(1, v, gen);
-                List<long> factors = GetPollardRhoFactorsList(v, startx, c);
+                //List<long> factors = GetPollardRhoFactorsList(v, startx, c);
+                List<long> factors = GetPollardRhoSingleFactor(v, startx, c);   //singlefactor ok 2,5x szybciej niz z lista i ograniczeniem petli
                 foreach (long factor in factors)
                 {
                     if (pcheck.IsPrimeMRTest(factor))
                     {
                         if (!primeFactors.ContainsKey(factor))
                         {
-                            if (GetPrimeFactorsPowerAndUpdateList(nv, factor, out nv, primeFactors, pcheck)) break;
+                            if (GetPrimeFactorPowerAndUpdateList(nv, factor, out nv, primeFactors, pcheck)) break;
                         }
                     }
                     else
