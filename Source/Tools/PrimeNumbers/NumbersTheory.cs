@@ -80,7 +80,7 @@ namespace NumberTheory
         /// <param name="b"></param>
         /// <param name="q"></param>
         /// <returns></returns>
-        public static long ExpMod(long a, long b, int q)
+        public static long ExpMod(long a, long b, long q)
         {
             long p = 1;
             while (b > 0)

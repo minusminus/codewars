@@ -16,9 +16,11 @@ namespace NumberTheory
         {
             //return (x*x + c)%n;
 
-            long d = ((x*x)%n + c)%n;
-            if (d < 0) d = n-d;
-            return d;
+            //long d = ((x*x)%n + c)%n;
+            //if (d < 0) d = n-d;
+            //return d;
+
+            return (NumbersTheory.ExpMod(x, 2, n) + c)%n;
         }
 
         /// <summary>
@@ -43,11 +45,14 @@ namespace NumberTheory
                 y = f(f(y, c, n), c, n);
                 d = NumbersTheory.GCDBinary(Math.Abs(x - y), n);
                 if ((d > 1) && (d < n))
-                    if(!factors.Contains(d))
+                    if (!factors.Contains(d))
+                    {
                         factors.Add(d);
+                        Console.WriteLine($"iteration {iters}, factor {d}");
+                    }
                 iters++;
             }
-
+            Console.WriteLine($"++ PRho iterations = {iters}");
             return factors;
         }
 

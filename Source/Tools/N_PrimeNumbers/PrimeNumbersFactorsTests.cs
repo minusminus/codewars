@@ -15,6 +15,7 @@ namespace N_NumberTheory
 
         private void CheckPollardRhoFactorsList(long n, long startx, long c, List<long> correct )
         {
+            Console.WriteLine($"++ n = {n} ++");
             List<long> res = _pobj.GetPollardRhoFactorsList(n, startx, c);
             res.Sort();
             res.ShouldBe(correct);
