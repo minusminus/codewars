@@ -16,10 +16,6 @@ namespace NumberTheory
         {
             //return (x*x + c)%n;
 
-            //long d = ((x*x)%n + c)%n;
-            //if (d < 0) d = n-d;
-            //return d;
-
             return (NumbersTheory.ExpMod(x, 2, n) + c)%n;
         }
 
@@ -39,7 +35,7 @@ namespace NumberTheory
             long d = 1;
             int iters = 0;
 
-            while (d != n)
+            while ((d != n) && (iters<25))
             {
                 x = f(x, c, n);
                 y = f(f(y, c, n), c, n);
@@ -48,11 +44,11 @@ namespace NumberTheory
                     if (!factors.Contains(d))
                     {
                         factors.Add(d);
-                        Console.WriteLine($"iteration {iters}, factor {d}");
+                        //Console.WriteLine($"iteration {iters}, factor {d}");
                     }
                 iters++;
             }
-            Console.WriteLine($"++ PRho iterations = {iters}");
+            //Console.WriteLine($"++ PRho iterations = {iters}");
             return factors;
         }
 
@@ -79,6 +75,7 @@ namespace NumberTheory
 
         /// <summary>
         /// Metoda faktoryzacji na czynniki pierwsze z wykorzystaniem algorytmu Rho Pollarda
+        /// dziala dla liczb 32bit
         /// 
         /// https://www.cs.colorado.edu/~srirams/courses/csci2824-spr14/pollardsRho.html
         /// http://www.geeksforgeeks.org/pollards-rho-algorithm-prime-factorization/
@@ -109,7 +106,7 @@ namespace NumberTheory
                 //long startx = gen.Next(1, (int)v);
                 long c = RandomLong(2, v, gen);
                 long startx = RandomLong(1, v, gen);
-                Console.WriteLine($"v={v}, x={startx}, c={c}");
+                //Console.WriteLine($"v={v}, x={startx}, c={c}");
                 List<long> factors = GetPollardRhoFactorsList(v, startx, c);
                 //foreach (long factor in factors) Console.Write($"{factor},");
                 //Console.WriteLine("");
@@ -121,7 +118,7 @@ namespace NumberTheory
                         {
                             long cnt = GetFactorsCount(nv, factor, out nv);
                             primeFactors[factor] = cnt;
-                            Console.WriteLine($"=== {factor} ^ {cnt}");
+                            //Console.WriteLine($"=== {factor} ^ {cnt}");
                             //ostatni dzielnik jest liczba pierwsza
                             if (pcheck.IsPrimeMRTest(nv))
                             {

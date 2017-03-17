@@ -28,14 +28,17 @@ namespace N_NumberTheory
             _pobj.IsPrimeMRTest(561).ShouldBeFalse();
             _pobj.IsPrimeMRTest(1105).ShouldBeFalse();
             _pobj.IsPrimeMRTest(1729).ShouldBeFalse();
+
+            _pobj.IsPrimeMRTest(2147483647).ShouldBeTrue(); //2^31 - 1
         }
 
-        [Test]
-        public void TestPrimesMillerRabinCheckBig()
-        {
-            _pobj.IsPrimeMRTest(123456789987654320).ShouldBeFalse();
-            _pobj.IsPrimeMRTest(1543209874845679).ShouldBeTrue();
-        }
+        //[Test]
+        //public void TestPrimesMillerRabinCheckBig()
+        //{
+        //    //_pobj.IsPrimeMRTest(123456789987654320).ShouldBeFalse();
+        //    //_pobj.IsPrimeMRTest(1543209874845679).ShouldBeTrue();
+        //    //_pobj.IsPrimeMRTest(7716049374228395).ShouldBeFalse();
+        //}
 
         [Test]
         public void SpecialTest()

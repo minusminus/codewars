@@ -48,6 +48,8 @@ namespace N_NumberTheory
 
             NumbersTheory.ExpMod(2, 32, 10).ShouldBe(6);
             NumbersTheory.ExpMod(2, 32, 2).ShouldBe(0);
+
+            //NumbersTheory.ExpMod(2, 771604937422839, 1543209874845679).ShouldBe(1);
         }
     }
 }

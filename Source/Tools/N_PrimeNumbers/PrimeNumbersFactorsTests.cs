@@ -15,7 +15,7 @@ namespace N_NumberTheory
 
         private void CheckPollardRhoFactorsList(long n, long startx, long c, List<long> correct )
         {
-            Console.WriteLine($"++ n = {n} ++");
+            //Console.WriteLine($"++ n = {n} ++");
             List<long> res = _pobj.GetPollardRhoFactorsList(n, startx, c);
             res.Sort();
             res.ShouldBe(correct);
@@ -44,11 +44,11 @@ namespace N_NumberTheory
             CheckPollardRhoFactorsList(16, 13, 6, new List<long>() { 8 });
         }
 
-        [Test]
-        public void TestPollardRhoFactorsListBig()
-        {
-            CheckPollardRhoFactorsList(123456789987654320, 2558860614600199, 112075433868738794, new List<long>() { 8 });
-        }
+        //[Test]
+        //public void TestPollardRhoFactorsListBig()
+        //{
+        //    CheckPollardRhoFactorsList(123456789987654320, 2558860614600199, 112075433868738794, new List<long>() { 8, 16, 80 });
+        //}
 
         [Test]
         public void TestPollardRhoPrimeFactors()
@@ -62,12 +62,14 @@ namespace N_NumberTheory
             _pobj.PollardRhoPrimeFactors(1000000000).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 2, 9 }, { 5, 9 } });
             _pobj.PollardRhoPrimeFactors(1000000001).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 7, 1 }, { 11, 1 }, {13, 1}, {19, 1}, { 52579, 1} });
             _pobj.PollardRhoPrimeFactors(123456789).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 3, 2 }, { 3607, 1 }, {3803, 1} });
+
+            _pobj.PollardRhoPrimeFactors(2147483646).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 2, 1 }, { 3, 2 }, { 7, 1 }, {11, 1}, {31, 1}, {151, 1}, {331, 1} });
         }
 
-        [Test]
-        public void TestPollardRhoPrimeFactorsBig()
-        {
-            _pobj.PollardRhoPrimeFactors(123456789987654320).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 2, 4 }, { 5, 1 }, { 1543209874845679, 1 } });
-        }
+        //[Test]
+        //public void TestPollardRhoPrimeFactorsBig()
+        //{
+        //    _pobj.PollardRhoPrimeFactors(123456789987654320).OrderBy(x => x.Key).ShouldBe(new Dictionary<long, long>() { { 2, 4 }, { 5, 1 }, { 1543209874845679, 1 } });
+        //}
     }
 }

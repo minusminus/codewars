@@ -41,7 +41,8 @@ namespace NumberTheory
             long y = 0;
             for (; t > 0; t--)
             {
-                y = (x*x)%n;
+                y = (x * x) % n;
+                //y = NumbersTheory.ExpMod(x, 2, n);
                 if ((y == 1) && (x != 1) && (x != n - 1)) //nietrywialny dzielnik - liczba jest zlozona
                     return true;
                 x = y;
@@ -59,7 +60,12 @@ namespace NumberTheory
             //if (x % 5 == 0) return (x == 5);
 
             //if n < 4,759,123,141, it is enough to test a = 2, 7, and 61;
-            return !(MillerRabinTest(2, (int) x) || MillerRabinTest(7, (int) x) || MillerRabinTest(61, (int) x));
+            return !(MillerRabinTest(2, (int)x) || MillerRabinTest(7, (int)x) || MillerRabinTest(61, (int)x));
+            //liczby 64bit sa za duze, dziala tylko na 32bit
+            //if n < 18,446,744,073,709,551,616 = 2^64, it is enough to test a = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, and 37.
+            //return !(MillerRabinTest(2, x) || MillerRabinTest(3, x) || MillerRabinTest(5, x) || MillerRabinTest(7, x) ||
+            //          MillerRabinTest(11, x) || MillerRabinTest(13, x) || MillerRabinTest(17, x) || MillerRabinTest(19, x) || 
+            //          MillerRabinTest(23, x) || MillerRabinTest(29, x) || MillerRabinTest(31, x) || MillerRabinTest(37, x));
         }
     }
 }
