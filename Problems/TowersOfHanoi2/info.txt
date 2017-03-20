@@ -1,0 +1,3 @@
+problem z 3 slupkami jak poprzednio
+
+zakladajac optymalne rozwiazanie dla n krazkow, jakie jest ulozenie krazkow w koku k?

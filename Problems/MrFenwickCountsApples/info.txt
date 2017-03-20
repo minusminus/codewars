@@ -1,0 +1,13 @@
+Mr Fenwick jest zarzadca duzego sadu.
+Gosc wchodzi w dowolnym miejscu sadu, spotyka Mr Fenwicka i pyta ile jablek jest na drzewach od miejsca w ktorym wszedl, az do tad.
+
+idea rozwiazania: fenwick tree
+
+testy:
+basic:
+	- kilka podstawowych przykladow
+extended:
+	- kolejne wartosci od 1 do 1000 i w petlach sprawdzenie wszystkich sum (weryfikowane suma ciagu arytmetycznego)
+	- kolejne wartosci ale co 2 (lub co n) weryfikowane tak samo
+super extended:
+	- kolejne wartosci od 1mln do 10mln z krokiem co 10, weryfikowane tez ciagiem arytmetycznym, tu powinna dac o sobie zlozonosc algorytmu
