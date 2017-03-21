@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +41,44 @@ namespace KPrimes
 
         public int Puzzle(int s)
         {
-            return 0;
+            Console.WriteLine($"s = {s}");
+            if (s < 138) return 0;
+            int res = 0;
+
+            Stopwatch sw = Stopwatch.StartNew();
+            List<long> p1 = new List<long>();
+            List<long> p3 = new List<long>();
+            List<long> p7 = new List<long>();
+            PrimeNumbersFactors pnf = new PrimeNumbersFactors();
+
+            //maksymalna liczba jest s - 8 - 2 = s - 10, minimalna 2
+            //wygenerowane listy sa zawsze posortowane
+            for (long i = 2; i <= s - 10; i++)
+            {
+                Dictionary<long, long> factors = pnf.PollardRhoPrimeFactors(i);
+                if (factors.Count == 0)
+                    p1.Add(i);
+                else
+                {
+                    long cnt = factors.Sum(x => x.Value);
+                    if (cnt == 3)
+                        p3.Add(i);
+                    else if (cnt == 7)
+                        p7.Add(i);
+                }
+            }
+            Console.WriteLine($"lists: {sw.ElapsedMilliseconds} ms");
+
+            //bruteforce
+            for(int i=0; i<p1.Count; i++)
+                for(int j=0; j<p3.Count; j++)
+                    for(int k=0; k<p7.Count; k++)
+                        if (p1[i] + p3[j] + p7[k] == s) res++;
+
+            sw.Stop();
+            Console.WriteLine($"check: {sw.ElapsedMilliseconds} ms");
+
+            return res;
         }
     }
 }
