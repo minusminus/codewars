@@ -50,7 +50,7 @@ namespace N_KPrimes
         public void PuzzleBigTests()
         {
             _pobj.Puzzle(10000).ShouldBe(34767);
-            //_pobj.Puzzle(100000).ShouldBe(34767);
+            //_pobj.Puzzle(100000).ShouldBe(3864680);
         }
 
     }

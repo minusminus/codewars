@@ -68,12 +68,18 @@ namespace KPrimes
                 }
             }
             Console.WriteLine($"lists: {sw.ElapsedMilliseconds} ms");
+            if ((p1.Count == 0) || (p3.Count == 0) || (p7.Count == 0)) return 0;
 
             //bruteforce
-            for(int i=0; i<p1.Count; i++)
-                for(int j=0; j<p3.Count; j++)
-                    for(int k=0; k<p7.Count; k++)
-                        if (p1[i] + p3[j] + p7[k] == s) res++;
+            //for(int i=0; i<p1.Count; i++)
+            //    for(int j=0; j<p3.Count; j++)
+            //        for(int k=0; k<p7.Count; k++)
+            //            if (p1[i] + p3[j] + p7[k] == s) res++;
+
+            for (int i = 0; i < p1.Count; i++)
+                for (int j = 0; j < p3.Count; j++)
+                    if (p7.BinarySearch(s - (p1[i] + p3[j])) >= 0) res++;
+
 
             sw.Stop();
             Console.WriteLine($"check: {sw.ElapsedMilliseconds} ms");
