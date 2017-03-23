@@ -69,6 +69,7 @@ namespace KPrimes
             }
             Console.WriteLine($"lists: {sw.ElapsedMilliseconds} ms");
             if ((p1.Count == 0) || (p3.Count == 0) || (p7.Count == 0)) return 0;
+            Console.WriteLine($"p1={p1.Count}, p3={p3.Count}, p7={p7.Count}");
 
             //bruteforce
             //for(int i=0; i<p1.Count; i++)
@@ -76,9 +77,18 @@ namespace KPrimes
             //        for(int k=0; k<p7.Count; k++)
             //            if (p1[i] + p3[j] + p7[k] == s) res++;
 
-            for (int i = 0; i < p1.Count; i++)
-                for (int j = 0; j < p3.Count; j++)
-                    if (p7.BinarySearch(s - (p1[i] + p3[j])) >= 0) res++;
+            //for (int i = 0; i < p1.Count; i++)
+            //    for (int j = 0; j < p3.Count; j++)
+            //        if (p7.BinarySearch(s - (p1[i] + p3[j])) >= 0) res++;
+
+            //for (int i = 0; i < p1.Count; i++)
+            //    for (int j = 0; (j < p3.Count) && (p1[i] + p3[j] + p7[0] <= s); j++)
+            //        if (p7.BinarySearch(s - (p1[i] + p3[j])) >= 0) res++;
+
+            //z obserwacji wynika ze p7<p1<p3
+            for (int i = 0; i < p7.Count; i++)
+                for (int j = 0; (j < p1.Count) && (p7[i] + p1[j] + p3[0] <= s); j++)
+                    if (p3.BinarySearch(s - (p7[i] + p1[j])) >= 0) res++;
 
 
             sw.Stop();
