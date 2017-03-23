@@ -86,10 +86,59 @@ namespace KPrimes
             //        if (p7.BinarySearch(s - (p1[i] + p3[j])) >= 0) res++;
 
             //z obserwacji wynika ze p7<p1<p3
-            for (int i = 0; i < p7.Count; i++)
-                for (int j = 0; (j < p1.Count) && (p7[i] + p1[j] + p3[0] <= s); j++)
-                    if (p3.BinarySearch(s - (p7[i] + p1[j])) >= 0) res++;
+            //for (int i = 0; i < p7.Count; i++)
+            //    for (int j = 0; (j < p1.Count) && (p7[i] + p1[j] + p3[0] <= s); j++)
+            //        if (p3.BinarySearch(s - (p7[i] + p1[j])) >= 0) res++;
 
+            //int step = 0;
+            //for (int i = 0; i < p7.Count; i++)
+            //{
+            //    Console.WriteLine($"--- step={step}, res={res}");
+            //    int rightboud = p3.Count;
+            //    for (int j = 0; (j < p1.Count) && (p7[i] + p1[j] + p3[0] <= s); j++)
+            //    {
+            //        //int k = p3.BinarySearch(s - (p7[i] + p1[j]));
+            //        int k = p3.BinarySearch(0, rightboud, s - (p7[i] + p1[j]), null);
+            //        if (k >= 0)
+            //        {
+            //            res++;
+            //            Console.WriteLine($"{step}: {i} ({p7[i]}), {j} ({p1[j]}), {k} ({p3[k]}) +++");
+            //            //rightboud = Math.Max(k + 1, p3.Count);
+            //        }
+            //        else
+            //        {
+            //            Console.WriteLine($"{step}: {i} ({p7[i]}), {j} ({p1[j]}), {k} (rightmax={p3[-k]}, expected={s - (p7[i] + p1[j])})");
+            //            rightboud = -k;
+            //        }
+            //        step++;
+            //    }
+            //}
+
+            int step = 0;
+            for (int i = 0; i < p7.Count; i++)
+            {
+                int rightbound = p3.BinarySearch(s - (p7[i] + p1[0]));
+                if (rightbound < 0) rightbound = -rightbound; else rightbound = Math.Min(rightbound + 1, p3.Count - 1);
+                Console.WriteLine($"--- step={step}, res={res}, rightbound={rightbound}");
+                for (int j = 0; (j < p1.Count) && (p7[i] + p1[j] + p3[0] <= s); j++)
+                {
+                    long sum = p7[i] + p1[j];
+                    long expected = s - sum;
+
+                    while (rightbound >= 0)
+                    {
+                        if (p3[rightbound] == expected)
+                        {
+                            res++;
+                            break;
+                        }
+                        if (p3[rightbound] < expected) break;
+                        rightbound--;
+                    }
+                    Console.WriteLine($"{step}: {i} ({p7[i]}), {j} ({p1[j]}), expected={expected}, next rb={rightbound}, res={res}");
+                    step++;
+                }
+            }
 
             sw.Stop();
             Console.WriteLine($"check: {sw.ElapsedMilliseconds} ms");
