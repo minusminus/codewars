@@ -49,8 +49,8 @@ namespace N_KPrimes
         [Test]
         public void PuzzleBigTests()
         {
-            //_pobj.Puzzle(10000).ShouldBe(34767);    //check: 85 ms
-            //_pobj.Puzzle(100000).ShouldBe(3864680); //check: 2259 ms
+            //_pobj.Puzzle(10000).ShouldBe(34767);    //check: 85 ms, 67 ms
+            //_pobj.Puzzle(100000).ShouldBe(3864680); //check: 2259 ms, 1724 ms
             _pobj.Puzzle(1000000).ShouldBe(396286961);  //check: 155730 ms, 30819 ms bez 3 petli | 114471 ms
         }
 

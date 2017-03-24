@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -39,6 +40,19 @@ namespace KPrimes
             return kprimes.ToArray();
         }
 
+        private void SetPowersOmmited(BitArray dotest, long n, long factor, long currpower)
+        {
+            long v = n*factor;
+            currpower++;
+            while (v < dotest.Count)
+            {
+                if((currpower!=3) && (currpower!=7))
+                    dotest[(int) v] = false;
+                v *= factor;
+                currpower++;
+            }
+        }
+
         public int Puzzle(int s)
         {
             Console.WriteLine($"s = {s}");
@@ -51,13 +65,21 @@ namespace KPrimes
             List<long> p7 = new List<long>();
             PrimeNumbersFactors pnf = new PrimeNumbersFactors();
 
+            BitArray dotest = new BitArray(s-10+1, true);
             //maksymalna liczba jest s - 8 - 2 = s - 10, minimalna 2
             //wygenerowane listy sa zawsze posortowane
             for (long i = 2; i <= s - 10; i++)
             {
+                if(!dotest[(int)i]) continue;
                 Dictionary<long, long> factors = pnf.PollardRhoPrimeFactors(i);
                 if (factors.Count == 0)
+                {
                     p1.Add(i);
+                    //SetPowersOmmited(dotest, i, 2, 1);
+                    //SetPowersOmmited(dotest, i, 3, 1);
+                    //SetPowersOmmited(dotest, i, 5, 1);
+                    //SetPowersOmmited(dotest, i, 7, 1);
+                }
                 else
                 {
                     long cnt = factors.Sum(x => x.Value);
@@ -65,6 +87,12 @@ namespace KPrimes
                         p3.Add(i);
                     else if (cnt == 7)
                         p7.Add(i);
+                    //if ((cnt == 3) || (cnt == 7))
+                    //{
+                    //    //daje ok 25% szybsze generowanie list
+                    //    foreach (var item in factors)
+                    //        SetPowersOmmited(dotest, i, item.Key, cnt);
+                    //}
                 }
             }
             Console.WriteLine($"lists: {sw.ElapsedMilliseconds} ms");
@@ -119,7 +147,7 @@ namespace KPrimes
             {
                 int rightbound = p3.BinarySearch(s - (p7[i] + p1[0]));
                 if (rightbound < 0) rightbound = -rightbound; else rightbound = Math.Min(rightbound + 1, p3.Count - 1);
-                Console.WriteLine($"--- step={step}, res={res}, rightbound={rightbound}");
+                //Console.WriteLine($"--- step={step}, res={res}, rightbound={rightbound}");
                 for (int j = 0; (j < p1.Count) && (p7[i] + p1[j] + p3[0] <= s); j++)
                 {
                     long sum = p7[i] + p1[j];
@@ -130,12 +158,13 @@ namespace KPrimes
                         if (p3[rightbound] == expected)
                         {
                             res++;
+                            //Console.WriteLine($"{step}: {i} ({p7[i]}), {j} ({p1[j]}), {rightbound} ({p3[rightbound]}), res={res}");
                             break;
                         }
                         if (p3[rightbound] < expected) break;
                         rightbound--;
                     }
-                    Console.WriteLine($"{step}: {i} ({p7[i]}), {j} ({p1[j]}), expected={expected}, next rb={rightbound}, res={res}");
+                    //Console.WriteLine($"{step}: {i} ({p7[i]}), {j} ({p1[j]}), expected={expected}, next rb={rightbound}, res={res}");
                     step++;
                 }
             }
