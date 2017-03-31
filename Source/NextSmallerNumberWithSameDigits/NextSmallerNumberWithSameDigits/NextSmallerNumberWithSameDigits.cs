@@ -32,23 +32,36 @@ namespace NextSmallerNumberWithSameDigits
             return res;
         }
 
+        //szuka najlepszej zamiany i zwraca indeks przed zmieniona pozycja
+        //po kazdym znalezionym indeksie szukany jest lepszy wynik w zmniejszonym zakresie tablicy
         private int FindChange(List<int> numbers)
         {
-            for (int i = 0; i < numbers.Count; i++)
+            int changefrom = -1;
+            int currchange = numbers.Count - 1;
+            for (int i = 0; i <= currchange; i++)
             {
-                int border = numbers.Count;
-                if (numbers[i] == 0) border--;
-                for (int j = i + 1; j < border; j++)
+                int border = currchange;
+                if ((numbers[i] == 0) && (currchange == numbers.Count - 1)) border--;
+                for (int j = i + 1; j <= border; j++)
                 {
                     if (numbers[i] < numbers[j])
                     {
-                        numbers.Insert(j + 1, numbers[i]);
-                        numbers.RemoveAt(i);
-                        return j;
+                        //numbers.Insert(j + 1, numbers[i]);
+                        //numbers.RemoveAt(i);
+                        //return j;
+                        changefrom = i;
+                        currchange = j - 1;
+                        break;
                     }
                 }
             }
-            return -1;
+
+            if (changefrom > -1)
+            {
+                numbers.Insert(currchange + 2, numbers[changefrom]);
+                numbers.RemoveAt(changefrom);
+            }
+            return currchange;
         }
 
         public long NextSmaller(long n)
@@ -57,9 +70,9 @@ namespace NextSmallerNumberWithSameDigits
             List<int> numbers = NumToList(n);
 
             int changeindex = FindChange(numbers);
-            if (changeindex > -1)
+            if(changeindex < numbers.Count-1)
             {
-                numbers.Sort(0, changeindex, null);
+                numbers.Sort(0, changeindex+1, null);
                 return ListToNum(numbers);
             }
             return -1;
