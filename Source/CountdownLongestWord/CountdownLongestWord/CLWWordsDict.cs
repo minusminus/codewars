@@ -17,6 +17,10 @@ namespace CountdownLongestWord
         /// licznik slow zaczynajacych sie od danej litery (dla slow z posortowanych liter)
         /// </summary>
         public Dictionary<char, int> WordsStartsWith { get; } = new Dictionary<char, int>();
+        /// <summary>
+        /// licznik slow rozpoczynajacych sie od 3 literowych zbitek
+        /// </summary>
+        public Dictionary<string, int> WordsStartsWith3Letters { get;  } = new Dictionary<string, int>();
 
         public char[] StringToSortedLetters(string s)
         {
@@ -27,11 +31,13 @@ namespace CountdownLongestWord
 
         public string LettersToString(char[] letters)
         {
-            return letters.ToString();
+            return new string(letters);
         }
 
-        private void PrepareWordsDict(string[] words)
+        public void PrepareWordsDict(string[] words)
         {
+            WordsDict.Clear();
+            WordsStartsWith.Clear();
             foreach (string word in words)
             {
                 string w = word.ToUpper();
@@ -56,6 +62,19 @@ namespace CountdownLongestWord
                 else
                 {
                     WordsStartsWith.Add(s[0], 1);
+                }
+                    //licznik slow zaczynjacych sie od zbitek 3 literowych
+                if (s.Length >= 3)
+                {
+                    string three = s.Substring(0, 3);
+                    if (WordsStartsWith3Letters.TryGetValue(three, out i))
+                    {
+                        WordsStartsWith3Letters[three] = i + 1;
+                    }
+                    else
+                    {
+                        WordsStartsWith3Letters.Add(three, 1);
+                    }
                 }
             }
         }

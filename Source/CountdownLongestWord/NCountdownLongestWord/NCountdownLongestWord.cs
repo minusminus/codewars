@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NCountdownLongestWord
 {
@@ -8,6 +11,7 @@ namespace NCountdownLongestWord
     public class NCountdownLongestWord
     {
         private readonly CountdownLongestWord.CountdownLongestWord _pobj = new CountdownLongestWord.CountdownLongestWord();
+        private readonly CountdownLongestWord.CLWWordsDict _wd = new CountdownLongestWord.CLWWordsDict();
 
         [Test]
         public void TestTryGetValue()
@@ -72,6 +76,55 @@ namespace NCountdownLongestWord
             //foreach (KeyValuePair<char, int> pair in dict)
             //    Console.Write($"{pair.Key}={pair.Value},");
             //Console.WriteLine();
+        }
+
+        [Test]
+        public void CLWWordsDictStringConversions()
+        {
+            _wd.StringToSortedLetters("dbac").ShouldBe("abcd");
+            _wd.LettersToString(new char[] {'a', 'b', 'c', 'd'}).ShouldBe("abcd");
+        }
+
+        [Test]
+        public void WordDictTest()
+        {
+            string[] words = new string[4] {"abcd", "ab", "zyx", "utyg"};
+
+            _wd.PrepareWordsDict(words);
+
+            _wd.WordsDict.Sum(x => x.Value.Count).ShouldBe(words.Length);
+            _wd.WordsStartsWith.Sum(x => x.Value).ShouldBe(words.Length);
+            _wd.WordsDict.Count.ShouldBe(4);
+            _wd.WordsStartsWith.Count.ShouldBe(3);
+            foreach (KeyValuePair<char, int> pair in _wd.WordsStartsWith)
+            {
+                Console.WriteLine($"{pair.Key}={pair.Value}");
+            }
+        }
+
+        [Test]
+        public void WordDictTestFromFile()
+        {
+            string[] words = File.ReadAllLines(@"d:\projects\codewars_github\tools---numbertheory\Source\CountdownLongestWord\google-10000-english-no-swears.txt");
+            _wd.PrepareWordsDict(words);
+
+            _wd.WordsDict.Sum(x => x.Value.Count).ShouldBe(words.Length);
+            _wd.WordsStartsWith.Sum(x => x.Value).ShouldBe(words.Length);
+            Console.WriteLine($"sorted letters words: {_wd.WordsDict.Count} (of {words.Count()})");
+            Console.WriteLine($"starts with: {_wd.WordsStartsWith.Count}");
+            //int i = 1;
+            //foreach (KeyValuePair<char, int> pair in _wd.WordsStartsWith)
+            //{
+            //    Console.WriteLine($"{i}: {pair.Key}={pair.Value} (of {words.Count()}, {100.0 * (float)pair.Value / (float)words.Count()} %)");
+            //    i++;
+            //}
+            Console.WriteLine($"starts with 3 letters: {_wd.WordsStartsWith3Letters.Count} (total words {_wd.WordsStartsWith3Letters.Sum(x => x.Value)})");
+            //i = 1;
+            //foreach (KeyValuePair<string, int> pair in _wd.WordsStartsWith3Letters)
+            //{
+            //    Console.WriteLine($"{i}: {pair.Key}={pair.Value} (of {words.Count()}, {100.0 * (float)pair.Value / (float)words.Count()} %)");
+            //    i++;
+            //}
         }
     }
 }
