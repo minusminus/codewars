@@ -14,6 +14,10 @@ namespace CountdownLongestWord
         /// </summary>
         public Dictionary<string, List<string>> WordsDict { get; } = new Dictionary<string, List<string>>();
         /// <summary>
+        /// slownik zliczajacy slowa o danej dlugosci
+        /// </summary>
+        public Dictionary<int, int> WordsLengthCount { get;  } = new Dictionary<int, int>();
+        /// <summary>
         /// licznik slow zaczynajacych sie od danej litery (dla slow z posortowanych liter)
         /// </summary>
         public Dictionary<char, int> WordsStartsWith { get; } = new Dictionary<char, int>();
@@ -53,28 +57,25 @@ namespace CountdownLongestWord
                     ls = new List<string>() { w };
                     WordsDict.Add(s, ls);
                 }
-                    //licznik slow zaczynajacych sie od okreslonej litery
+                    //dlugosci slow
                 int i;
-                if (WordsStartsWith.TryGetValue(s[0], out i))
-                {
-                    WordsStartsWith[s[0]] = i + 1;
-                }
+                if (WordsLengthCount.TryGetValue(s.Length, out i))
+                    WordsLengthCount[s.Length] = i + 1;
                 else
-                {
+                    WordsLengthCount[s.Length] = 1;
+                    //licznik slow zaczynajacych sie od okreslonej litery
+                if (WordsStartsWith.TryGetValue(s[0], out i))
+                    WordsStartsWith[s[0]] = i + 1;
+                else
                     WordsStartsWith.Add(s[0], 1);
-                }
                     //licznik slow zaczynjacych sie od zbitek 3 literowych
                 if (s.Length >= 3)
                 {
                     string three = s.Substring(0, 3);
                     if (WordsStartsWith3Letters.TryGetValue(three, out i))
-                    {
                         WordsStartsWith3Letters[three] = i + 1;
-                    }
                     else
-                    {
                         WordsStartsWith3Letters.Add(three, 1);
-                    }
                 }
             }
         }

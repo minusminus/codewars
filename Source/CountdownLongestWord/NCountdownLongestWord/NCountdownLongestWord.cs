@@ -94,6 +94,7 @@ namespace NCountdownLongestWord
 
             _wd.WordsDict.Sum(x => x.Value.Count).ShouldBe(words.Length);
             _wd.WordsStartsWith.Sum(x => x.Value).ShouldBe(words.Length);
+            _wd.WordsLengthCount.Sum(x => x.Value).ShouldBe(words.Length);
             _wd.WordsDict.Count.ShouldBe(4);
             _wd.WordsStartsWith.Count.ShouldBe(3);
             foreach (KeyValuePair<char, int> pair in _wd.WordsStartsWith)
@@ -110,6 +111,7 @@ namespace NCountdownLongestWord
 
             _wd.WordsDict.Sum(x => x.Value.Count).ShouldBe(words.Length);
             _wd.WordsStartsWith.Sum(x => x.Value).ShouldBe(words.Length);
+            _wd.WordsLengthCount.Sum(x => x.Value).ShouldBe(words.Length);
             Console.WriteLine($"sorted letters words: {_wd.WordsDict.Count} (of {words.Count()})");
             Console.WriteLine($"starts with: {_wd.WordsStartsWith.Count}");
             //int i = 1;
@@ -125,6 +127,11 @@ namespace NCountdownLongestWord
             //    Console.WriteLine($"{i}: {pair.Key}={pair.Value} (of {words.Count()}, {100.0 * (float)pair.Value / (float)words.Count()} %)");
             //    i++;
             //}
+            Console.WriteLine($"words length: {_wd.WordsLengthCount.Count}");
+            foreach (KeyValuePair<int, int> pair in _wd.WordsLengthCount)
+            {
+                Console.WriteLine($"{pair.Key}: {pair.Value}");
+            }
         }
     }
 }
