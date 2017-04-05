@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLWWordsDict.cs" />
+    <Compile Include="CLWWordsGenNK.cs" />
     <Compile Include="CountdownLongestWord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
