@@ -8,44 +8,48 @@ namespace CountdownLongestWord
 {
     public class CLWWordsGenNK
     {
-        private string _sbase;
-        private bool[] _flags;
-        private int[] _idx;
-        private int _k;
+        private readonly string _sbase;
+        private readonly int[] _idx;
 
-        public void Init(string sbase, int k)
+        public CLWWordsGenNK(string sbase)
         {
             _sbase = sbase;
-            _k = k;
-            _flags = new bool[_sbase.Length];
-            for (int i = 0; i < _flags.Length; i++)
-                _flags[i] = (i < _k);
-            _idx = new int[_k];
-            for (int i = 0; i < _k; i++)
+            _idx = new int[_sbase.Length];
+        }
+
+        private string GetMaskedString(int k)
+        {
+            //return _idx.Select(i => _sbase[i]).ToString();
+            string res = "";
+            for (int i = 0; i < k; i++) res += _sbase[_idx[i]];
+            return res;
+        }
+
+        public void GenerateValues(int k, Action<string> processString )
+        {
+            for (int i = 0; i < k; i++)
                 _idx[i] = i;
-        }
+            int maxpos = _sbase.Length - 1;
+            int cpos = k - 1;
 
-        private string GetMaskedString()
-        {
-            return "";
-        }
-
-        public void GenerateValues()
-        {
-            int cpos = _k - 1;
-
-            for (int p = _idx[cpos]; p < _sbase.Length; p++)
+            while (cpos >= 0)
             {
-                string s = GetMaskedString();
-                //przetworzenie wygenerowanego stringa
+                while ((cpos >= 0) && (_idx[cpos] == maxpos))
+                {
+                    //jezeli ostatni dotarl do swojej ostatniej pozycji to cofamy sie w lewo
+                    cpos--;
+                    maxpos--;
+                }
+                for (int il = cpos; il >= 0; il--) //przesuniecie wszystkich flag o 1 w prawo
+                {
+                    string s = GetMaskedString(k);
+                    //tu przetworzenie wygenerowanego stringa
+                    processString(s);
+                    _idx[il]++;
+                }
+                for (int il = cpos - 1; il >= 0; il--) //cofniecie flag oprocz ostatniej
+                    _idx[il]--;
             }
-
         }
-
-        //public string NextVal()
-        //{
-        //    string res = "";
-        //    return res;
-        //}
     }
 }
