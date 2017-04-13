@@ -16,8 +16,8 @@ namespace NCountdownLongestWord
             
             _pobj.GenerateValues(k, (s)=> {testres.Add(s);});
 
-            //testres.Sort();
-            //expected.Sort();
+            testres.Sort();
+            expected.Sort();
             testres.ShouldBe(expected);
         }
 

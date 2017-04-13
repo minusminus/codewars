@@ -16,7 +16,7 @@ namespace CountdownLongestWord
         public CLWWordsGenNK(string sbase)
         {
             _sbase = sbase;
-            _idx = new int[_sbase.Length];
+            _idx = new int[_sbase.Length + 1];
         }
 
         private string GetMaskedString(int k)
@@ -29,41 +29,35 @@ namespace CountdownLongestWord
 
         public void GenerateValues(int k, Action<string> processString )
         {
-            for (int i = 0; i < _idx.Length; i++) _idx[i] = 0;
-            IntGenValues(k, k, _sbase.Length-1, processString);
-            //for (int i = 0; i < k; i++)
-            //    _idx[i] = i;
-            //int maxpos = _sbase.Length - 1;
-            //int cpos = k - 1;
-
-            //string s = GetMaskedString(k);  //pierwszy geenrowany ciag
-            //processString(s);
-            //while (cpos >= 0)
-            //{
-            //    while ((cpos >= 0) && (_idx[cpos] == maxpos))
-            //    {
-            //        //jezeli ostatni dotarl do swojej ostatniej pozycji to cofamy sie w lewo
-            //        cpos--;
-            //        maxpos--;
-            //    }
-            //    for (int il = cpos; il >= 0; il--) //przesuniecie wszystkich flag o 1 w prawo
-            //    {
-            //        _idx[il]++;
-            //        s = GetMaskedString(k);
-            //        processString(s);   
-            //    }
-            //    for (int il = cpos - 1; il >= 0; il--) //cofniecie flag oprocz ostatniej, tylko te dla ktorych nastepna nie jest na koncu
-            //        if (_idx[il + 1] < maxpos)
-            //            _idx[il]--;
-            //}
+            //for (int i = 0; i < k; i++) _idx[i] = 0;
+            _idx[k] = _sbase.Length;
+            IntGenValues(k, k, processString);
         }
 
-        private void IntGenValues(int totalk, int k, int maxpos, Action<string> processString)
+        /// <summary>
+        /// Generuje kolejne maski kombinacji (n po k)
+        /// Tablica indeksow jest dlugosci k+1, w ostatnim elemencie jest straznik o wartosci dlugosci stringa
+        /// Dla kazdego przesuniecia indeksu o jeden generowane sa wszystkie kombinacje na mniejszych indeksach
+        /// Przyklad (5 po 3):
+        /// 11100
+        /// 11010
+        /// 10110
+        /// 01110
+        /// 11001
+        /// 10101
+        /// 01101
+        /// 10011
+        /// 01011
+        /// 00111
+        /// </summary>
+        /// <param name="totalk"></param>
+        /// <param name="k"></param>
+        /// <param name="processString"></param>
+        private void IntGenValues(int totalk, int k, Action<string> processString)
         {
             if (k == 1)
             {
-                if (totalk == 1) maxpos++;
-                for (int i = 0; i < maxpos; i++)
+                for (int i = 0; i < _idx[k]; i++)
                 {
                     _idx[0] = i;
                     string s = GetMaskedString(totalk);
@@ -76,10 +70,10 @@ namespace CountdownLongestWord
                 string s = GetMaskedString(totalk);
                 processString(s);
 
-                while (_idx[k-1] < maxpos)
+                while (_idx[k-1] < _idx[k]-1)
                 {
                     _idx[k-1]++;
-                    IntGenValues(totalk, k - 1, _idx[k-1], processString);
+                    IntGenValues(totalk, k - 1, processString);
                 }
             }
         }
