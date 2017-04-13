@@ -12,6 +12,7 @@ namespace CountdownLongestWord
     {
         private readonly string _sbase;
         private readonly int[] _idx;
+        private char[] _strchars;
 
         public CLWWordsGenNK(string sbase)
         {
@@ -22,14 +23,16 @@ namespace CountdownLongestWord
         private string GetMaskedString(int k)
         {
             //return _idx.Select(i => _sbase[i]).ToString();
-            string res = "";
-            for (int i = 0; i < k; i++) res += _sbase[_idx[i]];
-            return res;
+            //string res = "";
+            //for (int i = 0; i < k; i++) res += _sbase[_idx[i]];
+            //return res;
+            for (int i = 0; i < k; i++) _strchars[i] = _sbase[_idx[i]];
+            return new string(_strchars);
         }
 
         public void GenerateValues(int k, Action<string> processString )
         {
-            //for (int i = 0; i < k; i++) _idx[i] = 0;
+            _strchars = new char[k];
             _idx[k] = _sbase.Length;
             IntGenValues(k, k, processString);
         }
