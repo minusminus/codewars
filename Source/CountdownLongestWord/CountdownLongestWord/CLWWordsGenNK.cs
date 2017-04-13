@@ -10,30 +10,37 @@ namespace CountdownLongestWord
 {
     public class CLWWordsGenNK
     {
-        private readonly string _sbase;
-        private readonly int[] _idx;
+        //private readonly string _sbase;
+        private int[] _idx;
         private char[] _strchars;
+        private char[] _sbasearr;
+
+        private void Init(char[] sarr)
+        {
+            _sbasearr = sarr;
+            _idx = new int[_sbasearr.Length + 1];
+        }
 
         public CLWWordsGenNK(string sbase)
         {
-            _sbase = sbase;
-            _idx = new int[_sbase.Length + 1];
+            Init(sbase.ToCharArray());
+        }
+
+        public CLWWordsGenNK(char[] sarr)
+        {
+            Init(sarr);
         }
 
         private string GetMaskedString(int k)
         {
-            //return _idx.Select(i => _sbase[i]).ToString();
-            //string res = "";
-            //for (int i = 0; i < k; i++) res += _sbase[_idx[i]];
-            //return res;
-            for (int i = 0; i < k; i++) _strchars[i] = _sbase[_idx[i]];
+            for (int i = 0; i < k; i++) _strchars[i] = _sbasearr[_idx[i]];
             return new string(_strchars);
         }
 
         public void GenerateValues(int k, Action<string> processString )
         {
             _strchars = new char[k];
-            _idx[k] = _sbase.Length;
+            _idx[k] = _sbasearr.Length;
             IntGenValues(k, k, processString);
         }
 

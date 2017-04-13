@@ -10,8 +10,11 @@ namespace NCountdownLongestWord
     [TestFixture]
     public class NCountdownLongestWord
     {
-        private readonly CountdownLongestWord.CountdownLongestWord _pobj = new CountdownLongestWord.CountdownLongestWord();
+        private static readonly string[] _words10k = File.ReadAllLines(@"d:\projects\codewars_github\tools---numbertheory\Source\CountdownLongestWord\google-10000-english-no-swears.txt");
+
+        private readonly CountdownLongestWord.CountdownLongestWord _pobj = new CountdownLongestWord.CountdownLongestWord(_words10k);
         private readonly CountdownLongestWord.CLWWordsDict _wd = new CountdownLongestWord.CLWWordsDict();
+
 
         [Test]
         public void TestTryGetValue()
@@ -132,6 +135,21 @@ namespace NCountdownLongestWord
             {
                 Console.WriteLine($"{pair.Key}: {pair.Value}");
             }
+        }
+
+        [Test]
+        public void KataBasicTests()
+        {
+            _pobj.LongestWord("POVMERKIA").ShouldBe(new string[] {"VAMPIRE", "IMPROVE"});
+
+            //_pobj.LongestWord("DVAVPALEM").ShouldBe(new string[] { "VAMPED", "VALVED", "PALMED" });
+            _pobj.LongestWord("DVAVPALEM").ShouldBe(new string[] { "PAMELA" });
+        }
+
+        [Test]
+        public void ShortBasicTests()
+        {
+            _pobj.LongestWord("TVAK").ShouldBe(new string[] {"VAT"});
         }
     }
 }
