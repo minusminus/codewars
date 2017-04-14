@@ -50,7 +50,8 @@ namespace CountdownLongestWord
                 List<string> ls;
                 if (WordsDict.TryGetValue(s, out ls))
                 {
-                    ls.Add(word);
+                    if (ls.IndexOf(w) == -1)
+                        ls.Add(w);
                 }
                 else
                 {

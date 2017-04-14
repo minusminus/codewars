@@ -12,7 +12,7 @@ namespace NCountdownLongestWord
     {
         private static readonly string[] _words10k = File.ReadAllLines(@"d:\projects\codewars_github\tools---numbertheory\Source\CountdownLongestWord\google-10000-english-no-swears.txt");
 
-        private readonly CountdownLongestWord.CountdownLongestWord _pobj = new CountdownLongestWord.CountdownLongestWord(_words10k);
+        private readonly CountdownLongestWord.CountdownLongestWord _pobj = new CountdownLongestWord.CountdownLongestWord();
         private readonly CountdownLongestWord.CLWWordsDict _wd = new CountdownLongestWord.CLWWordsDict();
 
 
@@ -140,16 +140,22 @@ namespace NCountdownLongestWord
         [Test]
         public void KataBasicTests()
         {
-            _pobj.LongestWord("POVMERKIA").ShouldBe(new string[] {"VAMPIRE", "IMPROVE"});
+            _pobj.LongestWord("POVMERKIA", _words10k).ShouldBe(new string[] { "IMPROVE", "VAMPIRE" });
 
             //_pobj.LongestWord("DVAVPALEM").ShouldBe(new string[] { "VAMPED", "VALVED", "PALMED" });
-            _pobj.LongestWord("DVAVPALEM").ShouldBe(new string[] { "PAMELA" });
+            _pobj.LongestWord("DVAVPALEM", _words10k).ShouldBe(new string[] { "PAMELA" });
         }
 
         [Test]
         public void ShortBasicTests()
         {
-            _pobj.LongestWord("TVAK").ShouldBe(new string[] {"VAT"});
+            _pobj.LongestWord("TVAK", _words10k).ShouldBe(new string[] {"VAT"});
+        }
+
+        [Test]
+        public void NoRepeatingWordsTest()
+        {
+            _pobj.LongestWord("EAEEAYITB", _words10k).ShouldBe(new string[] { "BEAT", "BETA", "BITE", "BYTE", "EBAY", "IEEE" });
         }
     }
 }
