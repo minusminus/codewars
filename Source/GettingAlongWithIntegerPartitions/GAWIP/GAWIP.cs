@@ -15,17 +15,21 @@ namespace GAWIP
 
         private void CalcNextItermediate(int n, int curr, int ix)
         {
-            //Console.WriteLine($"n={n}, curr={curr}, ix={ix}");
-            if (curr == 1)
+            Console.Write($"({n},{curr},{ix}) ");
+            if (curr <= 1)
             {
                 //Console.WriteLine($"[{ix}]={_idx[ix - 1]}");
                 _products[_idx[ix - 1]] = true;
+                Console.WriteLine($"*p={_idx[ix - 1]}");
             }
             else
             {
                 _idx[ix] = _idx[ix - 1]*curr;
-                for(int j=n-curr; j>0; j--)
-                    CalcNextItermediate(curr, j, ix + 1);
+                for (int j = n - curr; j > 0; j--)
+                {
+                    Console.WriteLine($" p={_idx[ix]}, ");
+                    CalcNextItermediate(n-curr, j, ix + 1);
+                }
             }
         }
 
@@ -36,6 +40,7 @@ namespace GAWIP
 
             for (int i = n - 1; i >= 2; i--)
             {
+                Console.WriteLine($"=== {i}:");
                 CalcNextItermediate(n, i, 1);
             }
         }
@@ -52,7 +57,7 @@ namespace GAWIP
                     cnt++;
                     max = (i > max) ? i : max;
                     sum += i;
-                    //Console.WriteLine($"{i}");
+                    Console.WriteLine($"{i}");
                 }
             }
             Console.WriteLine($"cnt={cnt}, max={max}, sum={sum}");

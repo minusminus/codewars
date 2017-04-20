@@ -32,6 +32,15 @@ namespace NGAWIP
         }
 
         [Test]
+        public void Test8()
+        {
+            //powinno byc:
+            //prod(8) -> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 16, 18]
+            //sum=116, cnt=14, max=18
+            _pobj.Part(8).ShouldBe("Range: 17 Average: 8.28 Median: 7.50");
+        }
+
+        [Test]
         public void Test10()
         {
             _pobj.Part(10).ShouldBe("Range: 47 Average: 15.95 Median: 11.50");
