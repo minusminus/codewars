@@ -27,8 +27,8 @@ namespace NGAWIP
         [Test]
         public void Test_6_7()
         {
-            _pobj.Part(6).ShouldBe("Range: 7 Average: 4.14 Median: 4.00");
-            _pobj.Part(7).ShouldBe("Range: 11 Average: 5.80 Median: 5.50");
+            _pobj.Part(6).ShouldBe("Range: 8 Average: 4.75 Median: 4.50");
+            _pobj.Part(7).ShouldBe("Range: 11 Average: 6.09 Median: 6.00");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace NGAWIP
         [Test]
         public void Test10()
         {
-            _pobj.Part(10).ShouldBe("Range: 47 Average: 15.95 Median: 11.50");
+            _pobj.Part(10).ShouldBe("Range: 35 Average: 15.00 Median: 12.00");
         }
 
         [Test]

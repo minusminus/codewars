@@ -12,24 +12,35 @@ namespace GAWIP
     {
         private BitArray _products;
         private int[] _idx;
+        private int iterscnt;
 
         private void CalcNextItermediate(int n, int curr, int ix)
         {
-            Console.Write($"({n},{curr},{ix}) ");
-            if (curr <= 1)
+            ////Console.Write($"({n},{curr},{ix}) ");
+            //if (curr <= 1)
+            //{
+            //    //Console.WriteLine($"[{ix}]={_idx[ix - 1]}");
+            //    _products[_idx[ix - 1]] = true;
+            //    //Console.WriteLine($"*p={_idx[ix - 1]}");
+            //}
+            //else
+            //{
+            //    _idx[ix] = _idx[ix - 1]*curr;
+            //    _products[_idx[ix]] = true;
+            //    for (int j = n - curr; j > 1; j--)
+            //    {
+            //        //Console.WriteLine($" p={_idx[ix]}, ");
+            //        CalcNextItermediate(n-curr, j, ix + 1);
+            //    }
+            //}
+            iterscnt++;
+            _idx[ix] = _idx[ix - 1] * curr;
+            //_products[_idx[ix]] = true;
+            for (int j = n - curr; j > 1; j--)
             {
-                //Console.WriteLine($"[{ix}]={_idx[ix - 1]}");
-                _products[_idx[ix - 1]] = true;
-                Console.WriteLine($"*p={_idx[ix - 1]}");
-            }
-            else
-            {
-                _idx[ix] = _idx[ix - 1]*curr;
-                for (int j = n - curr; j > 0; j--)
-                {
-                    Console.WriteLine($" p={_idx[ix]}, ");
-                    CalcNextItermediate(n-curr, j, ix + 1);
-                }
+                //Console.WriteLine($" p={_idx[ix]}, ");
+                //Console.Write($"({ix},{j}),");
+                CalcNextItermediate(n - curr, j, ix + 1);
             }
         }
 
@@ -40,8 +51,10 @@ namespace GAWIP
 
             for (int i = n - 1; i >= 2; i--)
             {
+                iterscnt = 0;
                 Console.WriteLine($"=== {i}:");
                 CalcNextItermediate(n, i, 1);
+                Console.WriteLine($"iters={iterscnt}");
             }
         }
 
@@ -57,10 +70,10 @@ namespace GAWIP
                     cnt++;
                     max = (i > max) ? i : max;
                     sum += i;
-                    Console.WriteLine($"{i}");
+                    //Console.WriteLine($"{i}");
                 }
             }
-            Console.WriteLine($"cnt={cnt}, max={max}, sum={sum}");
+            //Console.WriteLine($"cnt={cnt}, max={max}, sum={sum}");
             int i1, i2;
             if (cnt%2 == 1)
                 i1 = i2 = cnt/2 + 1;
@@ -82,7 +95,8 @@ namespace GAWIP
             }
 
             var culture = CultureInfo.CreateSpecificCulture("en-US");
-            return $"Range: {max-1} Average: {((double)sum/(double)cnt).ToString("F2", culture)} Median: {((double)(i1+i2)/2.0).ToString("F2", culture)}";
+            //return $"Range: {max-1} Average: {((double)sum/(double)cnt).ToString("F2", culture)} Median: {((double)(i1+i2)/2.0).ToString("F2", culture)}";
+            return $"Range: {max - 1} Average: {(Math.Floor(100.0*((double)sum / (double)cnt))/100.0).ToString("F2", culture)} Median: {((double)(i1 + i2) / 2.0).ToString("F2", culture)}";
         }
 
         public string Part(long n)
