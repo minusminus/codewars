@@ -7,7 +7,7 @@ namespace NGAWIP
     [TestFixture]
     public class NGAWIP
     {
-        private GAWIP.GAWIP _pobj = new GAWIP.GAWIP();
+        private GAWIP.GAWIP2 _pobj = new GAWIP.GAWIP2();
 
         [Test]
         public void BasicKataTests()
@@ -22,6 +22,12 @@ namespace NGAWIP
         public void Test1()
         {
             _pobj.Part(1).ShouldBe("Range: 0 Average: 1.00 Median: 1.00");
+        }
+
+        [Test]
+        public void Test5()
+        {
+            _pobj.Part(5).ShouldBe("Range: 5 Average: 3.50 Median: 3.50");
         }
 
         [Test]

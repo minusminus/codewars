@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace GAWIP
 {
+    /// <summary>
+    /// bruteforce solution
+    /// </summary>
     public class GAWIP
     {
         private BitArray _products;
