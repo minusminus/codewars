@@ -43,7 +43,7 @@ namespace NGAWIP
             //powinno byc:
             //prod(8) -> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 16, 18]
             //sum=116, cnt=14, max=18
-            _pobj.Part(8).ShouldBe("Range: 17 Average: 8.28 Median: 7.50");
+            _pobj.Part(8).ShouldBe("Range: 17 Average: 8.29 Median: 7.50");
         }
 
         [Test]

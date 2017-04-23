@@ -21,27 +21,14 @@ namespace GAWIP
         private void CalcOneLevel(int total, int x)
         {
             int ones = total - x;
-            //for (int i = Math.Min(ones, x); i >= 0; i--)
-            ////for (int i = 1; i<=Math.Min(ones, x); i++)
-            //{
-            //    List<long> l = new List<long>();
-            //    for (int j = 0; j <= i; j++)
-            //    {
-            //        //l.AddRange(_arr[x - j][j].Select(val => x * val));
-            //        foreach (long val in _arr[x-j][j])
-            //            l.Add(x*val);
-            //    }
-            //    //_arr[x][i] = l;
-            //    _arr[x].Add(l);
-            //}
-
             for (int v = x; v > 1; v--) //dla kazdej liczby od x do 2
             {
                 List<long> l = new List<long>();
 
                 for (int j = Math.Min(ones, v); j > 1; j--)
                 {
-                    foreach (long val in _arr[j][ones-j])
+                    //l.AddRange(_arr[j][ones - j].Select(val => v*val));
+                    foreach (long val in _arr[j][ones - j]) //jest nieco szybsze niz linq (dla 50 0:00.28, z linq 0:0.034)
                         l.Add(v * val);
                 }
 
@@ -93,7 +80,7 @@ namespace GAWIP
             }
 
             var culture = CultureInfo.CreateSpecificCulture("en-US");
-            return $"Range: {res.Last() - res.First()} Average: {(Math.Floor(100.0 * ((double)res.Sum() / (double)res.Count)) / 100.0).ToString("F2", culture)} Median: {((double)(i1 + i2) / 2.0).ToString("F2", culture)}";
+            return $"Range: {res.Last() - res.First()} Average: {(100.0 * ((double)res.Sum() / (double)res.Count) / 100.0).ToString("F2", culture)} Median: {((double)(i1 + i2) / 2.0).ToString("F2", culture)}";
         }
 
         public string Part(long n)
