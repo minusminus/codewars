@@ -49,13 +49,13 @@ namespace NGAWIP
         [Test]
         public void Test10()
         {
-            _pobj.Part(10).ShouldBe("Range: 35 Average: 15.00 Median: 12.00");
+            _pobj.Part(10).ShouldBe("Range: 35 Average: 15.00 Median: 14.00");
         }
 
         [Test]
         public void Test50()
         {
-            _pobj.Part(50).ShouldBe("Range: 593711 Average: 35074.03 Median: 1628.50");
+            _pobj.Part(50).ShouldBe("Range: 86093441 Average: 1552316.81 Median: 120960.00");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,18 +21,31 @@ namespace GAWIP
         private void CalcOneLevel(int total, int x)
         {
             int ones = total - x;
-            for (int i = Math.Min(ones, x); i >= 0; i--)
-            //for (int i = 1; i<=Math.Min(ones, x); i++)
+            //for (int i = Math.Min(ones, x); i >= 0; i--)
+            ////for (int i = 1; i<=Math.Min(ones, x); i++)
+            //{
+            //    List<long> l = new List<long>();
+            //    for (int j = 0; j <= i; j++)
+            //    {
+            //        //l.AddRange(_arr[x - j][j].Select(val => x * val));
+            //        foreach (long val in _arr[x-j][j])
+            //            l.Add(x*val);
+            //    }
+            //    //_arr[x][i] = l;
+            //    _arr[x].Add(l);
+            //}
+
+            for (int v = x; v > 1; v--) //dla kazdej liczby od x do 2
             {
                 List<long> l = new List<long>();
-                for (int j = 0; j <= i; j++)
+
+                for (int j = Math.Min(ones, v); j > 1; j--)
                 {
-                    //l.AddRange(_arr[x - j][j].Select(val => x * val));
-                    foreach (long val in _arr[x-j][j])
-                        l.Add(x*val);
+                    foreach (long val in _arr[j][ones-j])
+                        l.Add(v * val);
                 }
-                //_arr[x][i] = l;
-                _arr[x].Add(l);
+
+                _arr[v].Add(l);
             }
         }
 
@@ -50,6 +64,38 @@ namespace GAWIP
                 CalcOneLevel(n, x);
         }
 
+        private string PrepareResult(int n)
+        {
+            List<long> res = new List<long>();
+            foreach (var xlist in _arr)
+                foreach (var l in xlist)
+                    res.AddRange(l);
+            res = res.Distinct().ToList();
+            res.Sort();
+
+            //Console.WriteLine($"{res.Count}");
+            //foreach (long l in res)
+            //    Console.Write($"{l},");
+            //Console.WriteLine("");
+
+            long i1, i2;
+            if (res.Count%2 == 1)   //res is 0 based
+            {
+                //i1 = i2 = res[res.Count/2 + 1];
+                i1 = i2 = res[res.Count / 2];
+            }
+            else
+            {
+                //i1 = res[res.Count/2];
+                //i2 = res[res.Count/2 + 1];
+                i1 = res[res.Count / 2 - 1];
+                i2 = res[res.Count / 2];
+            }
+
+            var culture = CultureInfo.CreateSpecificCulture("en-US");
+            return $"Range: {res.Last() - res.First()} Average: {(Math.Floor(100.0 * ((double)res.Sum() / (double)res.Count)) / 100.0).ToString("F2", culture)} Median: {((double)(i1 + i2) / 2.0).ToString("F2", culture)}";
+        }
+
         public string Part(long n)
         {
             _arr = new List<List<long>>[n + 1];
@@ -57,8 +103,7 @@ namespace GAWIP
                 _arr[i] = new List<List<long>>();
 
             CalcProducts((int)n);
-
-            return "";
+            return PrepareResult((int)n);
         }
     }
 }
