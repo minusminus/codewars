@@ -28,7 +28,7 @@ namespace GAWIP
                 for (int j = Math.Min(ones, v); j > 1; j--)
                 {
                     //l.AddRange(_arr[j][ones - j].Select(val => v*val));
-                    foreach (long val in _arr[j][ones - j]) //jest nieco szybsze niz linq (dla 50 0:00.28, z linq 0:0.034)
+                    foreach (long val in _arr[j][ones - j]) //jest nieco szybsze niz linq (dla 50 0:00.28, z linq 0:0.34)
                         l.Add(v * val);
                 }
 
