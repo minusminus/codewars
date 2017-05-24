@@ -9,19 +9,24 @@ namespace CCC
     /// <summary>
     /// algorytm podobny do wykorzystanego w GettingAlongWithIntegerPartitions (wersja GAWIP2)
     /// 
+    /// 
+    /// UWAGA: ograniczenie wyniku do int wynika z definicji zadania (klasy do uzupelnienia w codewars)
     /// </summary>
     public class CCC
     {
-        private List<List<long>>[] _arr;
+        private int DPProcess(int money, int[] sortedcoins, int[,] dp)
+        {
+            return 0;
+        }
 
         public int CountCombinations(int money, int[] coins)
         {
-            Array.Sort(coins);  //wartosci do rozkladu posortowane
-            _arr = new List<List<long>>[coins.Length + 1];
-            for (int i = 0; i < _arr.Length; i++)
-                _arr[i] = new List<List<long>>();
+            int[] sortedcoins = coins.Where(x => (x > 0) && (x <= money))
+                .OrderBy(x => x)
+                .ToArray();
+            int[,] dp = new int[money, sortedcoins.Count()];
 
-            return 0;
+            return DPProcess(money, sortedcoins, dp);
         }
     }
 }
