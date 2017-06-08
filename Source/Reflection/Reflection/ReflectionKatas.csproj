@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ReflectionAddMemberResults.cs" />
+    <Compile Include="ReflectionCompleteInvoke.cs" />
     <Compile Include="ReflectionGetAllMethods.cs" />
     <Compile Include="ReflectionGetType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
