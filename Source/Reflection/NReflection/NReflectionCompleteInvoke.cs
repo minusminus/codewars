@@ -17,6 +17,20 @@ namespace NReflection
         }
     }
 
+    public class testClassCIConstructor
+    {
+        public testClassCIConstructor(string text)
+        {
+            testvalue = text;
+        }
+
+        public string testvalue = "xyz";
+        public string doit()
+        {
+            return testvalue;
+        }
+    }
+
     public class NReflectionCompleteInvoke
     {
         Reflection.ReflectionCompleteInvoke _pobj = new Reflection.ReflectionCompleteInvoke();
@@ -44,6 +58,20 @@ namespace NReflection
         public void SmallObjectTest()
         {
             _pobj.InvokeMethod("testClassCI").ShouldBe(Helper.returnvalue);
+        }
+
+        [Test]
+        public void AssemblyQualifiedNameTest()
+        {
+            Console.WriteLine(Helper.GetType().AssemblyQualifiedName);
+            _pobj.InvokeMethod(Helper.GetType().AssemblyQualifiedName).ShouldBe(Helper.returnvalue);
+        }
+
+        [Test]
+        public void NoDefaultConstrucotrTest()
+        {
+            testClassCIConstructor tc = new testClassCIConstructor(null);
+            _pobj.InvokeMethod(tc.GetType().AssemblyQualifiedName).ShouldBe(tc.testvalue);
         }
     }
 }
