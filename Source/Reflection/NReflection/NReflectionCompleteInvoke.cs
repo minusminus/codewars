@@ -31,6 +31,7 @@ namespace NReflection
         }
     }
 
+    [TestFixture]
     public class NReflectionCompleteInvoke
     {
         Reflection.ReflectionCompleteInvoke _pobj = new Reflection.ReflectionCompleteInvoke();

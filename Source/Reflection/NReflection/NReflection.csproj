@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NReflectionAddMemberResults.cs" />
+    <Compile Include="NReflectionCallMeBack.cs" />
     <Compile Include="NReflectionCompleteInvoke.cs" />
     <Compile Include="NReflectionGetAllMethods.cs" />
     <Compile Include="NReflectionGetTypeTests.cs" />
