@@ -1,0 +1,4 @@
+http://friweb.pl/jak-poprawnie-zsumowac-milion-floatow/
+
+SUmowanie duzej tablicy floatow generuje spory blad, mozna wykorzystujac algorytm Kahana zmniejszyc ten blad.
+Jak¹œ treœæ zadania trzeba by wymyslec
