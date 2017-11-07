@@ -72,7 +72,7 @@ namespace NumberTheory
         /// <param name="l"></param>
         /// <param name="k"></param>
         /// <returns></returns>
-        public static long GCDExt(long a, long b, ref long l, ref long k)
+        public static long GCDExt(long a, long b, out long l, out long k)
         {
             if (a == 0)
             {
@@ -80,7 +80,7 @@ namespace NumberTheory
                 k = 1;
                 return b;
             }
-            long d = GCDExt(b%a, a, ref k, ref l);
+            long d = GCDExt(b%a, a, out k, out l);
             l -= (b/a)*k;
             return d;
         }

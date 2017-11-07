@@ -29,14 +29,14 @@ namespace N_NumberTheory
         [Test]
         public void TestGCDExt()
         {
-            long l = 0, k = 0;
+            long l, k;
             long d;
 
-            d = NumbersTheory.GCDExt(10, 15, ref l, ref k);
+            d = NumbersTheory.GCDExt(10, 15, out l, out k);
             d.ShouldBe(5);
             l.ShouldBe(-1);
             k.ShouldBe(1);
-            d = NumbersTheory.GCDExt(123, 291, ref l, ref k);
+            d = NumbersTheory.GCDExt(123, 291, out l, out k);
             d.ShouldBe(3);
             l.ShouldBe(-26);
             k.ShouldBe(11);
