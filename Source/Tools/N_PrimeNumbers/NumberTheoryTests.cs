@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using NumberTheory;
 using NUnit.Framework;
 using Shouldly;
@@ -23,6 +24,22 @@ namespace N_NumberTheory
 
             NumbersTheory.GCDBinary(48, 180).ShouldBe(12);
             NumbersTheory.GCDBinary(180, 48).ShouldBe(12);
+        }
+
+        [Test]
+        public void TestGCDExt()
+        {
+            long l = 0, k = 0;
+            long d;
+
+            d = NumbersTheory.GCDExt(10, 15, ref l, ref k);
+            d.ShouldBe(5);
+            l.ShouldBe(-1);
+            k.ShouldBe(1);
+            d = NumbersTheory.GCDExt(123, 291, ref l, ref k);
+            d.ShouldBe(3);
+            l.ShouldBe(-26);
+            k.ShouldBe(11);
         }
 
         [Test]
