@@ -9,18 +9,18 @@ namespace Skyscrapers
     class SkyscraperData
     {
         //public int size;
-        public readonly string[,] Data;
+        public readonly int[,] Data;
 
         public SkyscraperData(int N)
         {
             //size = N;
-            Data = new string[N, N];
+            Data = new int[N, N];
         }
 
         public SkyscraperData(SkyscraperData obj)
         {
             //size = obj.size;
-            Data = (string[,]) obj.Data.Clone();
+            Data = (int[,]) obj.Data.Clone();
         }
     }
 }
