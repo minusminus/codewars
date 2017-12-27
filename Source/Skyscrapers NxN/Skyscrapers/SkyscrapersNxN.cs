@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,54 @@ namespace Skyscrapers
             return true;
         }
 
+        private bool CheckDataCorrect(SkyscraperData d, int[] constraints)
+        {
+            if (!CheckDataReduced(d)) return false;
+
+            for (int i = 0; i < _n; i++)
+            {
+                //poziomo
+                int v = 1;
+                int highest = d.Data[i, 0];
+                for (int j = 0; j < _n; j++)
+                    if (d.Data[i, j] > highest)
+                    {
+                        v++;
+                        highest = d.Data[i, j];
+                    }
+                if ((constraints[4*_n - 1 - i] != 0) && (constraints[4*_n - 1 - i] != v)) return false;
+                v = 1;
+                highest = d.Data[i, _n - 1];
+                for (int j = _n - 1; j >= 0; j--)
+                    if (d.Data[i, j] > highest)
+                    {
+                        v++;
+                        highest = d.Data[i, j];
+                    }
+                if ((constraints[_n + i] != 0) && (constraints[_n + i] != v)) return false;
+                //pionowo
+                v = 1;
+                highest = d.Data[0, i];
+                for (int j = 0; j < _n; j++)
+                    if (d.Data[j, i] > highest)
+                    {
+                        v++;
+                        highest = d.Data[j, i];
+                    }
+                if ((constraints[i] != 0) && (constraints[i] != v)) return false;
+                v = 1;
+                highest = d.Data[_n - 1, i];
+                for (int j = _n - 1; j >= 0; j--)
+                    if (d.Data[j, i] > highest)
+                    {
+                        v++;
+                        highest = d.Data[j, i];
+                    }
+                if ((constraints[3 * _n - 1 - i] != 0) && (constraints[3*_n - 1 - i] != v)) return false;
+            }
+            return true;
+        }
+
         private void ReduceRowsCols(SkyscraperData d, List<Tuple<int, int>> proc)
         {
             int iproc = 0;
@@ -48,16 +97,22 @@ namespace Skyscrapers
                 for (int i = 0; i < _n; i++)
                 {
                     if (i == col) continue;
-                    d.RemoveElementMask(row, i, mask);
-                    if ((d.CountBits(row, i) == 1) && (proc.Any(x => (x.Item1 == row) && (x.Item2 == i))))
-                        proc.Add(new Tuple<int, int>(row, i));
+                    if (d.CountBits(row, i) > 1)
+                    {
+                        d.RemoveElementMask(row, i, mask);
+                        if ((d.CountBits(row, i) == 1) && (!proc.Any(x => (x.Item1 == row) && (x.Item2 == i))))
+                            proc.Add(new Tuple<int, int>(row, i));
+                    }
                 }
                 for (int i = 0; i < _n; i++)
                 {
                     if (i == row) continue;
-                    d.RemoveElementMask(i, col, mask);
-                    if ((d.CountBits(row, i) == 1) && (proc.Any(x => (x.Item1 == i) && (x.Item2 == col))))
-                        proc.Add(new Tuple<int, int>(i, col));
+                    if (d.CountBits(i, col) > 1)
+                    {
+                        d.RemoveElementMask(i, col, mask);
+                        if ((d.CountBits(i, col) == 1) && (!proc.Any(x => (x.Item1 == i) && (x.Item2 == col))))
+                            proc.Add(new Tuple<int, int>(i, col));
+                    }
                 }
                 iproc++;
             }
@@ -100,19 +155,55 @@ namespace Skyscrapers
             ReduceRowsCols(d, proc);
         }
 
+        public SkyscraperData FindSolution(SkyscraperData d, int[] constraints)
+        {
+            if (CheckDataCorrect(d, constraints)) return d;
+
+            List<Tuple<int, Tuple<int,int>>> cntList = new List<Tuple<int, Tuple<int, int>>>();
+            for(int i=0; i<_n; i++)
+                for (int j = 0; j < _n; j++)
+                {
+                    int bits = d.CountBits(i, j);
+                    if (bits > 1)
+                        cntList.Add(new Tuple<int, Tuple<int, int>>(bits, new Tuple<int, int>(i, j)));
+                }
+            cntList.Sort((x, y) => x.Item1.CompareTo(y.Item1));
+
+            for (int i = 0; i < cntList.Count - 1; i++)
+            {
+                int row = cntList[i].Item2.Item1;
+                int col = cntList[i].Item2.Item2;
+                int el = d.Data[row, col];
+                for (int m = 1; m <= _n; m++)
+                    if ((el & SkyscraperData.Masks[m]) != 0)
+                    {
+                        SkyscraperData newd = new SkyscraperData(d);
+                        newd.Data[row, col] = SkyscraperData.Masks[m];
+                        List<Tuple<int, int>> proc = new List<Tuple<int, int>>() {new Tuple<int, int>(row, col)};
+                        ReduceRowsCols(newd, proc);
+                        //if (CheckDataCorrect(newd, constraints)) return newd;
+                        newd = FindSolution(newd, constraints);
+                        if (newd != null) return newd;
+                    }
+            }
+
+            return null;
+        }
+
         public int[][] Solve(int[] constraints)
         {
             SkyscraperData d = CreateInitialData();
             ApplyConstraints(d, constraints);
 
+            SkyscraperData dres = FindSolution(d, constraints);
+            if (dres == null) throw new Exception("dres == null");
 
-            //if(!CheckDataReduced(d)) throw new Exception("Data not reduced");
             int[][] res = new int[_n][];
             for (int i = 0; i < _n; i++)
             {
                 res[i]=new int[_n];
                 for (int j = 0; j < _n; j++)
-                    res[i][j] = Array.IndexOf(SkyscraperData.Masks, d.Data[i, j]);
+                    res[i][j] = Array.IndexOf(SkyscraperData.Masks, dres.Data[i, j]);
             }
             return res;
         }

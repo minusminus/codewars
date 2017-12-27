@@ -36,7 +36,7 @@ namespace NSkyscrapers
 
             SkyscraperData data = _pobj.CreateInitialData();
             _pobj.ApplyConstraints(data, clues);
-            data.Data.ShouldBe(expected);
+            data.Data.ShouldBe(expected, "first test failed");
 
             clues = new[]
             {
@@ -54,7 +54,7 @@ namespace NSkyscrapers
             };
             data = _pobj.CreateInitialData();
             _pobj.ApplyConstraints(data, clues);
-            data.Data.ShouldBe(expected);
+            data.Data.ShouldBe(expected, "second test failed");
         }
     }
 }
