@@ -41,7 +41,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NSkyscraperData.cs" />
     <Compile Include="NSkyscrapers.cs" />
+    <Compile Include="NSkyscrapersNxNApplyConstraints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -11,62 +11,21 @@ namespace Skyscrapers
     /// 
     /// ograniczenie N do 9
     /// </summary>
-    class SkyscrapersNxN
+    public class SkyscrapersNxN
     {
-        private const int MaxN = 9;
-        private static readonly int[] Masks = new int[MaxN + 1] { 0, 1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7, 1 << 8 };
-        private static readonly int[] MasksRev = new int[MaxN + 1] { 0, Masks[1] ^ -1, Masks[2] ^ -1, Masks[3] ^ -1, Masks[4] ^ -1, Masks[5] ^ -1, Masks[6] ^ -1, Masks[7] ^ -1, Masks[8] ^ -1, Masks[9] ^ -1 };
-
-        private readonly int _initValue;
         private readonly int _n;
 
         public SkyscrapersNxN(int N)
         {
             _n = N;
-            _initValue = GenerateInitValue(N);
         }
 
-        private int GenerateInitValue(int N)
-        {
-            int res = 0;
-            for (int i = 0; i < N; i++)
-                res |= Masks[i+1];
-            return res;
-        }
-
-        /// <summary>
-        /// Zwraca ilosc ustawionych bitow metodą Briana Kernighana, ponieważ ustawionych bitów może być max _n
-        /// https://stackoverflow.com/a/12171691/5912466
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private int CountBits(int value)
-        {
-            int cnt = 0;
-            while (value != 0)
-            {
-                cnt++;
-                value &= value - 1;
-            }
-            return cnt;
-        }
-
-        private int SetElement(int val, int num)
-        {
-            return val | Masks[num];
-        }
-
-        private int RemoveElement(int val, int num)
-        {
-            return val & MasksRev[num];
-        }
-
-        private SkyscraperData CreateInitialData()
+        public SkyscraperData CreateInitialData()
         {
             SkyscraperData d = new SkyscraperData(_n);
             for(int i=0; i<_n; i++)
                 for (int j = 0; j < _n; j++)
-                    d.Data[i, j] = _initValue;
+                    d.Data[i, j] = SkyscraperData.InitialValues[_n];
             return d;
         }
 
@@ -74,32 +33,71 @@ namespace Skyscrapers
         {
             for (int i = 0; i < _n; i++)
                 for (int j = 0; j < _n; j++)
-                    if (CountBits(d.Data[i, j]) != 1) return false;
+                    if (d.CountBits(i, j) != 1) return false;
             return true;
         }
 
-        private void ApplyConstraints(SkyscraperData d, int[] constraints)
+        private void ReduceRowsCols(SkyscraperData d, List<Tuple<int, int>> proc)
         {
-            for(int i=0; i<constraints.Length; i++)
+            int iproc = 0;
+            while (iproc < proc.Count)
+            {
+                int row = proc[iproc].Item1;
+                int col = proc[iproc].Item2;
+                int mask = d.Data[row, col] ^ -1;
+                for (int i = 0; i < _n; i++)
+                {
+                    if (i == col) continue;
+                    d.RemoveElementMask(row, i, mask);
+                    if ((d.CountBits(row, i) == 1) && (proc.Any(x => (x.Item1 == row) && (x.Item2 == i))))
+                        proc.Add(new Tuple<int, int>(row, i));
+                }
+                for (int i = 0; i < _n; i++)
+                {
+                    if (i == row) continue;
+                    d.RemoveElementMask(i, col, mask);
+                    if ((d.CountBits(row, i) == 1) && (proc.Any(x => (x.Item1 == i) && (x.Item2 == col))))
+                        proc.Add(new Tuple<int, int>(i, col));
+                }
+                iproc++;
+            }
+        }
+
+        public void ApplyConstraints(SkyscraperData d, int[] constraints)
+        {
+            //ograniczenia od lewej do prawej po N rzedow
+            //po przejsciu N rzedow obrot tablicy w prawo i analiza kolejnych rzedow
+            for (int i = constraints.Length - 1; i >= 0; i--)
+            {
                 if (constraints[i] > 0)
                 {
-                    int section = i/4;
-                    //narazie dla sekcji 3 (od lewej do prawej)
-                    int row = i%4;
+                    int row = _n - 1 - i%_n;
                     if (constraints[i] == _n)
                     {
                         for (int k = 0; k < _n; k++)
-                            d.Data[row, k] = Masks[_n - k];
+                            d.Data[row, k] = SkyscraperData.Masks[k + 1];
                     }
                     else if (constraints[i] == 1)
                     {
-                        d.Data[row, _n - 1] = Masks[_n];
+                        d.Data[row, 0] = SkyscraperData.Masks[_n];
                     }
                     else
                     {
-                        
+                        for(int el=_n; el>1; el--)
+                            for (int k = 0; k < constraints[i] - 1 - (_n - el); k++)
+                                d.RemoveElement(row, k, el);
                     }
                 }
+                if (i%_n == 0)
+                    d.RotateRight();
+            }
+            //po nalozeniu ograniczen uwzglednienie wszystkich powstalych pozycji jednoelementowych (redukcja w wierszach i kolumnach)
+            List<Tuple<int, int>> proc = new List<Tuple<int, int>>();
+            for(int i=0; i<_n; i++)
+                for(int j=0; j<_n; j++)
+                    if (d.CountBits(i, j) == 1)
+                        proc.Add(new Tuple<int, int>(i, j));
+            ReduceRowsCols(d, proc);
         }
 
         public int[][] Solve(int[] constraints)
@@ -107,7 +105,16 @@ namespace Skyscrapers
             SkyscraperData d = CreateInitialData();
             ApplyConstraints(d, constraints);
 
-            return null;
+
+            //if(!CheckDataReduced(d)) throw new Exception("Data not reduced");
+            int[][] res = new int[_n][];
+            for (int i = 0; i < _n; i++)
+            {
+                res[i]=new int[_n];
+                for (int j = 0; j < _n; j++)
+                    res[i][j] = Array.IndexOf(SkyscraperData.Masks, d.Data[i, j]);
+            }
+            return res;
         }
     }
 }

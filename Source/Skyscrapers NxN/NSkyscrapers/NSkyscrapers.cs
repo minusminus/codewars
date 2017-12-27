@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Shouldly;
+using Skyscrapers;
 
 namespace NSkyscrapers
 {
@@ -8,7 +9,6 @@ namespace NSkyscrapers
     public class NSkyscrapers
     {
         private readonly Skyscrapers.Skyscrapers4x4 _pobj = new Skyscrapers.Skyscrapers4x4();
-
 
         [Test]
         public void BasicKataTests()
