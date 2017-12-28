@@ -9,10 +9,39 @@ namespace Skyscrapers
 {
     public class SkyscraperData
     {
-        private const int MaxN = 9;
-        public static readonly int[] Masks = new int[MaxN + 1] { 0, 1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7, 1 << 8 };
-        public static readonly int[] MasksRev = new int[MaxN + 1] { 0, Masks[1] ^ -1, Masks[2] ^ -1, Masks[3] ^ -1, Masks[4] ^ -1, Masks[5] ^ -1, Masks[6] ^ -1, Masks[7] ^ -1, Masks[8] ^ -1, Masks[9] ^ -1 };
-        public static readonly int[] InitialValues = new int[MaxN + 1] { 0, 1, (Masks[2] - 1) | Masks[2], (Masks[3] - 1) | Masks[3], (Masks[4] - 1) | Masks[4], (Masks[5] - 1) | Masks[5], (Masks[6] - 1) | Masks[6], (Masks[7] - 1) | Masks[7], (Masks[8] - 1) | Masks[8], (Masks[9] - 1) | Masks[9] };
+        private const int MaxN = 8;
+        public static readonly int[] Masks = new int[MaxN + 1] { 0, 1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7 };
+        public static readonly int[] MasksRev = new int[MaxN + 1] { 0, Masks[1] ^ -1, Masks[2] ^ -1, Masks[3] ^ -1, Masks[4] ^ -1, Masks[5] ^ -1, Masks[6] ^ -1, Masks[7] ^ -1, Masks[8] ^ -1 };
+        public static readonly int[] InitialValues = new int[MaxN + 1] { 0, 1, (Masks[2] - 1) | Masks[2], (Masks[3] - 1) | Masks[3], (Masks[4] - 1) | Masks[4], (Masks[5] - 1) | Masks[5], (Masks[6] - 1) | Masks[6], (Masks[7] - 1) | Masks[7], (Masks[8] - 1) | Masks[8] };
+        public static readonly int[] ByteBitCount = new int[256]
+        {
+            0, 1, 1, 2, 1, 2, 2, 3, 1, 2,
+            2, 3, 2, 3, 3, 4, 1, 2, 2, 3,
+            2, 3, 3, 4, 2, 3, 3, 4, 3, 4,
+            4, 5, 1, 2, 2, 3, 2, 3, 3, 4,
+            2, 3, 3, 4, 3, 4, 4, 5, 2, 3,
+            3, 4, 3, 4, 4, 5, 3, 4, 4, 5,
+            4, 5, 5, 6, 1, 2, 2, 3, 2, 3,
+            3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+            2, 3, 3, 4, 3, 4, 4, 5, 3, 4,
+            4, 5, 4, 5, 5, 6, 2, 3, 3, 4,
+            3, 4, 4, 5, 3, 4, 4, 5, 4, 5,
+            5, 6, 3, 4, 4, 5, 4, 5, 5, 6,
+            4, 5, 5, 6, 5, 6, 6, 7, 1, 2,
+            2, 3, 2, 3, 3, 4, 2, 3, 3, 4,
+            3, 4, 4, 5, 2, 3, 3, 4, 3, 4,
+            4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+            2, 3, 3, 4, 3, 4, 4, 5, 3, 4,
+            4, 5, 4, 5, 5, 6, 3, 4, 4, 5,
+            4, 5, 5, 6, 4, 5, 5, 6, 5, 6,
+            6, 7, 2, 3, 3, 4, 3, 4, 4, 5,
+            3, 4, 4, 5, 4, 5, 5, 6, 3, 4,
+            4, 5, 4, 5, 5, 6, 4, 5, 5, 6,
+            5, 6, 6, 7, 3, 4, 4, 5, 4, 5,
+            5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+            4, 5, 5, 6, 5, 6, 6, 7, 5, 6,
+            6, 7, 6, 7, 7, 8
+        };
 
         private readonly int _size;
         public readonly int[,] Data;
@@ -44,20 +73,31 @@ namespace Skyscrapers
             Array.Copy(tmp, Data, tmp.Length);
         }
 
-        /// <summary>
-        /// Zwraca ilosc ustawionych bitow metodą Briana Kernighana, ponieważ ustawionych bitów może być max _n
-        /// https://stackoverflow.com/a/12171691/5912466
-        /// </summary>
+        ///// <summary>
+        ///// Zwraca ilosc ustawionych bitow metodą Briana Kernighana, ponieważ ustawionych bitów może być max _n
+        ///// https://stackoverflow.com/a/12171691/5912466
+        ///// </summary>
+        //public int CountBits(int row, int col)
+        //{
+        //    int value = Data[row, col];
+        //    int cnt = 0;
+        //    while (value != 0)
+        //    {
+        //        cnt++;
+        //        value &= value - 1;
+        //    }
+        //    return cnt;
+        //}
+
         public int CountBits(int row, int col)
         {
-            int value = Data[row, col];
-            int cnt = 0;
-            while (value != 0)
-            {
-                cnt++;
-                value &= value - 1;
-            }
-            return cnt;
+            //return ByteBitCount[Data[row, col]];
+            return CountBits(Data[row, col]);
+        }
+
+        public int CountBits(int val)
+        {
+            return ByteBitCount[val];
         }
 
         public void SetElement(int row, int col, int num)

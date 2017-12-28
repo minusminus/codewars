@@ -102,7 +102,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skyscrapers", "Skyscrapers 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSkyscrapers", "Skyscrapers NxN\NSkyscrapers\NSkyscrapers.csproj", "{5D92ED40-C365-4ACD-872D-120391F9FA5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyscrapersProfiling", "Skyscrapers NxN\SkyscrapersProfiling\SkyscrapersProfiling.csproj", "{C7A1D8F4-CA13-46A6-A81C-947C912CF8B3}"
+EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -236,6 +241,10 @@ Global
 		{5D92ED40-C365-4ACD-872D-120391F9FA5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D92ED40-C365-4ACD-872D-120391F9FA5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D92ED40-C365-4ACD-872D-120391F9FA5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7A1D8F4-CA13-46A6-A81C-947C912CF8B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7A1D8F4-CA13-46A6-A81C-947C912CF8B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7A1D8F4-CA13-46A6-A81C-947C912CF8B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7A1D8F4-CA13-46A6-A81C-947C912CF8B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,5 +298,6 @@ Global
 		{C508B825-4B7F-4A3F-802F-3562CC94B31C} = {28BE73BF-5DC4-45D4-9AE0-93FCA54B325E}
 		{69E8D715-353C-4AF8-8592-14094A27ADF6} = {C508B825-4B7F-4A3F-802F-3562CC94B31C}
 		{5D92ED40-C365-4ACD-872D-120391F9FA5F} = {C508B825-4B7F-4A3F-802F-3562CC94B31C}
+		{C7A1D8F4-CA13-46A6-A81C-947C912CF8B3} = {C508B825-4B7F-4A3F-802F-3562CC94B31C}
 	EndGlobalSection
 EndGlobal

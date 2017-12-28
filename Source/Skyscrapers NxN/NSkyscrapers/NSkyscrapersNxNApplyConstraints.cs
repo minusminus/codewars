@@ -28,10 +28,10 @@ namespace NSkyscrapers
             };
             var expected = new int[,]
             {
-                {m1|m2, m1|m2|m3, m4, m1|m2},
-                {m4, m1|m2|m3, m1|m2|m3, m1|m2|m3},
-                {m1|m2|m3, mAll, m1|m2|m3, m1|m2},
-                {m1|m2, m1|m2|m3, m1|m2|m3, m4}
+                {m1|m2, m3, m4, m1|m2},
+                {m4, m1|m2, m1|m2, m3},
+                {m3, m4, m1|m2, m1|m2},
+                {m1|m2, m1|m2, m3, m4}
             };
 
             SkyscraperData data = _pobj.CreateInitialData();
@@ -48,9 +48,9 @@ namespace NSkyscrapers
             expected = new int[,]
             {
                 {m1|m2|m3, m1|m2|m3, m4, m1|m2|m3},
-                {m1|m2|m3, mAll, m1|m2|m3, m1|m2|m3},
+                {m1|m2|m3, m4, m1|m2|m3, m1|m2|m3},
                 {m4, m1|m2|m3, m1|m2|m3, m1|m2|m3},
-                {m1|m2|m3, mAll, m1|m2, mAll}
+                {m1|m2|m3, m1|m2|m3, m1|m2, m4}
             };
             data = _pobj.CreateInitialData();
             _pobj.ApplyConstraints(data, clues);
