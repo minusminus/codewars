@@ -42,8 +42,7 @@ namespace Skyscrapers
         {
             for (int i = 0; i < _n; i++)
             {
-                int mask = 0;
-                int mask2 = 0;
+                int mask = 0, mask2 = 0;
                 for (int j = 0; j < _n; j++)
                 {
                     mask |= d.Data[i, j];
@@ -108,7 +107,7 @@ namespace Skyscrapers
             return true;
         }
 
-        private bool CheckDataCorrect(SkyscraperData d, int[] constraints)
+        public bool CheckDataCorrect(SkyscraperData d, int[] constraints)
         {
             if (!CheckDataReduced(d)) return false;
             if (!CheckDataElements(d)) return false;
@@ -142,13 +141,8 @@ namespace Skyscrapers
                 int mask = d.Data[row, col] ^ -1;
                 for (int i = 0; i < _n; i++)
                 {
-                    if (i == col) continue;
-                    TryReduceSingleElement(d, proc, row, i, mask);
-                }
-                for (int i = 0; i < _n; i++)
-                {
-                    if (i == row) continue;
-                    TryReduceSingleElement(d, proc, i, col, mask);
+                    if (i != col) TryReduceSingleElement(d, proc, row, i, mask);
+                    if (i != row) TryReduceSingleElement(d, proc, i, col, mask);
                 }
                 iproc++;
             }
@@ -179,7 +173,7 @@ namespace Skyscrapers
                         if (k != i) mask2 |= d.Data[k, j];  //pionowo
                     }
                     if (!TrySetSingleElement(d, proc, i, j, mask))
-                        TrySetSingleElement(d, proc, i, j, mask);
+                        TrySetSingleElement(d, proc, i, j, mask2);
                 }
         }
 
@@ -267,23 +261,23 @@ namespace Skyscrapers
 
         public int[][] Solve(int[] constraints)
         {
-            Console.WriteLine("***");
+            //Console.WriteLine("***");
             SkyscrapersCounters.Clear();
             SkyscraperData d = CreateInitialData();
             ApplyConstraints(d, constraints);
 
             SkyscraperData dres = FindSolution(d, constraints);
 
-            Console.WriteLine($"NewData: {SkyscrapersCounters.NewData}");
-            Console.WriteLine($"ReduceRCIters: {SkyscrapersCounters.ReduceRCIters}");
-            Console.WriteLine($"ReduceRCLoops: {SkyscrapersCounters.ReduceRCLoops}");
-            Console.WriteLine($"ReduceRCLoopsRemoves: {SkyscrapersCounters.ReduceRCLoopsRemoves}");
-            Console.WriteLine($"ReduceRCReductions: {SkyscrapersCounters.ReduceRCReductions}");
-            Console.WriteLine($"CheckDataCorrectCalls: {SkyscrapersCounters.CheckDataCorrectCalls}");
-            Console.WriteLine($"CorrectData: {SkyscrapersCounters.CorrectData}");
-            Console.WriteLine($"FirstCorrectDataInCall: {SkyscrapersCounters.FirstCorrectDataInCall}");
+            //Console.WriteLine($"NewData: {SkyscrapersCounters.NewData}");
+            //Console.WriteLine($"ReduceRCIters: {SkyscrapersCounters.ReduceRCIters}");
+            //Console.WriteLine($"ReduceRCLoops: {SkyscrapersCounters.ReduceRCLoops}");
+            //Console.WriteLine($"ReduceRCLoopsRemoves: {SkyscrapersCounters.ReduceRCLoopsRemoves}");
+            //Console.WriteLine($"ReduceRCReductions: {SkyscrapersCounters.ReduceRCReductions}");
+            //Console.WriteLine($"CheckDataCorrectCalls: {SkyscrapersCounters.CheckDataCorrectCalls}");
+            //Console.WriteLine($"CorrectData: {SkyscrapersCounters.CorrectData}");
+            //Console.WriteLine($"FirstCorrectDataInCall: {SkyscrapersCounters.FirstCorrectDataInCall}");
 
-            if (dres == null) throw new Exception("dres == null");
+            if (dres == null) return null;//throw new Exception("dres == null");
 
             int[][] res = new int[_n][];
             for (int i = 0; i < _n; i++)

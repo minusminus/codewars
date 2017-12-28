@@ -91,7 +91,6 @@ namespace Skyscrapers
 
         public int CountBits(int row, int col)
         {
-            //return ByteBitCount[Data[row, col]];
             return CountBits(Data[row, col]);
         }
 
