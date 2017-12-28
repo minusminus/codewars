@@ -45,6 +45,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkyscrapersCounters.cs" />
     <Compile Include="SkyscrapersNxN.cs" />
+    <Compile Include="SkyscrapersNxNDataReductor.cs" />
+    <Compile Include="SkyscrapersNxNDataValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
