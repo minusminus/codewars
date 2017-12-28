@@ -38,10 +38,25 @@ namespace Skyscrapers
             return true;
         }
 
-        private bool CheckDataCorrect(SkyscraperData d, int[] constraints)
+        private bool CheckDataElements(SkyscraperData d)
         {
-            if (!CheckDataReduced(d)) return false;
+            for (int i = 0; i < _n; i++)
+            {
+                int mask = 0;
+                int mask2 = 0;
+                for (int j = 0; j < _n; j++)
+                {
+                    mask |= d.Data[i, j];
+                    mask2 |= d.Data[j, i];
+                }
+                if (mask != SkyscraperData.InitialValues[_n]) return false;
+                if (mask2 != SkyscraperData.InitialValues[_n]) return false;
+            }
+            return true;
+        }
 
+        private bool CheckDataConstraints(SkyscraperData d, int[] constraints)
+        {
             for (int i = 0; i < _n; i++)
             {
                 //poziomo
@@ -53,7 +68,7 @@ namespace Skyscrapers
                         v++;
                         highest = d.Data[i, j];
                     }
-                if ((constraints[4*_n - 1 - i] != 0) && (constraints[4*_n - 1 - i] != v)) return false;
+                if ((constraints[4 * _n - 1 - i] != 0) && (constraints[4 * _n - 1 - i] != v)) return false;
                 v = 1;
                 highest = d.Data[i, _n - 1];
                 for (int j = _n - 1; j >= 0; j--)
@@ -81,9 +96,16 @@ namespace Skyscrapers
                         v++;
                         highest = d.Data[j, i];
                     }
-                if ((constraints[3 * _n - 1 - i] != 0) && (constraints[3*_n - 1 - i] != v)) return false;
+                if ((constraints[3 * _n - 1 - i] != 0) && (constraints[3 * _n - 1 - i] != v)) return false;
             }
             return true;
+        }
+
+        private bool CheckDataCorrect(SkyscraperData d, int[] constraints)
+        {
+            if (!CheckDataReduced(d)) return false;
+            if (!CheckDataElements(d)) return false;
+            return CheckDataConstraints(d, constraints);
         }
 
         private void ReduceRowsCols(SkyscraperData d, List<Tuple<int, int>> proc)
