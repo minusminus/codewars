@@ -14,6 +14,7 @@ namespace Skyscrapers
         {
             _n = N;
         }
+
         private bool CheckDataReduced(SkyscraperData d)
         {
             for (int i = 0; i < _n; i++)
@@ -38,7 +39,7 @@ namespace Skyscrapers
             return true;
         }
 
-        private void CheckDataConstaintsSingleCheck(ref int v, ref int highest, int dataval)
+        private void CheckDataConstraintsSingleCheck(ref int v, ref int highest, int dataval)
         {
             if (dataval > highest)
             {
@@ -59,7 +60,7 @@ namespace Skyscrapers
                     v = 1;
                     highest = d.Data[i, 0];
                     for (int j = 0; j < _n; j++)
-                        CheckDataConstaintsSingleCheck(ref v, ref highest, d.Data[i, j]);
+                        CheckDataConstraintsSingleCheck(ref v, ref highest, d.Data[i, j]);
                     if (constraints[4 * _n - 1 - i] != v) return false;
                 }
                 if (constraints[_n + i] != 0)
@@ -67,7 +68,7 @@ namespace Skyscrapers
                     v = 1;
                     highest = d.Data[i, _n - 1];
                     for (int j = _n - 1; j >= 0; j--)
-                        CheckDataConstaintsSingleCheck(ref v, ref highest, d.Data[i, j]);
+                        CheckDataConstraintsSingleCheck(ref v, ref highest, d.Data[i, j]);
                     if (constraints[_n + i] != v) return false;
                 }
                 //pionowo
@@ -76,7 +77,7 @@ namespace Skyscrapers
                     v = 1;
                     highest = d.Data[0, i];
                     for (int j = 0; j < _n; j++)
-                        CheckDataConstaintsSingleCheck(ref v, ref highest, d.Data[j, i]);
+                        CheckDataConstraintsSingleCheck(ref v, ref highest, d.Data[j, i]);
                     if (constraints[i] != v) return false;
                 }
                 if (constraints[3 * _n - 1 - i] != 0)
@@ -84,14 +85,14 @@ namespace Skyscrapers
                     v = 1;
                     highest = d.Data[_n - 1, i];
                     for (int j = _n - 1; j >= 0; j--)
-                        CheckDataConstaintsSingleCheck(ref v, ref highest, d.Data[j, i]);
+                        CheckDataConstraintsSingleCheck(ref v, ref highest, d.Data[j, i]);
                     if (constraints[3 * _n - 1 - i] != v) return false;
                 }
             }
             return true;
         }
 
-        public bool CheckDataCorrect(SkyscraperData d, int[] constraints)
+        public bool CheckData(SkyscraperData d, int[] constraints)
         {
             if (!CheckDataReduced(d)) return false;
             if (!CheckDataElements(d)) return false;

@@ -14,6 +14,7 @@ namespace Skyscrapers
         {
             _n = N;
         }
+
         private void TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
         {
             SkyscrapersCounters.ReduceRCLoops++;

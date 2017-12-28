@@ -73,7 +73,7 @@ namespace Skyscrapers
 
         public SkyscraperData FindSolution(SkyscraperData d, int[] constraints)
         {
-            if (_dataValidator.CheckDataCorrect(d, constraints)) return d;
+            if (_dataValidator.CheckData(d, constraints)) return d;
 
             List<Tuple<int, Tuple<int,int>>> cntList = new List<Tuple<int, Tuple<int, int>>>();
             for(int i=0; i<_n; i++)
