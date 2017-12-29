@@ -39,6 +39,31 @@ namespace Skyscrapers
             return true;
         }
 
+        private bool CheckDataUniqueElements(SkyscraperData d)
+        {
+            for (int i = 0; i < _n; i++)
+            {
+                int mask = 0, mask2 = 0;
+                int cnt = 0, cnt2 = 0;
+                for (int j = 0; j < _n; j++)
+                {
+                    if (d.CountBits(i, j) == 1)
+                    {
+                        mask ^= d.Data[i, j];
+                        cnt++;
+                    }
+                    if (d.CountBits(j, i) == 1)
+                    {
+                        mask2 ^= d.Data[j, i];
+                        cnt2++;
+                    }
+                }
+                if ((d.CountBits(mask) != cnt) || (d.CountBits(mask2) != cnt2))
+                    return false;
+            }
+            return true;
+        }
+
         private void CheckDataConstraintsSingleCheck(ref int v, ref int highest, int dataval)
         {
             if (dataval > highest)
@@ -92,10 +117,24 @@ namespace Skyscrapers
             return true;
         }
 
-        public bool CheckData(SkyscraperData d, int[] constraints)
+        public bool CheckData(SkyscraperData d, int[] constraints, ref bool incorrectElements)
         {
+            incorrectElements = false;
+            if (!CheckDataUniqueElements(d))
+            {
+                SkyscrapersCounters.IncorrectDataCount++;
+                //Console.WriteLine($"incorrect data count: {SkyscrapersCounters.IncorrectDataCount}");
+                incorrectElements = true;
+                return false;
+            }
             if (!CheckDataReduced(d)) return false;
-            if (!CheckDataElements(d)) return false;
+            //if (!CheckDataElements(d))
+            //{
+            //    SkyscrapersCounters.IncorrectDataCount++;
+            //    Console.WriteLine($"incorrect data count: {SkyscrapersCounters.IncorrectDataCount}");
+            //    incorrectElements = true;
+            //    return false;
+            //}
             return CheckDataConstraints(d, constraints);
         }
     }

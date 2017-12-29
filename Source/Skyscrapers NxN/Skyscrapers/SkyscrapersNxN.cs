@@ -73,7 +73,9 @@ namespace Skyscrapers
 
         public SkyscraperData FindSolution(SkyscraperData d, int[] constraints)
         {
-            if (_dataValidator.CheckData(d, constraints)) return d;
+            bool incorrectElements = false;
+            if (_dataValidator.CheckData(d, constraints, ref incorrectElements)) return d;
+            if (incorrectElements) return null; //wygenerowane dane sa niepoprawne - obcianym drzewo w tym miejscu
 
             List<Tuple<int, Tuple<int,int>>> cntList = new List<Tuple<int, Tuple<int, int>>>();
             for(int i=0; i<_n; i++)
@@ -93,7 +95,7 @@ namespace Skyscrapers
                 for (int m = 1; m <= _n; m++)
                     if ((el & SkyscraperData.Masks[m]) != 0)
                     {
-                        //SkyscrapersCounters.NewData++;
+                        SkyscrapersCounters.NewData++;
                         SkyscraperData newd = new SkyscraperData(d);
                         newd.Data[row, col] = SkyscraperData.Masks[m];
                         List<Tuple<int, int>> proc = new List<Tuple<int, int>>() {new Tuple<int, int>(row, col)};
@@ -109,7 +111,7 @@ namespace Skyscrapers
         public int[][] Solve(int[] constraints)
         {
             //Console.WriteLine("***");
-            //SkyscrapersCounters.Clear();
+            SkyscrapersCounters.Clear();
             SkyscraperData d = CreateInitialData();
             ApplyConstraints(d, constraints);
 
