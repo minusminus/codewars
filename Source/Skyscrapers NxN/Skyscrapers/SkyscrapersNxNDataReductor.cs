@@ -17,15 +17,15 @@ namespace Skyscrapers
 
         private void TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
         {
-            SkyscrapersCounters.ReduceRCLoops++;
+            //SkyscrapersCounters.ReduceRCLoops++;
             if (d.CountBits(row, col) > 1)
             {
-                SkyscrapersCounters.ReduceRCLoopsRemoves++;
+                //SkyscrapersCounters.ReduceRCLoopsRemoves++;
                 d.RemoveElementMask(row, col, mask);
                 //if ((d.CountBits(row, i) == 1) && (!proc.Any(x => (x.Item1 == row) && (x.Item2 == i))))
                 if (d.CountBits(row, col) == 1)
                 {
-                    SkyscrapersCounters.ReduceRCReductions++;
+                    //SkyscrapersCounters.ReduceRCReductions++;
                     proc.Add(new Tuple<int, int>(row, col));
                 }
             }
@@ -36,7 +36,7 @@ namespace Skyscrapers
             int iproc = 0;
             while (iproc < proc.Count)
             {
-                SkyscrapersCounters.ReduceRCIters++;
+                //SkyscrapersCounters.ReduceRCIters++;
                 int row = proc[iproc].Item1;
                 int col = proc[iproc].Item2;
                 int mask = d.Data[row, col] ^ -1;
