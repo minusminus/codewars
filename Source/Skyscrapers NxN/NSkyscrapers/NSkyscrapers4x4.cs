@@ -6,7 +6,7 @@ using Skyscrapers;
 namespace NSkyscrapers
 {
     [TestFixture]
-    public class NSkyscrapers
+    public class NSkyscrapers4x4
     {
         private readonly Skyscrapers.Skyscrapers4x4 _pobj = new Skyscrapers.Skyscrapers4x4();
 

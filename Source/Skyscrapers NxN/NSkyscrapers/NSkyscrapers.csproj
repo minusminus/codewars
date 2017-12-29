@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NSkyscraperData.cs" />
-    <Compile Include="NSkyscrapers.cs" />
+    <Compile Include="NSkyscrapers4x4.cs" />
+    <Compile Include="NSkyscrapers6x6.cs" />
     <Compile Include="NSkyscrapersNxNApplyConstraints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
