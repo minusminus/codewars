@@ -101,7 +101,7 @@ namespace Skyscrapers
                 for (int m = 1; m <= _n; m++)
                     if ((el & SkyscraperData.Masks[m]) != 0)
                     {
-                        SkyscrapersCounters.NewData++;
+                        //SkyscrapersCounters.NewData++;
                         SkyscraperData newd = new SkyscraperData(d);
                         newd.Data[row, col] = SkyscraperData.Masks[m];
                         List<Tuple<int, int>> proc = new List<Tuple<int, int>>() {new Tuple<int, int>(row, col)};

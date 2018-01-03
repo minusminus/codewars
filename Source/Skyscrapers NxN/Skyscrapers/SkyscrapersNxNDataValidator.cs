@@ -122,19 +122,10 @@ namespace Skyscrapers
             incorrectElements = false;
             if (!CheckDataUniqueElements(d))
             {
-                SkyscrapersCounters.IncorrectDataCount++;
-                //Console.WriteLine($"incorrect data count: {SkyscrapersCounters.IncorrectDataCount}");
                 incorrectElements = true;
                 return false;
             }
             if (!CheckDataReduced(d)) return false;
-            //if (!CheckDataElements(d))
-            //{
-            //    SkyscrapersCounters.IncorrectDataCount++;
-            //    Console.WriteLine($"incorrect data count: {SkyscrapersCounters.IncorrectDataCount}");
-            //    incorrectElements = true;
-            //    return false;
-            //}
             return CheckDataConstraints(d, constraints);
         }
     }
