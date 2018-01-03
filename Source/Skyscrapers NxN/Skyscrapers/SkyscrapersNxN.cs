@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -75,22 +76,27 @@ namespace Skyscrapers
         {
             bool incorrectElements = false;
             if (_dataValidator.CheckData(d, constraints, ref incorrectElements)) return d;
-            if (incorrectElements) return null; //wygenerowane dane sa niepoprawne - obcianym drzewo w tym miejscu
+            if (incorrectElements) return null; //wygenerowane dane sa niepoprawne - obcinamy drzewo w tym miejscu
 
-            List<Tuple<int, Tuple<int,int>>> cntList = new List<Tuple<int, Tuple<int, int>>>();
-            for(int i=0; i<_n; i++)
+            //wybierany pierwszy element o najmniejszej ilosci mozliwych pozycji
+            int row = -1, col = -1;
+            int currminbits = -1;
+            for (int i = 0; i < _n; i++)
                 for (int j = 0; j < _n; j++)
                 {
                     int bits = d.CountBits(i, j);
                     if (bits > 1)
-                        cntList.Add(new Tuple<int, Tuple<int, int>>(bits, new Tuple<int, int>(i, j)));
+                        if ((currminbits == -1) || (bits < currminbits))
+                        {
+                            row = i;
+                            col = j;
+                            currminbits = bits;
+                        }
                 }
-            cntList.Sort((x, y) => x.Item1.CompareTo(y.Item1));
 
-            for (int i = 0; i < cntList.Count; i++)
+            //analiza drzewa rozwiazan w glab
+            if (currminbits > -1)
             {
-                int row = cntList[i].Item2.Item1;
-                int col = cntList[i].Item2.Item2;
                 int el = d.Data[row, col];
                 for (int m = 1; m <= _n; m++)
                     if ((el & SkyscraperData.Masks[m]) != 0)
