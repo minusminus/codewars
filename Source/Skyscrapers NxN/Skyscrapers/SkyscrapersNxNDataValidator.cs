@@ -22,10 +22,9 @@ namespace Skyscrapers
             //        if (d.CountBits(i, j) != 1) return false;
             //return true;
 
-            int mask = d.SetInRow[0];
-            for (int i = 1; i < _n; i++)
-                mask &= d.SetInRow[i];
-            return (d.CountBits(mask) == _n);
+            for (int i = 0; i < _n; i++)
+                if (d.SetInRow[i] != SkyscraperData.InitialValues[_n]) return false;
+            return true;
         }
 
         private bool CheckDataElements(SkyscraperData d)

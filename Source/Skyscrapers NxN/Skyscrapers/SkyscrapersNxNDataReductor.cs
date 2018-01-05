@@ -39,11 +39,21 @@ namespace Skyscrapers
                 int row = proc[iproc].Item1;
                 int col = proc[iproc].Item2;
                 int mask = d.Data[row, col] ^ -1;
-                for (int i = 0; i < _n; i++)
-                {
-                    if (i != col) if (!TryReduceSingleElement(d, proc, row, i, mask)) return false;
-                    if (i != row) if (!TryReduceSingleElement(d, proc, i, col, mask)) return false;
-                }
+                //for (int i = 0; i < _n; i++)
+                //{
+                //    if (i != col) if (!TryReduceSingleElement(d, proc, row, i, mask)) return false;
+                //    if (i != row) if (!TryReduceSingleElement(d, proc, i, col, mask)) return false;
+                //}
+                if (d.SetInRow[row] != SkyscraperData.InitialValues[_n])
+                    for (int i = 0; i < _n; i++)
+                    {
+                        if (i != col) if (!TryReduceSingleElement(d, proc, row, i, mask)) return false;
+                    }
+                if (d.SetInCol[col] != SkyscraperData.InitialValues[_n])
+                    for (int i = 0; i < _n; i++)
+                    {
+                        if (i != row) if (!TryReduceSingleElement(d, proc, i, col, mask)) return false;
+                    }
                 iproc++;
             }
             return true;
