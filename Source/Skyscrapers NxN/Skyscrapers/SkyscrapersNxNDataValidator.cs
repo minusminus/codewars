@@ -17,10 +17,15 @@ namespace Skyscrapers
 
         private bool CheckDataReduced(SkyscraperData d)
         {
-            for (int i = 0; i < _n; i++)
-                for (int j = 0; j < _n; j++)
-                    if (d.CountBits(i, j) != 1) return false;
-            return true;
+            //for (int i = 0; i < _n; i++)
+            //    for (int j = 0; j < _n; j++)
+            //        if (d.CountBits(i, j) != 1) return false;
+            //return true;
+
+            int mask = d.SetInRow[0];
+            for (int i = 1; i < _n; i++)
+                mask &= d.SetInRow[i];
+            return (d.CountBits(mask) == _n);
         }
 
         private bool CheckDataElements(SkyscraperData d)
@@ -117,14 +122,14 @@ namespace Skyscrapers
             return true;
         }
 
-        public bool CheckData(SkyscraperData d, int[] constraints, ref bool incorrectElements)
+        public bool CheckData(SkyscraperData d, int[] constraints)
         {
-            incorrectElements = false;
-            if (!CheckDataUniqueElements(d))
-            {
-                incorrectElements = true;
-                return false;
-            }
+            //incorrectElements = false;
+            //if (!CheckDataUniqueElements(d))
+            //{
+            //    incorrectElements = true;
+            //    return false;
+            //}
             if (!CheckDataReduced(d)) return false;
             return CheckDataConstraints(d, constraints);
         }

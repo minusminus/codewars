@@ -48,10 +48,12 @@ namespace Skyscrapers
                     {
                         for (int k = 0; k < _n; k++)
                             d.Data[row, k] = SkyscraperData.Masks[k + 1];
+                        //d.SetSingleElement(row, k, k + 1);
                     }
                     else if (constraints[i] == 1)
                     {
                         d.Data[row, 0] = SkyscraperData.Masks[_n];
+                        //d.SetSingleElement(row, 0, _n);
                     }
                     else
                     {
@@ -68,15 +70,16 @@ namespace Skyscrapers
             for(int i=0; i<_n; i++)
                 for(int j=0; j<_n; j++)
                     if (d.CountBits(i, j) == 1)
+                    {
+                        d.SetSingleElementMask(i, j, d.Data[i, j]);
                         proc.Add(new Tuple<int, int>(i, j));
+                    }
             _dataReductor.ReduceData(d, proc);
         }
 
         public SkyscraperData FindSolution(SkyscraperData d, int[] constraints)
         {
-            bool incorrectElements = false;
-            if (_dataValidator.CheckData(d, constraints, ref incorrectElements)) return d;
-            if (incorrectElements) return null; //wygenerowane dane sa niepoprawne - obcinamy drzewo w tym miejscu
+            if (_dataValidator.CheckData(d, constraints)) return d;
 
             //wybierany pierwszy element o najmniejszej ilosci mozliwych pozycji
             int row = -1, col = -1;
@@ -103,10 +106,12 @@ namespace Skyscrapers
                     {
                         //SkyscrapersCounters.NewData++;
                         SkyscraperData newd = new SkyscraperData(d);
-                        newd.Data[row, col] = SkyscraperData.Masks[m];
+                        //newd.Data[row, col] = SkyscraperData.Masks[m];
+                        newd.SetSingleElement(row, col, m);
                         List<Tuple<int, int>> proc = new List<Tuple<int, int>>() {new Tuple<int, int>(row, col)};
-                        _dataReductor.ReduceData(newd, proc);
-                        SkyscraperData nextd = FindSolution(newd, constraints);
+                        SkyscraperData nextd = null;
+                        if (_dataReductor.ReduceData(newd, proc))
+                            nextd = FindSolution(newd, constraints);
                         if (nextd != null) return nextd;
                     }
             }

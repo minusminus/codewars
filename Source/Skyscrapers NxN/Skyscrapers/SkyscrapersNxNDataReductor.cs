@@ -15,38 +15,38 @@ namespace Skyscrapers
             _n = N;
         }
 
-        private void TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
+        private bool TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
         {
-            //SkyscrapersCounters.ReduceRCLoops++;
             if (d.CountBits(row, col) > 1)
             {
-                //SkyscrapersCounters.ReduceRCLoopsRemoves++;
                 d.RemoveElementMask(row, col, mask);
-                //if ((d.CountBits(row, i) == 1) && (!proc.Any(x => (x.Item1 == row) && (x.Item2 == i))))
                 if (d.CountBits(row, col) == 1)
                 {
-                    //SkyscrapersCounters.ReduceRCReductions++;
+                    if (((d.Data[row, col] & d.SetInRow[row]) != 0) || ((d.Data[row, col] & d.SetInCol[col]) != 0))
+                        return false;
+                    d.SetSingleElementMask(row, col, d.Data[row, col]);
                     proc.Add(new Tuple<int, int>(row, col));
                 }
             }
+            return true;
         }
 
-        private void ReduceRowsCols(SkyscraperData d, List<Tuple<int, int>> proc)
+        private bool ReduceRowsCols(SkyscraperData d, List<Tuple<int, int>> proc)
         {
             int iproc = 0;
             while (iproc < proc.Count)
             {
-                //SkyscrapersCounters.ReduceRCIters++;
                 int row = proc[iproc].Item1;
                 int col = proc[iproc].Item2;
                 int mask = d.Data[row, col] ^ -1;
                 for (int i = 0; i < _n; i++)
                 {
-                    if (i != col) TryReduceSingleElement(d, proc, row, i, mask);
-                    if (i != row) TryReduceSingleElement(d, proc, i, col, mask);
+                    if (i != col) if (!TryReduceSingleElement(d, proc, row, i, mask)) return false;
+                    if (i != row) if (!TryReduceSingleElement(d, proc, i, col, mask)) return false;
                 }
                 iproc++;
             }
+            return true;
         }
 
         private bool TrySetSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
@@ -54,7 +54,8 @@ namespace Skyscrapers
             int v = (mask ^ -1) & d.Data[row, col]; //zostaja jedynki tam gdzie w masce sa 0
             if (d.CountBits(v) == 1)
             {
-                d.Data[row, col] = v;
+                //d.Data[row, col] = v;
+                d.SetSingleElementMask(row, col, v);
                 proc.Add(new Tuple<int, int>(row, col));
                 return true;
             }
@@ -78,14 +79,15 @@ namespace Skyscrapers
                 }
         }
 
-        public void ReduceData(SkyscraperData d, List<Tuple<int, int>> proc)
+        public bool ReduceData(SkyscraperData d, List<Tuple<int, int>> proc)
         {
             while (proc.Count > 0)
             {
-                ReduceRowsCols(d, proc);
+                if (!ReduceRowsCols(d, proc)) return false;
                 proc.Clear();
                 SetRowsColsWherePossible(d, proc);
             }
+            return true;
         }
     }
 }

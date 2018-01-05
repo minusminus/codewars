@@ -45,23 +45,31 @@ namespace Skyscrapers
 
         private readonly int _size;
         public readonly int[,] Data;
+        public readonly int[] SetInRow;
+        public readonly int[] SetInCol;
 
         public SkyscraperData(int N)
         {
             _size = N;
             Data = new int[N, N];
+            SetInRow = new int[N];
+            SetInCol = new int[N];
         }
 
         public SkyscraperData(SkyscraperData obj)
         {
             _size = obj._size;
             Data = (int[,]) obj.Data.Clone();
+            SetInRow = (int[]) obj.SetInRow.Clone();
+            SetInCol = (int[])obj.SetInCol.Clone();
         }
 
         public SkyscraperData(int N, int[,] tbl)
         {
             _size = N;
             Data = (int[,])tbl.Clone();
+            SetInRow = new int[N];
+            SetInCol = new int[N];
         }
 
         public void RotateRight()
@@ -112,5 +120,18 @@ namespace Skyscrapers
         {
             Data[row, col] &= mask;
         }
+
+        public void SetSingleElement(int row, int col, int num)
+        {
+            SetSingleElementMask(row, col, SkyscraperData.Masks[num]);
+        }
+
+        public void SetSingleElementMask(int row, int col, int mask)
+        {
+            Data[row, col] = mask;
+            SetInRow[row] |= mask;
+            SetInCol[col] |= mask;
+        }
+
     }
 }

@@ -11,16 +11,29 @@ namespace SkyscrapersProfiling
     {
         static void Main(string[] args)
         {
-            var clues = new[]{ 3, 2, 2, 3, 2, 1,
-                           1, 2, 3, 3, 2, 2,
-                           5, 1, 2, 2, 4, 3,
-                           3, 2, 1, 2, 2, 4};
+            //7x7 medium
+            //var clues = new[]
+            //{
+            //    7, 0, 0, 0, 2, 2, 3,
+            //    0, 0, 3, 0, 0, 0, 0,
+            //    3, 0, 3, 0, 0, 5, 0,
+            //    0, 0, 0, 0, 5, 0, 4
+            //};
+
+            //7x7 hard
+            var clues = new[]
+            {
+                0, 2, 3, 0, 2, 0, 0,
+                5, 0, 4, 5, 0, 4, 0,
+                0, 4, 2, 0, 0, 0, 6,
+                5, 2, 2, 2, 2, 4, 1
+            };
 
 
             //testowe wywolanie
-            const int CALLSCOUNT = 20;
+            const int CALLSCOUNT = 1;
 
-            Skyscrapers6x6 testobj = new Skyscrapers6x6();
+            Skyscrapers7x7 testobj = new Skyscrapers7x7();
             for(int i=0; i<CALLSCOUNT; i++)
             {
                 testobj.SolvePuzzle(clues);
