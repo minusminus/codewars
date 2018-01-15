@@ -12,7 +12,8 @@ namespace Skyscrapers
         public static int ReduceRCIters;
         public static int ReduceRCLoops;
         public static int ReduceRCLoopsRemoves;
-        public static int ReduceRCReductions;
+        public static long ReduceRCReductions;
+        public static long ReduceRCDoublesCut;
         public static int CheckDataCorrectCalls;
         public static int CorrectData;
         public static int FirstCorrectDataInCall;
@@ -24,6 +25,7 @@ namespace Skyscrapers
             ReduceRCIters = 0;
             ReduceRCLoops = 0;
             ReduceRCLoopsRemoves = 0;
+            ReduceRCDoublesCut = 0;
             ReduceRCReductions = 0;
             CheckDataCorrectCalls = 0;
             CorrectData = 0;

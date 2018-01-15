@@ -132,7 +132,8 @@ namespace Skyscrapers
             //Console.WriteLine($"ReduceRCIters: {SkyscrapersCounters.ReduceRCIters}");
             //Console.WriteLine($"ReduceRCLoops: {SkyscrapersCounters.ReduceRCLoops}");
             //Console.WriteLine($"ReduceRCLoopsRemoves: {SkyscrapersCounters.ReduceRCLoopsRemoves}");
-            //Console.WriteLine($"ReduceRCReductions: {SkyscrapersCounters.ReduceRCReductions}");
+            Console.WriteLine($"ReduceRCReductions: {SkyscrapersCounters.ReduceRCReductions}");
+            Console.WriteLine($"ReduceRCDoublesCut: {SkyscrapersCounters.ReduceRCDoublesCut}");
             //Console.WriteLine($"CheckDataCorrectCalls: {SkyscrapersCounters.CheckDataCorrectCalls}");
             //Console.WriteLine($"CorrectData: {SkyscrapersCounters.CorrectData}");
             //Console.WriteLine($"FirstCorrectDataInCall: {SkyscrapersCounters.FirstCorrectDataInCall}");
