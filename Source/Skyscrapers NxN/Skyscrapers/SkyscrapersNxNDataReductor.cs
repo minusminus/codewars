@@ -72,6 +72,8 @@ namespace Skyscrapers
                 //d.Data[row, col] = v;
                 d.SetSingleElementMask(row, col, v);
                 proc.Add(new Tuple<int, int>(row, col));
+                //ReduceRowsCols(d, proc);
+                //proc.Clear();
                 return true;
             }
             return false;
@@ -79,84 +81,65 @@ namespace Skyscrapers
 
         private void SetRowsColsWherePossible(SkyscraperData d, List<Tuple<int, int>> proc)
         {
-            for (int i = 0; i < _n; i++)
-                for (int j = 0; j < _n; j++)
-                {
-                    if (d.CountBits(i, j) == 1) continue;
-                    int mask = 0, mask2 = 0;
-                    for (int k = 0; k < _n; k++)
-                    {
-                        if (k != j) mask |= d.Data[i, k];   //pozimo
-                        if (k != i) mask2 |= d.Data[k, j];  //pionowo
-                    }
-                    if (!TrySetSingleElement(d, proc, i, j, mask))
-                        TrySetSingleElement(d, proc, i, j, mask2);
-                    //bool b = TrySetSingleElement(d, proc, i, j, mask);
-                    //if (!b) b = TrySetSingleElement(d, proc, i, j, mask2);
-                    //if (b)
-                    //{
-                    //    ReduceRowsCols(d, proc);
-                    //    proc.Clear();
-                    //}
-                }
+            SkyscrapersCounters.SetRowsCols++;
 
-            //taka implementacja mimo nizszej zlozonosci 6n^2 na n=7 niewele daje bo n^3=7n^2
-            //w testach okazalo sie, zepoprzednia implementacja jest sprawniejsza
-            //
-            ////prekalkulowane maski dla danego pola, najpierw od lewej potem od prawej, co daje n^2 zamianst n^3
-            //int[] precalcmasks = new int[_n];
+            //prekalkulowane maski dla danego pola, najpierw od lewej potem od prawej, co daje n^2 zamianst n^3
+            int[,] masksrow = new int[_n, _n];
+            int[,] maskscol = new int[_n, _n];
+            for (int i = 0; i < _n; i++)
+            {
+                //od lewej
+                masksrow[i, 0] = 0;
+                maskscol[i, 0] = 0;
+                if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
+                    for (int j = 1; j < _n; j++)
+                        masksrow[i, j] = masksrow[i, j - 1] | d.Data[i, j - 1];
+                if (d.SetInCol[i] != SkyscraperData.InitialValues[_n])
+                    for (int j = 1; j < _n; j++)
+                        maskscol[i, j] = maskscol[i, j - 1] | d.Data[j - 1, i];
+                //i od prawej
+                int tmprightrow = 0, tmprightcol = 0;
+                if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
+                    for (int j = _n - 2; j >= 0; j--)
+                    {
+                        tmprightrow |= d.Data[i, j + 1];
+                        masksrow[i, j] |= tmprightrow;
+                    }
+                if (d.SetInCol[i] != SkyscraperData.InitialValues[_n])
+                    for (int j = _n - 2; j >= 0; j--)
+                    {
+                        tmprightcol |= d.Data[j + 1, i];
+                        maskscol[i, j] |= tmprightcol;
+                    }
+            }
+
+            for (int i = 0; i < _n; i++)
+                if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
+                    for (int j = 0; j < _n; j++)
+                    {
+                        if (d.CountBits(i, j) == 1) continue;
+                        int mask = masksrow[i, j];
+                        int mask2 = maskscol[j, i];
+                        if (!TrySetSingleElement(d, proc, i, j, mask))
+                            TrySetSingleElement(d, proc, i, j, mask2);
+                        //TrySetSingleElement(d, proc, i, j, mask);
+                        //TrySetSingleElement(d, proc, i, j, mask2);
+                    }
+
             //for (int i = 0; i < _n; i++)
-            //{
-            //    if (d.SetInRow[i] == SkyscraperData.InitialValues[_n]) continue;
-            //    //od lewej
-            //    precalcmasks[0] = 0;
-            //    for (int j = 1; j < _n; j++)
-            //        precalcmasks[j] = precalcmasks[j - 1] | d.Data[i, j - 1];
-            //    //i od prawej
-            //    int tmpright = 0;//d.Data[i, _n - 1];
-            //    for (int j = _n - 2; j >= 0; j--)
-            //    {
-            //        tmpright |= d.Data[i, j + 1];
-            //        precalcmasks[j] |= tmpright;
-            //    }
-            //    //i przetworzenie wiersza
-            //    for (int j = 1; j < _n; j++)
-            //    {
-            //        if (d.CountBits(i, j) == 1) continue;
-            //        TrySetSingleElement(d, proc, i, j, precalcmasks[j]);
-            //        //if (TrySetSingleElement(d, proc, i, j, precalcmasks[j]))
-            //        //{
-            //        //    ReduceRowsCols(d, proc);
-            //        //    proc.Clear();
-            //        //}
-            //    }
-            //}
-            //for (int i = 0; i < _n; i++)
-            //{
-            //    if (d.SetInCol[i] == SkyscraperData.InitialValues[_n]) continue;
-            //    //od lewej
-            //    precalcmasks[0] = 0;
-            //    for (int j = 1; j < _n; j++)
-            //        precalcmasks[j] = precalcmasks[j - 1] | d.Data[j - 1, i];
-            //    //i od prawej
-            //    int tmpright = 0;//d.Data[_n - 1, i];
-            //    for (int j = _n - 2; j >= 0; j--)
-            //    {
-            //        tmpright |= d.Data[j + 1, i];
-            //        precalcmasks[j] |= tmpright;
-            //    }
-            //    //i przetworzenie wiersza
-            //    for (int j = 1; j < _n; j++)
-            //    {
-            //        if (d.CountBits(j, i) == 1) continue;
-            //        TrySetSingleElement(d, proc, j, i, precalcmasks[j]);
-            //        //if (TrySetSingleElement(d, proc, j, i, precalcmasks[j]))
-            //        //{
-            //        //    ReduceRowsCols(d, proc);
-            //        //    proc.Clear();
-            //        //}
-            //    }
-            //}
+            //    if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
+            //        for (int j = 0; j < _n; j++)
+            //        {
+            //            if (d.CountBits(i, j) == 1) continue;
+            //            int mask = 0, mask2 = 0;
+            //            for (int k = 0; k < _n; k++)
+            //            {
+            //                if (k != j) mask |= d.Data[i, k]; //pozimo
+            //                if (k != i) mask2 |= d.Data[k, j]; //pionowo
+            //            }
+            //            if (!TrySetSingleElement(d, proc, i, j, mask))
+            //                TrySetSingleElement(d, proc, i, j, mask2);
+            //        }
         }
 
         public bool ReduceData(SkyscraperData d, List<Tuple<int, int>> proc)

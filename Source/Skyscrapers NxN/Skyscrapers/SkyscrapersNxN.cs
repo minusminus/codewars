@@ -137,6 +137,7 @@ namespace Skyscrapers
             //Console.WriteLine($"CheckDataCorrectCalls: {SkyscrapersCounters.CheckDataCorrectCalls}");
             //Console.WriteLine($"CorrectData: {SkyscrapersCounters.CorrectData}");
             //Console.WriteLine($"FirstCorrectDataInCall: {SkyscrapersCounters.FirstCorrectDataInCall}");
+            Console.WriteLine($"SetRowsCols: {SkyscrapersCounters.SetRowsCols}");
 
             if (dres == null) return null;  //throw new Exception("dres == null");
 

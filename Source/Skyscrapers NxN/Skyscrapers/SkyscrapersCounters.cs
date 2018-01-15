@@ -18,6 +18,7 @@ namespace Skyscrapers
         public static int CorrectData;
         public static int FirstCorrectDataInCall;
         public static int IncorrectDataCount;
+        public static long SetRowsCols;
 
         public static void Clear()
         {
@@ -31,6 +32,7 @@ namespace Skyscrapers
             CorrectData = 0;
             FirstCorrectDataInCall = 0;
             IncorrectDataCount = 0;
+            SetRowsCols = 0;
         }
     }
 }
