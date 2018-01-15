@@ -79,82 +79,84 @@ namespace Skyscrapers
 
         private void SetRowsColsWherePossible(SkyscraperData d, List<Tuple<int, int>> proc)
         {
+            for (int i = 0; i < _n; i++)
+                for (int j = 0; j < _n; j++)
+                {
+                    if (d.CountBits(i, j) == 1) continue;
+                    int mask = 0, mask2 = 0;
+                    for (int k = 0; k < _n; k++)
+                    {
+                        if (k != j) mask |= d.Data[i, k];   //pozimo
+                        if (k != i) mask2 |= d.Data[k, j];  //pionowo
+                    }
+                    if (!TrySetSingleElement(d, proc, i, j, mask))
+                        TrySetSingleElement(d, proc, i, j, mask2);
+                    //bool b = TrySetSingleElement(d, proc, i, j, mask);
+                    //if (!b) b = TrySetSingleElement(d, proc, i, j, mask2);
+                    //if (b)
+                    //{
+                    //    ReduceRowsCols(d, proc);
+                    //    proc.Clear();
+                    //}
+                }
+
+            //taka implementacja mimo nizszej zlozonosci 6n^2 na n=7 niewele daje bo n^3=7n^2
+            //w testach okazalo sie, zepoprzednia implementacja jest sprawniejsza
+            //
+            ////prekalkulowane maski dla danego pola, najpierw od lewej potem od prawej, co daje n^2 zamianst n^3
+            //int[] precalcmasks = new int[_n];
             //for (int i = 0; i < _n; i++)
-            //    for (int j = 0; j < _n; j++)
+            //{
+            //    if (d.SetInRow[i] == SkyscraperData.InitialValues[_n]) continue;
+            //    //od lewej
+            //    precalcmasks[0] = 0;
+            //    for (int j = 1; j < _n; j++)
+            //        precalcmasks[j] = precalcmasks[j - 1] | d.Data[i, j - 1];
+            //    //i od prawej
+            //    int tmpright = 0;//d.Data[i, _n - 1];
+            //    for (int j = _n - 2; j >= 0; j--)
+            //    {
+            //        tmpright |= d.Data[i, j + 1];
+            //        precalcmasks[j] |= tmpright;
+            //    }
+            //    //i przetworzenie wiersza
+            //    for (int j = 1; j < _n; j++)
             //    {
             //        if (d.CountBits(i, j) == 1) continue;
-            //        int mask = 0, mask2 = 0;
-            //        for (int k = 0; k < _n; k++)
-            //        {
-            //            if (k != j) mask |= d.Data[i, k];   //pozimo
-            //            if (k != i) mask2 |= d.Data[k, j];  //pionowo
-            //        }
-            //        if (!TrySetSingleElement(d, proc, i, j, mask))
-            //            TrySetSingleElement(d, proc, i, j, mask2);
-            //        //bool b = TrySetSingleElement(d, proc, i, j, mask);
-            //        //if (!b) b = TrySetSingleElement(d, proc, i, j, mask2);
-            //        //if (b)
+            //        TrySetSingleElement(d, proc, i, j, precalcmasks[j]);
+            //        //if (TrySetSingleElement(d, proc, i, j, precalcmasks[j]))
             //        //{
             //        //    ReduceRowsCols(d, proc);
             //        //    proc.Clear();
             //        //}
             //    }
-            //return;
-
-            //prekalkulowane maski dla danego pola, najpierw od lewej potem od prawej, co daje n^2 zamianst n^3
-            int[] precalcmasks = new int[_n];
-            for (int i = 0; i < _n; i++)
-            {
-                if (d.SetInRow[i] == SkyscraperData.InitialValues[_n]) continue;
-                //od lewej
-                precalcmasks[0] = 0;
-                for (int j = 1; j < _n; j++)
-                    precalcmasks[j] = precalcmasks[j - 1] | d.Data[i, j - 1];
-                //i od prawej
-                int tmpright = 0;//d.Data[i, _n - 1];
-                for (int j = _n - 2; j >= 0; j--)
-                {
-                    tmpright |= d.Data[i, j + 1];
-                    precalcmasks[j] |= tmpright;
-                }
-                //i przetworzenie wiersza
-                for (int j = 1; j < _n; j++)
-                {
-                    if (d.CountBits(i, j) == 1) continue;
-                    TrySetSingleElement(d, proc, i, j, precalcmasks[j]);
-                    //if (TrySetSingleElement(d, proc, i, j, precalcmasks[j]))
-                    //{
-                    //    ReduceRowsCols(d, proc);
-                    //    proc.Clear();
-                    //}
-                }
-            }
-            for (int i = 0; i < _n; i++)
-            {
-                if (d.SetInCol[i] == SkyscraperData.InitialValues[_n]) continue;
-                //od lewej
-                precalcmasks[0] = 0;
-                for (int j = 1; j < _n; j++)
-                    precalcmasks[j] = precalcmasks[j - 1] | d.Data[j - 1, i];
-                //i od prawej
-                int tmpright = 0;//d.Data[_n - 1, i];
-                for (int j = _n - 2; j >= 0; j--)
-                {
-                    tmpright |= d.Data[j + 1, i];
-                    precalcmasks[j] |= tmpright;
-                }
-                //i przetworzenie wiersza
-                for (int j = 1; j < _n; j++)
-                {
-                    if (d.CountBits(j, i) == 1) continue;
-                    TrySetSingleElement(d, proc, j, i, precalcmasks[j]);
-                    //if (TrySetSingleElement(d, proc, j, i, precalcmasks[j]))
-                    //{
-                    //    ReduceRowsCols(d, proc);
-                    //    proc.Clear();
-                    //}
-                }
-            }
+            //}
+            //for (int i = 0; i < _n; i++)
+            //{
+            //    if (d.SetInCol[i] == SkyscraperData.InitialValues[_n]) continue;
+            //    //od lewej
+            //    precalcmasks[0] = 0;
+            //    for (int j = 1; j < _n; j++)
+            //        precalcmasks[j] = precalcmasks[j - 1] | d.Data[j - 1, i];
+            //    //i od prawej
+            //    int tmpright = 0;//d.Data[_n - 1, i];
+            //    for (int j = _n - 2; j >= 0; j--)
+            //    {
+            //        tmpright |= d.Data[j + 1, i];
+            //        precalcmasks[j] |= tmpright;
+            //    }
+            //    //i przetworzenie wiersza
+            //    for (int j = 1; j < _n; j++)
+            //    {
+            //        if (d.CountBits(j, i) == 1) continue;
+            //        TrySetSingleElement(d, proc, j, i, precalcmasks[j]);
+            //        //if (TrySetSingleElement(d, proc, j, i, precalcmasks[j]))
+            //        //{
+            //        //    ReduceRowsCols(d, proc);
+            //        //    proc.Clear();
+            //        //}
+            //    }
+            //}
         }
 
         public bool ReduceData(SkyscraperData d, List<Tuple<int, int>> proc)
