@@ -84,18 +84,22 @@ namespace Skyscrapers
             //wybierany pierwszy element o najmniejszej ilosci mozliwych pozycji
             int row = -1, col = -1;
             int currminbits = -1;
+            int setbits = 0;
             for (int i = 0; i < _n; i++)
-                for (int j = 0; j < _n; j++)
-                {
-                    int bits = d.CountBits(i, j);
-                    if (bits > 1)
-                        if ((currminbits == -1) || (bits < currminbits))
-                        {
-                            row = i;
-                            col = j;
-                            currminbits = bits;
-                        }
-                }
+                if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
+                    for (int j = 0; j < _n; j++)
+                    {
+                        int bits = d.CountBits(i, j);
+                        if (bits > 1)
+                            //if ((currminbits == -1) || (bits < currminbits))
+                            if ((currminbits == -1) || (bits < currminbits) || ((bits == currminbits) && (d.CountBits(d.SetInRow[i]) < setbits)))   //w wierszu najmniej ustawionych bitow
+                            {
+                                row = i;
+                                col = j;
+                                currminbits = bits;
+                                setbits = d.SetInRow[i];
+                            }
+                    }
 
             //analiza drzewa rozwiazan w glab
             if (currminbits > -1)
@@ -104,9 +108,8 @@ namespace Skyscrapers
                 for (int m = 1; m <= _n; m++)
                     if ((el & SkyscraperData.Masks[m]) != 0)
                     {
-                        //SkyscrapersCounters.NewData++;
+                        SkyscrapersCounters.NewData++;
                         SkyscraperData newd = new SkyscraperData(d);
-                        //newd.Data[row, col] = SkyscraperData.Masks[m];
                         newd.SetSingleElement(row, col, m);
                         List<Tuple<int, int>> proc = new List<Tuple<int, int>>() {new Tuple<int, int>(row, col)};
                         SkyscraperData nextd = null;
@@ -128,7 +131,7 @@ namespace Skyscrapers
 
             SkyscraperData dres = FindSolution(d, constraints);
 
-            //Console.WriteLine($"NewData: {SkyscrapersCounters.NewData}");
+            Console.WriteLine($"NewData: {SkyscrapersCounters.NewData}");
             //Console.WriteLine($"ReduceRCIters: {SkyscrapersCounters.ReduceRCIters}");
             //Console.WriteLine($"ReduceRCLoops: {SkyscrapersCounters.ReduceRCLoops}");
             //Console.WriteLine($"ReduceRCLoopsRemoves: {SkyscrapersCounters.ReduceRCLoopsRemoves}");
