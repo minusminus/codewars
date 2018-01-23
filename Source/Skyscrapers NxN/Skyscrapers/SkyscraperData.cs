@@ -47,6 +47,8 @@ namespace Skyscrapers
         public readonly int[,] Data;
         public readonly int[] SetInRow;
         public readonly int[] SetInCol;
+        public readonly List<int>[] Rows;
+        public readonly List<int>[] Cols;
 
         public SkyscraperData(int N)
         {
@@ -54,6 +56,13 @@ namespace Skyscrapers
             Data = new int[N, N];
             SetInRow = new int[N];
             SetInCol = new int[N];
+            Rows = new List<int>[N];
+            Cols = new List<int>[N];
+            for (int i = 0; i < N; i++)
+            {
+                Rows[i] = new List<int>();
+                Cols[i] = new List<int>();
+            }
         }
 
         public SkyscraperData(SkyscraperData obj)
@@ -62,6 +71,13 @@ namespace Skyscrapers
             Data = (int[,]) obj.Data.Clone();
             SetInRow = (int[]) obj.SetInRow.Clone();
             SetInCol = (int[])obj.SetInCol.Clone();
+            Rows = new List<int>[_size];
+            Cols = new List<int>[_size];
+            for (int i = 0; i < _size; i++)
+            {
+                Rows[i] = obj.Rows[i].ToList();
+                Cols[i] = obj.Cols[i].ToList();
+            }
         }
 
         public SkyscraperData(int N, int[,] tbl)
@@ -70,6 +86,13 @@ namespace Skyscrapers
             Data = (int[,])tbl.Clone();
             SetInRow = new int[N];
             SetInCol = new int[N];
+            Rows = new List<int>[N];
+            Cols = new List<int>[N];
+            for (int i = 0; i < N; i++)
+            {
+                Rows[i] = new List<int>();
+                Cols[i] = new List<int>();
+            }
         }
 
         public void RotateRight()
@@ -104,6 +127,7 @@ namespace Skyscrapers
 
         public int CountBits(int val)
         {
+            SkyscrapersCounters.CountBits++;
             return ByteBitCount[val];
         }
 
@@ -131,6 +155,8 @@ namespace Skyscrapers
             Data[row, col] = mask;
             SetInRow[row] |= mask;
             SetInCol[col] |= mask;
+            Rows[row].Remove(col);
+            Cols[col].Remove(row);
         }
 
     }

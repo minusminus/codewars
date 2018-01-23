@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Shouldly;
 using Skyscrapers;
@@ -37,6 +38,14 @@ namespace NSkyscrapers
             SkyscraperData data = _pobj.CreateInitialData();
             _pobj.ApplyConstraints(data, clues);
             data.Data.ShouldBe(expected, "first test failed");
+            data.Rows[0].ShouldBe(new List<int>() {0, 3});
+            data.Rows[1].ShouldBe(new List<int>() {1, 2});
+            data.Rows[2].ShouldBe(new List<int>() {2, 3});
+            data.Rows[3].ShouldBe(new List<int>() {0, 1});
+            data.Cols[0].ShouldBe(new List<int>() {0, 3});
+            data.Cols[1].ShouldBe(new List<int>() {1, 3});
+            data.Cols[2].ShouldBe(new List<int>() {1, 2});
+            data.Cols[3].ShouldBe(new List<int>() {0, 2});
 
             clues = new[]
             {
@@ -55,6 +64,14 @@ namespace NSkyscrapers
             data = _pobj.CreateInitialData();
             _pobj.ApplyConstraints(data, clues);
             data.Data.ShouldBe(expected, "second test failed");
+            data.Rows[0].ShouldBe(new List<int>() { 0, 1, 3 });
+            data.Rows[1].ShouldBe(new List<int>() { 0, 2, 3 });
+            data.Rows[2].ShouldBe(new List<int>() { 1, 2, 3 });
+            data.Rows[3].ShouldBe(new List<int>() { 0, 1, 2 });
+            data.Cols[0].ShouldBe(new List<int>() { 0, 1, 3 });
+            data.Cols[1].ShouldBe(new List<int>() { 0, 2, 3 });
+            data.Cols[2].ShouldBe(new List<int>() { 1, 2, 3 });
+            data.Cols[3].ShouldBe(new List<int>() { 0, 1, 2 });
         }
     }
 }

@@ -65,6 +65,14 @@ namespace Skyscrapers
                 if (i%_n == 0)
                     d.RotateRight();
             }
+            //po nalozeniu ograniczen wygenerowanie list indeksow pozycji nie jednobitowych
+            for (int i = 0; i < _n; i++)
+                for (int j = 0; j < _n; j++)
+                {
+                    if (d.CountBits(i, j) > 1) d.Rows[i].Add(j);
+                    if (d.CountBits(j, i) > 1) d.Cols[j].Add(i);
+                }
+
             //po nalozeniu ograniczen uwzglednienie wszystkich powstalych pozycji jednoelementowych (redukcja w wierszach i kolumnach)
             List<Tuple<int, int>> proc = new List<Tuple<int, int>>();
             for(int i=0; i<_n; i++)
@@ -141,6 +149,7 @@ namespace Skyscrapers
             //Console.WriteLine($"CorrectData: {SkyscrapersCounters.CorrectData}");
             //Console.WriteLine($"FirstCorrectDataInCall: {SkyscrapersCounters.FirstCorrectDataInCall}");
             Console.WriteLine($"SetRowsCols: {SkyscrapersCounters.SetRowsCols}");
+            Console.WriteLine($"CountBits: {SkyscrapersCounters.CountBits}");
 
             if (dres == null) return null;  //throw new Exception("dres == null");
 
