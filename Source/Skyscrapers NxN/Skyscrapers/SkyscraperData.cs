@@ -47,8 +47,8 @@ namespace Skyscrapers
         public readonly int[,] Data;
         public readonly int[] SetInRow;
         public readonly int[] SetInCol;
-        public readonly List<int>[] Rows;
-        public readonly List<int>[] Cols;
+        public readonly List<int>[] Rows;   //lista elementow w wierszu (kolumn)
+        public readonly List<int>[] Cols;   //lista elementow w kolumnie (wierszy)
 
         public SkyscraperData(int N)
         {

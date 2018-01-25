@@ -15,8 +15,9 @@ namespace Skyscrapers
             _n = N;
         }
 
-        private bool TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
+        private bool TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask, out bool singleset)
         {
+            singleset = false;
             //if (d.CountBits(row, col) > 1)
             {
                 d.RemoveElementMask(row, col, mask);
@@ -29,6 +30,7 @@ namespace Skyscrapers
                     }
                     d.SetSingleElementMask(row, col, d.Data[row, col]);
                     proc.Add(new Tuple<int, int>(row, col));
+                    singleset = true;
                 }
             }
             //else if (d.Data[row, col] == (mask ^ -1)) return false;
@@ -49,20 +51,24 @@ namespace Skyscrapers
                 //    {
                 //        if (i != col) if (!TryReduceSingleElement(d, proc, row, i, mask)) return false;
                 //    }
-                for (int i = 0; i < d.Rows[row].Count; i++)
+                int i = 0;
+                while (i < d.Rows[row].Count)
                 {
-                    //if (d.Rows[row][i] != col) if (!TryReduceSingleElement(d, proc, row, d.Rows[row][i], mask)) return false;
-                    if (!TryReduceSingleElement(d, proc, row, d.Rows[row][i], mask)) return false;
+                    bool singleset;
+                    if (!TryReduceSingleElement(d, proc, row, d.Rows[row][i], mask, out singleset)) return false;
+                    if (!singleset) i++;
                 }
                 //if (d.SetInCol[col] != SkyscraperData.InitialValues[_n])
                 //    for (int i = 0; i < _n; i++)
                 //    {
                 //        if (i != row) if (!TryReduceSingleElement(d, proc, i, col, mask)) return false;
                 //    }
-                for (int i = 0; i < d.Cols[col].Count; i++)
+                i = 0;
+                while (i < d.Cols[col].Count)
                 {
-                    //if (d.Cols[col][i] != row) if (!TryReduceSingleElement(d, proc, d.Cols[col][i], col, mask)) return false;
-                    if (!TryReduceSingleElement(d, proc, d.Cols[col][i], col, mask)) return false;
+                    bool singleset;
+                    if (!TryReduceSingleElement(d, proc, d.Cols[col][i], col, mask, out singleset)) return false;
+                    if (!singleset) i++;
                 }
                 iproc++;
             }
@@ -142,8 +148,9 @@ namespace Skyscrapers
                     for (int k = 0; k < d.Rows[i].Count; k++)
                         if (k != j) mask |= d.Data[i, d.Rows[i][k]];
 
-                    for (int k = 0; k < d.Cols[d.Rows[i][j]].Count; k++)
-                        if (d.Cols[d.Rows[i][j]][k] != i) mask2 |= d.Data[d.Cols[d.Rows[i][j]][k], d.Rows[i][j]];
+                    int col = d.Rows[i][j];
+                    for (int k = 0; k < d.Cols[col].Count; k++)
+                        if (d.Cols[col][k] != i) mask2 |= d.Data[d.Cols[col][k], col];
 
                     bool b = TrySetSingleElement(d, proc, i, d.Rows[i][j], mask);
                     if(!b) b = TrySetSingleElement(d, proc, i, d.Rows[i][j], mask2);
@@ -155,43 +162,43 @@ namespace Skyscrapers
         private void SetRowsColsWherePossibleDoubles(SkyscraperData d, List<Tuple<int, int>> proc)
         {
             //wierszami
-            for (int i = 0; i < _n; i++)
-            {
-                //listy indeksow elementow dla masek
-                Dictionary<int, List<int>> rowels = new Dictionary<int, List<int>>();
-                for (int j = 0; j < _n; j++)
-                {
-                    //rozbicie elementu (wybranie ustawionych bitow)
-                    List<int> el = new List<int>();
-                    for (int m = 1; m <= _n; m++)
-                        if ((d.Data[i, j] & SkyscraperData.Masks[m]) != 0) el.Add(SkyscraperData.Masks[m]);
-                    //wyznaczenie list z calego wiersza dla wszystkich par danego elementu 
-                    for (int f = 0; f < el.Count - 1; f++)
-                        for (int n = f + 1; n < el.Count; n++)
-                        {
-                            int p = el[f] | el[n];
-                            if (rowels.ContainsKey(p)) continue;
-                            List<int> tl = new List<int>();
-                            for (int k = 0; k < _n; k++)
-                                if ((d.Data[i, k] & p) == p) tl.Add(k);
-                            rowels.Add(p, tl);
-                        }
-                }
-                //analiza par
-                int removedmask = 0;    //moga pojawic sie pary dla powtarzajacych sie pozycji - mozna tylko raz pozycje usunac
-                foreach (var rowel in rowels.Where(x => x.Value.Count==2))
-                {
-                    if ((rowel.Key & removedmask) != 0) continue;
-                    for (int k = 0; k < _n; k++)
-                    {
-                        if (rowel.Value.Contains(k))
-                            d.Data[i, k] = rowel.Key;
-                        else
-                            TryReduceSingleElement(d, proc, i, k, rowel.Key ^ -1);
-                    }
-                    removedmask |= rowel.Key;
-                }
-            }
+            //for (int i = 0; i < _n; i++)
+            //{
+            //    //listy indeksow elementow dla masek
+            //    Dictionary<int, List<int>> rowels = new Dictionary<int, List<int>>();
+            //    for (int j = 0; j < _n; j++)
+            //    {
+            //        //rozbicie elementu (wybranie ustawionych bitow)
+            //        List<int> el = new List<int>();
+            //        for (int m = 1; m <= _n; m++)
+            //            if ((d.Data[i, j] & SkyscraperData.Masks[m]) != 0) el.Add(SkyscraperData.Masks[m]);
+            //        //wyznaczenie list z calego wiersza dla wszystkich par danego elementu 
+            //        for (int f = 0; f < el.Count - 1; f++)
+            //            for (int n = f + 1; n < el.Count; n++)
+            //            {
+            //                int p = el[f] | el[n];
+            //                if (rowels.ContainsKey(p)) continue;
+            //                List<int> tl = new List<int>();
+            //                for (int k = 0; k < _n; k++)
+            //                    if ((d.Data[i, k] & p) == p) tl.Add(k);
+            //                rowels.Add(p, tl);
+            //            }
+            //    }
+            //    //analiza par
+            //    int removedmask = 0;    //moga pojawic sie pary dla powtarzajacych sie pozycji - mozna tylko raz pozycje usunac
+            //    foreach (var rowel in rowels.Where(x => x.Value.Count==2))
+            //    {
+            //        if ((rowel.Key & removedmask) != 0) continue;
+            //        for (int k = 0; k < _n; k++)
+            //        {
+            //            if (rowel.Value.Contains(k))
+            //                d.Data[i, k] = rowel.Key;
+            //            else
+            //                TryReduceSingleElement(d, proc, i, k, rowel.Key ^ -1);
+            //        }
+            //        removedmask |= rowel.Key;
+            //    }
+            //}
         }
 
         public bool ReduceData(SkyscraperData d, List<Tuple<int, int>> proc)
