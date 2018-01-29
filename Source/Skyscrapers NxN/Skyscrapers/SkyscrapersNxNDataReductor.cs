@@ -15,10 +15,10 @@ namespace Skyscrapers
             _n = N;
         }
 
-        private bool TryReduceSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask, out bool singleset)
+        private bool TryReduceSingleElement(SkyscraperData d, int row, int col, int mask, out bool singleset)
         {
             singleset = false;
-            //if (d.CountBits(row, col) > 1)
+            if (d.CountBits(row, col) > 1)
             {
                 d.RemoveElementMask(row, col, mask);
                 if (d.CountBits(row, col) == 1)
@@ -29,11 +29,34 @@ namespace Skyscrapers
                         return false;
                     }
                     d.SetSingleElementMask(row, col, d.Data[row, col]);
-                    proc.Add(new Tuple<int, int>(row, col));
+                    if (!ReduceRowCol(d, row, col)) return false;
                     singleset = true;
                 }
             }
             //else if (d.Data[row, col] == (mask ^ -1)) return false;
+            return true;
+        }
+
+        private bool ReduceRowCol(SkyscraperData d, int row, int col)
+        {
+            SkyscrapersCounters.ReduceRCReductions++;
+            int mask = d.Data[row, col] ^ -1;
+            int i = 0;
+            while (i < d.Rows[row].Count)
+            {
+                bool singleset = false;
+                if (col != d.Rows[row][i])
+                    if (!TryReduceSingleElement(d, row, d.Rows[row][i], mask, out singleset)) return false;
+                if (!singleset) i++;
+            }
+            i = 0;
+            while (i < d.Cols[col].Count)
+            {
+                bool singleset = false;
+                if (row != d.Cols[col][i])
+                    if (!TryReduceSingleElement(d, d.Cols[col][i], col, mask, out singleset)) return false;
+                if (!singleset) i++;
+            }
             return true;
         }
 
@@ -42,54 +65,31 @@ namespace Skyscrapers
             int iproc = 0;
             while (iproc < proc.Count)
             {
-                SkyscrapersCounters.ReduceRCReductions++;
-                int row = proc[iproc].Item1;
-                int col = proc[iproc].Item2;
-                int mask = d.Data[row, col] ^ -1;
-                //if (d.SetInRow[row] != SkyscraperData.InitialValues[_n])
-                //    for (int i = 0; i < _n; i++)
-                //    {
-                //        if (i != col) if (!TryReduceSingleElement(d, proc, row, i, mask)) return false;
-                //    }
-                int i = 0;
-                while (i < d.Rows[row].Count)
-                {
-                    bool singleset;
-                    if (!TryReduceSingleElement(d, proc, row, d.Rows[row][i], mask, out singleset)) return false;
-                    if (!singleset) i++;
-                }
-                //if (d.SetInCol[col] != SkyscraperData.InitialValues[_n])
-                //    for (int i = 0; i < _n; i++)
-                //    {
-                //        if (i != row) if (!TryReduceSingleElement(d, proc, i, col, mask)) return false;
-                //    }
-                i = 0;
-                while (i < d.Cols[col].Count)
-                {
-                    bool singleset;
-                    if (!TryReduceSingleElement(d, proc, d.Cols[col][i], col, mask, out singleset)) return false;
-                    if (!singleset) i++;
-                }
+                if (!ReduceRowCol(d, proc[iproc].Item1, proc[iproc].Item2)) return false;
                 iproc++;
             }
             return true;
         }
 
-        private bool TrySetSingleElement(SkyscraperData d, List<Tuple<int, int>> proc, int row, int col, int mask)
+        private bool TrySetSingleElement(SkyscraperData d, int row, int col, int mask)
         {
-            int v = (mask ^ -1) & d.Data[row, col]; //zostaja jedynki tam gdzie w masce sa 0
+            //int v = (mask ^ -1) & d.Data[row, col]; //zostaja jedynki tam gdzie w masce sa 0
+            int v = (mask ^ -1) & (d.Data[row, col] & ((d.SetInRow[row] | d.SetInCol[col]) ^ -1));
             if (d.CountBits(v) == 1)
+                //if (((v & d.SetInRow[row]) == 0) && ((v & d.SetInCol[col]) == 0))
             {
                 d.SetSingleElementMask(row, col, v);
-                proc.Add(new Tuple<int, int>(row, col));
-                //ReduceRowsCols(d, proc);
-                //proc.Clear();
+                if (!ReduceRowCol(d, row, col)) return false;
                 return true;
             }
+            //if (d.CountBits(v) > 1)
+            //{
+            //    d.SetMultiElementMask(row, col, v);
+            //}
             return false;
         }
 
-        private void SetRowsColsWherePossible(SkyscraperData d, List<Tuple<int, int>> proc)
+        private bool SetRowsColsWherePossible(SkyscraperData d)
         {
             SkyscrapersCounters.SetRowsCols++;
 
@@ -124,39 +124,49 @@ namespace Skyscrapers
             //}
 
             //for (int i = 0; i < _n; i++)
-            //    if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
-            //        for (int j = 0; j < _n; j++)
-            //        {
-            //            if (d.CountBits(i, j) == 1) continue;
-            //            int mask = 0, mask2 = 0;
-            //            for (int k = 0; k < _n; k++)
-            //            {
-            //                if (k != j) mask |= d.Data[i, k]; //pozimo
-            //                if (k != i) mask2 |= d.Data[k, j]; //pionowo
-            //            }
-            //            if (!TrySetSingleElement(d, proc, i, j, mask))
-            //                TrySetSingleElement(d, proc, i, j, mask2);
-            //        }
+            //{
+            //    int j = 0;
+            //    while (j < d.Rows[i].Count)
+            //    {
+            //        int mask = 0, mask2 = 0;
+
+            //        for (int k = 0; k < d.Rows[i].Count; k++)
+            //            if (k != j) mask |= d.Data[i, d.Rows[i][k]];
+
+            //        int col = d.Rows[i][j];
+            //        for (int k = 0; k < d.Cols[col].Count; k++)
+            //            if (d.Cols[col][k] != i) mask2 |= d.Data[d.Cols[col][k], col];
+
+            //        bool b = TrySetSingleElement(d, i, d.Rows[i][j], mask);
+            //        if (!b) b = TrySetSingleElement(d, i, d.Rows[i][j], mask2);
+            //        if (!b) j++;
+            //    }
+            //}
 
             for (int i = 0; i < _n; i++)
             {
                 int j = 0;
                 while (j < d.Rows[i].Count)
                 {
-                    int mask = 0, mask2 = 0;
-
+                    int mask = 0;
                     for (int k = 0; k < d.Rows[i].Count; k++)
                         if (k != j) mask |= d.Data[i, d.Rows[i][k]];
-
-                    int col = d.Rows[i][j];
-                    for (int k = 0; k < d.Cols[col].Count; k++)
-                        if (d.Cols[col][k] != i) mask2 |= d.Data[d.Cols[col][k], col];
-
-                    bool b = TrySetSingleElement(d, proc, i, d.Rows[i][j], mask);
-                    if(!b) b = TrySetSingleElement(d, proc, i, d.Rows[i][j], mask2);
-                    if (!b) j++;
+                    if (!TrySetSingleElement(d, i, d.Rows[i][j], mask)) j++;
                 }
             }
+            for (int i = 0; i < _n; i++)
+            {
+                int j = 0;
+                while (j < d.Cols[i].Count)
+                {
+                    int mask = 0;
+                    for (int k = 0; k < d.Cols[i].Count; k++)
+                        if (k != j) mask |= d.Data[d.Cols[i][k], i];
+                    if (!TrySetSingleElement(d, d.Cols[i][j], i, mask)) j++;
+                }
+            }
+
+            return true;
         }
 
         private void SetRowsColsWherePossibleDoubles(SkyscraperData d, List<Tuple<int, int>> proc)
@@ -203,15 +213,11 @@ namespace Skyscrapers
 
         public bool ReduceData(SkyscraperData d, List<Tuple<int, int>> proc)
         {
-            while (proc.Count > 0)
-            {
-                if (!ReduceRowsCols(d, proc)) return false;
-                proc.Clear();
-                SetRowsColsWherePossible(d, proc);
-                //if (!ReduceRowsCols(d, proc)) return false;
-                //proc.Clear();
-                //SetRowsColsWherePossibleDoubles(d, proc);
-            }
+            if (!ReduceRowsCols(d, proc)) return false;
+            if (!SetRowsColsWherePossible(d)) return false;
+            //if (!ReduceRowsCols(d, proc)) return false;
+            //proc.Clear();
+            //SetRowsColsWherePossibleDoubles(d, proc);
             return true;
         }
     }

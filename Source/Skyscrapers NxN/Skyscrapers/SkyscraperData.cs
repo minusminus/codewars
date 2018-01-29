@@ -159,5 +159,10 @@ namespace Skyscrapers
             Cols[col].Remove(row);
         }
 
+        public void SetMultiElementMask(int row, int col, int mask)
+        {
+            Data[row, col] = mask;
+        }
+
     }
 }

@@ -69,8 +69,11 @@ namespace Skyscrapers
             for (int i = 0; i < _n; i++)
                 for (int j = 0; j < _n; j++)
                 {
-                    if (d.CountBits(i, j) > 1) d.Rows[i].Add(j);
-                    if (d.CountBits(j, i) > 1) d.Cols[j].Add(i);
+                    if (d.CountBits(i, j) > 1)
+                    {
+                        d.Rows[i].Add(j);
+                        d.Cols[j].Add(i);
+                    }
                 }
 
             //po nalozeniu ograniczen uwzglednienie wszystkich powstalych pozycji jednoelementowych (redukcja w wierszach i kolumnach)
@@ -119,7 +122,7 @@ namespace Skyscrapers
                         SkyscrapersCounters.NewData++;
                         SkyscraperData newd = new SkyscraperData(d);
                         newd.SetSingleElement(row, col, m);
-                        List<Tuple<int, int>> proc = new List<Tuple<int, int>>() {new Tuple<int, int>(row, col)};
+                        List<Tuple<int, int>> proc = new List<Tuple<int, int>>() { new Tuple<int, int>(row, col) };
                         SkyscraperData nextd = null;
                         if (_dataReductor.ReduceData(newd, proc))
                             nextd = FindSolution(newd, constraints);
