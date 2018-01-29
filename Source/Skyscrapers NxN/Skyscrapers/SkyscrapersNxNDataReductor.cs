@@ -18,7 +18,7 @@ namespace Skyscrapers
         private bool TryReduceSingleElement(SkyscraperData d, int row, int col, int mask, out bool singleset)
         {
             singleset = false;
-            if (d.CountBits(row, col) > 1)
+            //if (d.CountBits(row, col) > 1)
             {
                 d.RemoveElementMask(row, col, mask);
                 if (d.CountBits(row, col) == 1)
@@ -33,7 +33,6 @@ namespace Skyscrapers
                     singleset = true;
                 }
             }
-            //else if (d.Data[row, col] == (mask ^ -1)) return false;
             return true;
         }
 
@@ -62,30 +61,24 @@ namespace Skyscrapers
 
         private bool ReduceRowsCols(SkyscraperData d, List<Tuple<int, int>> proc)
         {
-            int iproc = 0;
-            while (iproc < proc.Count)
-            {
-                if (!ReduceRowCol(d, proc[iproc].Item1, proc[iproc].Item2)) return false;
-                iproc++;
-            }
-            return true;
+            //int iproc = 0;
+            //while (iproc < proc.Count)
+            //{
+            //    if (!ReduceRowCol(d, proc[iproc].Item1, proc[iproc].Item2)) return false;
+            //    iproc++;
+            //}
+            return proc.All(p => ReduceRowCol(d, p.Item1, p.Item2));
         }
 
         private bool TrySetSingleElement(SkyscraperData d, int row, int col, int mask)
         {
-            //int v = (mask ^ -1) & d.Data[row, col]; //zostaja jedynki tam gdzie w masce sa 0
-            int v = (mask ^ -1) & (d.Data[row, col] & ((d.SetInRow[row] | d.SetInCol[col]) ^ -1));
+            int v = (mask ^ -1) & (d.Data[row, col] & ((d.SetInRow[row] | d.SetInCol[col]) ^ -1));  //zostaja jedynki tam gdzie w masce sa 0, dodatkowo wylaczone juz ustawione bity
             if (d.CountBits(v) == 1)
-                //if (((v & d.SetInRow[row]) == 0) && ((v & d.SetInCol[col]) == 0))
             {
                 d.SetSingleElementMask(row, col, v);
                 if (!ReduceRowCol(d, row, col)) return false;
                 return true;
             }
-            //if (d.CountBits(v) > 1)
-            //{
-            //    d.SetMultiElementMask(row, col, v);
-            //}
             return false;
         }
 
@@ -93,75 +86,52 @@ namespace Skyscrapers
         {
             SkyscrapersCounters.SetRowsCols++;
 
-            //prekalkulowane maski dla danego pola, najpierw od lewej potem od prawej, co daje n^2 zamianst n^3
-            //int[,] masksrow = new int[_n, _n];
-            //int[,] maskscol = new int[_n, _n];
-            //for (int i = 0; i < _n; i++)
-            //{
-            //    //od lewej
-            //    masksrow[i, 0] = 0;
-            //    maskscol[i, 0] = 0;
-            //    if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
-            //        for (int j = 1; j < _n; j++)
-            //            masksrow[i, j] = masksrow[i, j - 1] | d.Data[i, j - 1];
-            //    if (d.SetInCol[i] != SkyscraperData.InitialValues[_n])
-            //        for (int j = 1; j < _n; j++)
-            //            maskscol[i, j] = maskscol[i, j - 1] | d.Data[j - 1, i];
-            //    //i od prawej
-            //    int tmprightrow = 0, tmprightcol = 0;
-            //    if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
-            //        for (int j = _n - 2; j >= 0; j--)
-            //        {
-            //            tmprightrow |= d.Data[i, j + 1];
-            //            masksrow[i, j] |= tmprightrow;
-            //        }
-            //    if (d.SetInCol[i] != SkyscraperData.InitialValues[_n])
-            //        for (int j = _n - 2; j >= 0; j--)
-            //        {
-            //            tmprightcol |= d.Data[j + 1, i];
-            //            maskscol[i, j] |= tmprightcol;
-            //        }
-            //}
-
             //for (int i = 0; i < _n; i++)
             //{
             //    int j = 0;
             //    while (j < d.Rows[i].Count)
             //    {
-            //        int mask = 0, mask2 = 0;
-
+            //        int mask = 0;
             //        for (int k = 0; k < d.Rows[i].Count; k++)
             //            if (k != j) mask |= d.Data[i, d.Rows[i][k]];
-
-            //        int col = d.Rows[i][j];
-            //        for (int k = 0; k < d.Cols[col].Count; k++)
-            //            if (d.Cols[col][k] != i) mask2 |= d.Data[d.Cols[col][k], col];
-
-            //        bool b = TrySetSingleElement(d, i, d.Rows[i][j], mask);
-            //        if (!b) b = TrySetSingleElement(d, i, d.Rows[i][j], mask2);
-            //        if (!b) j++;
+            //        if (!TrySetSingleElement(d, i, d.Rows[i][j], mask)) j++;
+            //    }
+            //}
+            //for (int i = 0; i < _n; i++)
+            //{
+            //    int j = 0;
+            //    while (j < d.Cols[i].Count)
+            //    {
+            //        int mask = 0;
+            //        for (int k = 0; k < d.Cols[i].Count; k++)
+            //            if (k != j) mask |= d.Data[d.Cols[i][k], i];
+            //        if (!TrySetSingleElement(d, d.Cols[i][j], i, mask)) j++;
             //    }
             //}
 
             for (int i = 0; i < _n; i++)
             {
                 int j = 0;
+                int leftmask = 0;
                 while (j < d.Rows[i].Count)
                 {
-                    int mask = 0;
-                    for (int k = 0; k < d.Rows[i].Count; k++)
-                        if (k != j) mask |= d.Data[i, d.Rows[i][k]];
+                    int mask = leftmask;
+                    for (int k = j + 1; k < d.Rows[i].Count; k++)
+                        mask |= d.Data[i, d.Rows[i][k]];
+                    leftmask |= d.Data[i, d.Rows[i][j]];
                     if (!TrySetSingleElement(d, i, d.Rows[i][j], mask)) j++;
                 }
             }
             for (int i = 0; i < _n; i++)
             {
                 int j = 0;
+                int leftmask = 0;
                 while (j < d.Cols[i].Count)
                 {
-                    int mask = 0;
-                    for (int k = 0; k < d.Cols[i].Count; k++)
-                        if (k != j) mask |= d.Data[d.Cols[i][k], i];
+                    int mask = leftmask;
+                    for (int k = j + 1; k < d.Cols[i].Count; k++)
+                        mask |= d.Data[d.Cols[i][k], i];
+                    leftmask |= d.Data[d.Cols[i][j], i];
                     if (!TrySetSingleElement(d, d.Cols[i][j], i, mask)) j++;
                 }
             }

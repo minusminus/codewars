@@ -48,12 +48,10 @@ namespace Skyscrapers
                     {
                         for (int k = 0; k < _n; k++)
                             d.Data[row, k] = SkyscraperData.Masks[k + 1];
-                        //d.SetSingleElement(row, k, k + 1);
                     }
                     else if (constraints[i] == 1)
                     {
                         d.Data[row, 0] = SkyscraperData.Masks[_n];
-                        //d.SetSingleElement(row, 0, _n);
                     }
                     else
                     {
@@ -102,7 +100,6 @@ namespace Skyscrapers
                     {
                         int bits = d.CountBits(i, j);
                         if (bits > 1)
-                            //if ((currminbits == -1) || (bits < currminbits))
                             if ((currminbits == -1) || (bits < currminbits) || ((bits == currminbits) && (d.CountBits(d.SetInRow[i]) < setbits)))   //w wierszu najmniej ustawionych bitow
                             {
                                 row = i;
