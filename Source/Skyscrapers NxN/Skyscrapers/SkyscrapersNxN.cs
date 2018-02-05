@@ -86,21 +86,23 @@ namespace Skyscrapers
             _dataReductor.ReduceData(d, proc);
         }
 
-        public SkyscraperData FindSolution(SkyscraperData d, int[] constraints)
+        private bool GetMinRowCol_Default(SkyscraperData d, out int row, out int col)
         {
-            if (_dataValidator.CheckData(d, constraints)) return d;
+            row = -1;
+            col = -1;
 
-            //wybierany pierwszy element o najmniejszej ilosci mozliwych pozycji
-            int row = -1, col = -1;
-            int currminbits = -1;
+            int currminbits = _n + 1;
             int setbits = 0;
             for (int i = 0; i < _n; i++)
                 if (d.SetInRow[i] != SkyscraperData.InitialValues[_n])
+                {
+                    int setbitsinrow = d.CountBits(d.SetInRow[i]);
                     for (int j = 0; j < _n; j++)
                     {
                         int bits = d.CountBits(i, j);
                         if (bits > 1)
-                            if ((currminbits == -1) || (bits < currminbits) || ((bits == currminbits) && (d.CountBits(d.SetInRow[i]) < setbits)))   //w wierszu najmniej ustawionych bitow
+                            if ((bits < currminbits) ||
+                                ((bits == currminbits) && (setbitsinrow < setbits))) //w wierszu najmniej ustawionych bitow
                             {
                                 row = i;
                                 col = j;
@@ -108,9 +110,45 @@ namespace Skyscrapers
                                 setbits = d.SetInRow[i];
                             }
                     }
+                }
+            return (currminbits != _n + 1);
+        }
 
+        private bool GetMinRowCol_Rows(SkyscraperData d, out int row, out int col)
+        {
+            row = -1;
+            col = -1;
+
+            int currminbits = _n + 1;
+            int setbits = 0;
+            for (int i = 0; i < _n; i++)
+            {
+                int setbitsinrow = d.CountBits(d.SetInRow[i]);
+                for (int j = 0; j < d.Rows[i].Count; j++)
+                {
+                    int bits = d.CountBits(i, d.Rows[i][j]);
+                    if ((bits < currminbits) ||
+                        ((bits == currminbits) && (setbitsinrow < setbits))) //w wierszu najmniej ustawionych bitow
+                    {
+                        row = i;
+                        col = d.Rows[i][j];
+                        currminbits = bits;
+                        setbits = setbitsinrow;
+                    }
+                }
+            }
+            return (currminbits != _n + 1);
+        }
+
+        public SkyscraperData FindSolution(SkyscraperData d, int[] constraints)
+        {
+            if (_dataValidator.CheckData(d, constraints)) return d;
+
+            //wybierany pierwszy element o najmniejszej ilosci mozliwych pozycji
             //analiza drzewa rozwiazan w glab
-            if (currminbits > -1)
+            int row = -1, col = -1;
+            //if (GetMinRowCol_Default(d, out row, out col))
+            if (GetMinRowCol_Rows(d, out row, out col))
             {
                 int el = d.Data[row, col];
                 for (int m = 1; m <= _n; m++)
