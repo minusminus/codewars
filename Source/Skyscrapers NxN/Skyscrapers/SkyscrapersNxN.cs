@@ -150,17 +150,21 @@ namespace Skyscrapers
             //if (GetMinRowCol_Default(d, out row, out col))
             if (GetMinRowCol_Rows(d, out row, out col))
             {
+                //Console.WriteLine($"{SkyscrapersCounters.Level}, {row}, {col}");
                 int el = d.Data[row, col];
                 for (int m = 1; m <= _n; m++)
                     if ((el & SkyscraperData.Masks[m]) != 0)
                     {
+                        //Console.WriteLine($"{SkyscrapersCounters.Level}, {row}, {col}, {m}");
                         SkyscrapersCounters.NewData++;
                         SkyscraperData newd = new SkyscraperData(d);
                         newd.SetSingleElement(row, col, m);
                         List<Tuple<int, int>> proc = new List<Tuple<int, int>>() { new Tuple<int, int>(row, col) };
                         SkyscraperData nextd = null;
+                        SkyscrapersCounters.Level++;
                         if (_dataReductor.ReduceData(newd, proc))
                             nextd = FindSolution(newd, constraints);
+                        SkyscrapersCounters.Level--;
                         if (nextd != null) return nextd;
                     }
             }
