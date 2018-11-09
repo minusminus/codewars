@@ -22,14 +22,17 @@ namespace Skyscrapers
             _tbl[y] = t;
         }
 
+        private void AddCurrentTblToResult()
+        {
+            int[] item = new int[_tbl.Length];
+            Array.Copy(_tbl, 0, item, 0, _tbl.Length);
+            _resList.Add(item);
+        }
+
         private void Perm(int m)
         {
             if (m == 0)
-            {
-                int[] item = new int[_tbl.Length];
-                Array.Copy(_tbl, 0, item, 0, _tbl.Length);
-                _resList.Add(item);
-            }
+                AddCurrentTblToResult();
             else
             {
                 for (int i = 0; i <= m; i++)
