@@ -48,6 +48,7 @@
     <Compile Include="NSkyscrapers6x6.cs" />
     <Compile Include="NSkyscrapers7x7.cs" />
     <Compile Include="NSkyscrapersNxNApplyConstraints.cs" />
+    <Compile Include="NSkyscrapersPrecalcData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
