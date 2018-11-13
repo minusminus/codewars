@@ -13,7 +13,7 @@ namespace Skyscrapers
     public class PermutationGen
     {
         private int[] _tbl;
-        private List<int[]> _resList;
+        private Action<int[]> _permProcessor;
 
         private void SwapInTbl(int x, int y)
         {
@@ -22,17 +22,10 @@ namespace Skyscrapers
             _tbl[y] = t;
         }
 
-        private void AddCurrentTblToResult()
-        {
-            int[] item = new int[_tbl.Length];
-            Array.Copy(_tbl, 0, item, 0, _tbl.Length);
-            _resList.Add(item);
-        }
-
         private void Perm(int m)
         {
             if (m == 0)
-                AddCurrentTblToResult();
+                _permProcessor(_tbl);
             else
             {
                 for (int i = 0; i <= m; i++)
@@ -47,10 +40,10 @@ namespace Skyscrapers
             }
         }
 
-        public void Gen(int[] tbl, List<int[]> resList)
+        public void Gen(int[] tbl, Action<int[]> permProcessor)
         {
             _tbl = tbl;
-            _resList = resList;
+            _permProcessor = permProcessor;
             Perm(_tbl.Length - 1);
         }
     }

@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="LineVisibilityChecker.cs" />
     <Compile Include="PermutationGen.cs" />
+    <Compile Include="PermutationGenList.cs" />
     <Compile Include="SkyscraperData.cs" />
+    <Compile Include="SkyscrapersPrecalcData.cs" />
     <Compile Include="Skyscrapers4x4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Skyscrapers6x6.cs" />

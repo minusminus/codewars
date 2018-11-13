@@ -23,7 +23,7 @@ namespace NSkyscrapers
         [Test]
         public void FourElemsPermTest()
         {
-            PermutationGen obj = new PermutationGen();
+            PermutationGenList obj = new PermutationGenList();
 
             int[] testdata = new int[4] {1, 2, 3, 4};
             List<int[]> resList = new List<int[]>();
