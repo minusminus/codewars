@@ -33,7 +33,6 @@ namespace Skyscrapers
                 AddList(i, constraints[i]);
             }
 
-
             _lists = null;
             return new int[_n][];
         }
@@ -43,36 +42,51 @@ namespace Skyscrapers
             List<int[]> l = _precalc.GetList(visibility);
             _lists[index] = l;
 
-            //int removedcnt = l.RemoveAll(x => x[0] == 0);
-
             //1. usunac z nowej listy wszystkie niepasujace do biezacych list
+            PrepareList(index);
             //2. usunac z biezacych to co nie pasuje do nowej listy
             //3. usuwac z pionowych to co nie pasuje do poziomych i z poziomych to co nie pasuje do pionowych do momentu az nic nie zostanie usuniete
         }
 
-        private bool[] GetAllItemsAtPosition(List<int[]> list, int pos )
+        private List<int> GetAllItemsAtPosition(List<int[]> list, int pos )
         {
-            bool[] res = new bool[_n];
-            for (int i = 0; i < _n; i++) res[i] = false;
+            bool[] existing = new bool[_n];
+            for (int i = 0; i < _n; i++) existing[i] = false;
 
             foreach (int[] tbl in list)
-                res[tbl[pos] - 1] = true;
+                existing[tbl[pos] - 1] = true;
 
+            List<int> res = new List<int>();
+            for (int i = 0; i < _n; i++)
+                if (existing[i])
+                    res.Add(i + 1);
             return res;
         }
 
         private void PrepareList(int index)
         {
-            List<int[]> l = _lists[index];
+            List<int[]> newList = _lists[index];
             int side = index/_n;
             int sidepos = index%_n;
 
+            //na poczatek zakladamy ze:
+            //nowa lista jest z prawej strony, analizujemy listy z gory
             int startrange = 0;
-            if ((side & 1) == 0) startrange = _n;
+            //if ((side & 1) == 0) startrange = _n;
+            //dla kazdej listy z gory wyznaczamy na pozycji okreslonej przez nowa liste, liste dopuszczalnych elementow (wystepujacych na pozycji w gornej liscie)
+            //i filtrujemy nimi nowa liste na pozycji okreslonej przez indeks gornej listy
             for (int i = startrange; i < startrange + _n; i++)
             {
                 if (_lists[i] == null) continue;
-                bool[] toremove = GetAllItemsAtPosition(_lists[i], 0);
+                List<int> allowed = GetAllItemsAtPosition(_lists[i], sidepos);
+                newList.RemoveAll(tbl => !allowed.Contains(tbl[i - startrange]));
+            }
+            //to samo dla dolnych list
+            for (int i = startrange + 2*_n; i < startrange + 2*_n + _n; i++)
+            {
+                if (_lists[i] == null) continue;
+                List<int> allowed = GetAllItemsAtPosition(_lists[i], _n - sidepos - 1);
+                newList.RemoveAll(tbl => !allowed.Contains(tbl[_n - (i - startrange - 2*_n) - 1]));
             }
         }
 
