@@ -69,24 +69,27 @@ namespace Skyscrapers
             int side = index/_n;
             int sidepos = index%_n;
 
+            //gorne listy pomijane
+            if (side == 0) return;
+
             //na poczatek zakladamy ze:
             //nowa lista jest z prawej strony, analizujemy listy z gory
             int startrange = 0;
             //if ((side & 1) == 0) startrange = _n;
             //dla kazdej listy z gory wyznaczamy na pozycji okreslonej przez nowa liste, liste dopuszczalnych elementow (wystepujacych na pozycji w gornej liscie)
             //i filtrujemy nimi nowa liste na pozycji okreslonej przez indeks gornej listy
+            //od razu analogicznie dla dolnych list z odwroconym indeksem
             for (int i = startrange; i < startrange + _n; i++)
             {
-                if (_lists[i] == null) continue;
-                List<int> allowed = GetAllItemsAtPosition(_lists[i], sidepos);
-                newList.RemoveAll(tbl => !allowed.Contains(tbl[i - startrange]));
-            }
-            //to samo dla dolnych list
-            for (int i = startrange + 2*_n; i < startrange + 2*_n + _n; i++)
-            {
-                if (_lists[i] == null) continue;
-                List<int> allowed = GetAllItemsAtPosition(_lists[i], _n - sidepos - 1);
-                newList.RemoveAll(tbl => !allowed.Contains(tbl[_n - (i - startrange - 2*_n) - 1]));
+                List<int> allowedTop = null;
+                List<int> allowedBottom = null;
+                if (_lists[i] != null)
+                    allowedTop = GetAllItemsAtPosition(_lists[i], sidepos);
+                if (_lists[i + 2*_n] != null)
+                    allowedBottom = GetAllItemsAtPosition(_lists[i + 2*_n], _n - sidepos - 1);
+                if ((allowedTop == null) && (allowedBottom == null)) continue;
+                newList.RemoveAll(tbl => ((allowedTop != null) && (!allowedTop.Contains(tbl[i - startrange]))) 
+                                        || ((allowedBottom != null) && (!allowedBottom.Contains(tbl[i - startrange]))));
             }
         }
 
