@@ -45,6 +45,7 @@
     <Compile Include="NPermutationGen.cs" />
     <Compile Include="NSkyscraperData.cs" />
     <Compile Include="NSkyscrapers4x4.cs" />
+    <Compile Include="NSkyscrapers4x4_Perms.cs" />
     <Compile Include="NSkyscrapers6x6.cs" />
     <Compile Include="NSkyscrapers7x7.cs" />
     <Compile Include="NSkyscrapersNxNApplyConstraints.cs" />

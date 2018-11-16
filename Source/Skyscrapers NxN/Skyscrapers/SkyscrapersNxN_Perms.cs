@@ -23,88 +23,39 @@ namespace Skyscrapers
 
         public int[][] Solve(int[] constraints)
         {
-            _lists = new List<int[]>[_n];  //tablica list zainicjalizowana nulami
-            for (int i = 0; i < _lists.Length; i++) _lists[i] = null;
+            _lists = new List<int[]>[4*_n];  //tablica list zainicjalizowana nulami
+            //for (int i = 0; i < _lists.Length; i++) _lists[i] = null;
 
-            //przetworzenie list dla wszystkich ograniczen
-            for (int i = 0; i < _n; i++)
+            //zainicjalizowanie list dla wszystkich ograniczen
+            for (int i = 0; i < _lists.Length; i++)
+                if (constraints[i] != 0)
+                    _lists[i] = _precalc.GetList(constraints[i]);
+
+            //redukcja w poziomie i pionie wszystkich list
+            int deleted = 1;
+            while (deleted > 0)
             {
-                if (constraints[i] == 0) continue;
-                AddList(i, constraints[i]);
+                deleted = ReduceHorizontal();
+                deleted += ReduceVertical();
             }
+
+            //wygenerowanie wynikowej tabeli
 
             _lists = null;
             return new int[_n][];
         }
 
-        private void AddList(int index, int visibility)
-        {
-            List<int[]> l = _precalc.GetList(visibility);
-            _lists[index] = l;
-
-            //1. usunac z nowej listy wszystkie niepasujace do biezacych list
-            PrepareList(index);
-            //2. usunac z biezacych to co nie pasuje do nowej listy
-            //3. usuwac z pionowych to co nie pasuje do poziomych i z poziomych to co nie pasuje do pionowych do momentu az nic nie zostanie usuniete
-        }
-
-        private List<int> GetAllItemsAtPosition(List<int[]> list, int pos )
-        {
-            bool[] existing = new bool[_n];
-            for (int i = 0; i < _n; i++) existing[i] = false;
-
-            foreach (int[] tbl in list)
-                existing[tbl[pos] - 1] = true;
-
-            List<int> res = new List<int>();
-            for (int i = 0; i < _n; i++)
-                if (existing[i])
-                    res.Add(i + 1);
-            return res;
-        }
-
-        private void PrepareList(int index)
-        {
-            List<int[]> newList = _lists[index];
-            int side = index/_n;
-            int sidepos = index%_n;
-
-            //gorne listy pomijane
-            if (side == 0) return;
-
-            //na poczatek zakladamy ze:
-            //nowa lista jest z prawej strony, analizujemy listy z gory
-            int startrange = 0;
-            //if ((side & 1) == 0) startrange = _n;
-            //dla kazdej listy z gory wyznaczamy na pozycji okreslonej przez nowa liste, liste dopuszczalnych elementow (wystepujacych na pozycji w gornej liscie)
-            //i filtrujemy nimi nowa liste na pozycji okreslonej przez indeks gornej listy
-            //od razu analogicznie dla dolnych list z odwroconym indeksem
-            for (int i = startrange; i < startrange + _n; i++)
-            {
-                List<int> allowedTop = null;
-                List<int> allowedBottom = null;
-                if (_lists[i] != null)
-                    allowedTop = GetAllItemsAtPosition(_lists[i], sidepos);
-                if (_lists[i + 2*_n] != null)
-                    allowedBottom = GetAllItemsAtPosition(_lists[i + 2*_n], _n - sidepos - 1);
-                if ((allowedTop == null) && (allowedBottom == null)) continue;
-                newList.RemoveAll(tbl => ((allowedTop != null) && (!allowedTop.Contains(tbl[i - startrange]))) 
-                                        || ((allowedBottom != null) && (!allowedBottom.Contains(tbl[i - startrange]))));
-            }
-        }
 
         private List<int>[] GetAllowedItems(List<int[]> list, bool backwards)
         {
             bool[][] existing = new bool[_n][];
             for (int i = 0; i < _n; i++)
-            {
                 existing[i] = new bool[_n];
-                for (int j = 0; j < _n; j++) existing[i][j] = false;
-            }
 
-            foreach (int[] tbl in list)
-                for (int i = 0; i < _n; i++)
-                    existing[i][tbl[i]] = true;
+            if (list != null)
+                foreach (int[] tbl in list)
+                    for (int i = 0; i < _n; i++)
+                        existing[i][tbl[i] - 1] = true;
 
             List<int>[] res = new List<int>[_n];
             for (int i = 0; i < _n; i++)
@@ -129,7 +80,7 @@ namespace Skyscrapers
             return true;
         }
 
-        private void ReduceHorizontal()
+        private int ReduceHorizontal()
         {
             //redukcja list poziomych (z prawej i lewej strony)
 
@@ -143,10 +94,35 @@ namespace Skyscrapers
                 allowedBottom[i] = GetAllowedItems(_lists[2 * _n + i], true);
 
             //potem filtrujemy listy boczne za pomoca tych macierzy
+            int deleted = 0;
             for (int i = 0; i < _n; i++)
-                _lists[_n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, i, allowedTop, allowedBottom));
+                if (_lists[_n + i] != null)
+                    deleted += _lists[_n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, i, allowedTop, allowedBottom));
             for (int i = 0; i < _n; i++)
-                _lists[3 * _n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, _n - i - 1, allowedTop, allowedBottom));
+                if (_lists[3 * _n + i] != null)
+                    deleted += _lists[3 * _n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, _n - i - 1, allowedTop, allowedBottom));
+            return deleted;
+        }
+
+        private int ReduceVertical()
+        {
+            //redukcja list pionowych (gornej i dolnej)
+
+            List<int>[][] allowedLeft = new List<int>[_n][];
+            List<int>[][] allowedRight = new List<int>[_n][];
+            for (int i = 0; i < _n; i++)
+                allowedLeft[i] = GetAllowedItems(_lists[3 * _n + i], false);
+            for (int i = 0; i < _n; i++)
+                allowedRight[i] = GetAllowedItems(_lists[_n + i], true);
+
+            int deleted = 0;
+            for (int i = 0; i < _n; i++)
+                if (_lists[i] != null)
+                    deleted += _lists[i].RemoveAll(tbl => CheckIfPermAllowed(tbl, i, allowedLeft, allowedRight));
+            for (int i = 0; i < _n; i++)
+                if (_lists[2 * _n + i] != null)
+                    deleted += _lists[2 * _n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, _n - i - 1, allowedLeft, allowedRight));
+            return deleted;
         }
 
     }
