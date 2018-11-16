@@ -93,5 +93,61 @@ namespace Skyscrapers
             }
         }
 
+        private List<int>[] GetAllowedItems(List<int[]> list, bool backwards)
+        {
+            bool[][] existing = new bool[_n][];
+            for (int i = 0; i < _n; i++)
+            {
+                existing[i] = new bool[_n];
+                for (int j = 0; j < _n; j++) existing[i][j] = false;
+            }
+
+            foreach (int[] tbl in list)
+                for (int i = 0; i < _n; i++)
+                    existing[i][tbl[i]] = true;
+
+            List<int>[] res = new List<int>[_n];
+            for (int i = 0; i < _n; i++)
+            {
+                List<int> l = new List<int>();
+                if (backwards)
+                    res[_n - i - 1] = l;
+                else
+                    res[i] = l;
+                for (int j = 0; j < _n; j++)
+                    if (existing[i][j])
+                        l.Add(j + 1);
+            }
+            return res;
+        }
+
+        private bool CheckIfPermAllowed(int[] tbl, int pos, List<int>[][] allowedTop, List<int>[][] allowedBottom)
+        {
+            for (int i = 0; i < _n; i++)
+                if ((!allowedTop[i][pos].Contains(tbl[i])) || (!allowedBottom[i][pos].Contains(tbl[i])))
+                    return false;
+            return true;
+        }
+
+        private void ReduceHorizontal()
+        {
+            //redukcja list poziomych (z prawej i lewej strony)
+
+            //dla list gornych wyznaczamy macierz dopuszczalnych elementow na kazdej pozycji
+            //dla dolnych analogicznie tylko z odwroconym indeksem
+            List<int>[][] allowedTop = new List<int>[_n][];
+            List<int>[][] allowedBottom = new List<int>[_n][];
+            for (int i = 0; i < _n; i++)
+                allowedTop[i] = GetAllowedItems(_lists[i], false);
+            for (int i = 0; i < _n; i++)
+                allowedBottom[i] = GetAllowedItems(_lists[2 * _n + i], true);
+
+            //potem filtrujemy listy boczne za pomoca tych macierzy
+            for (int i = 0; i < _n; i++)
+                _lists[_n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, i, allowedTop, allowedBottom));
+            for (int i = 0; i < _n; i++)
+                _lists[3 * _n + i].RemoveAll(tbl => CheckIfPermAllowed(tbl, _n - i - 1, allowedTop, allowedBottom));
+        }
+
     }
 }
