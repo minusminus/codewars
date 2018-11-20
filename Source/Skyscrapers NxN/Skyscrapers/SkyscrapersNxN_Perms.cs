@@ -74,7 +74,7 @@ namespace Skyscrapers
         {
             for (int i = 0; i < _n; i++)
                 if (((allowedTop[i] != null) && (!allowedTop[i][pos].Contains(tbl[i])))
-                    || ((allowedBottom[i] != null) && (!allowedBottom[i][pos].Contains(tbl[i]))))
+                    || ((allowedBottom[_n - i - 1] != null) && (!allowedBottom[_n - i - 1][pos].Contains(tbl[i]))))
                     return true;
             return false;
         }
