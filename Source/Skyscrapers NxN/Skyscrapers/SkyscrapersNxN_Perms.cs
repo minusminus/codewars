@@ -73,8 +73,8 @@ namespace Skyscrapers
         private bool CheckIfPermToRemove(int[] tbl, int pos, List<int>[][] allowedTop, List<int>[][] allowedBottom)
         {
             for (int i = 0; i < _n; i++)
-                if (((allowedTop[i] != null) && (!allowedTop[i][pos].Contains(tbl[i])))
-                    || ((allowedBottom[_n - i - 1] != null) && (!allowedBottom[_n - i - 1][pos].Contains(tbl[i]))))
+                if (((allowedTop[i] != null) && (!allowedTop[i][pos].Contains(tbl[pos])))
+                    || ((allowedBottom[_n - i - 1] != null) && (!allowedBottom[_n - i - 1][_n - pos - 1].Contains(tbl[pos]))))
                     return true;
             return false;
         }
@@ -109,14 +109,14 @@ namespace Skyscrapers
         {
             //redukcja list pionowych (gornej i dolnej)
 
-            List<int>[][] allowedLeft = new List<int>[_n][];
             List<int>[][] allowedRight = new List<int>[_n][];
-            for (int i = 0; i < _n; i++)
-                if (_lists[3 * _n + i] != null)
-                    allowedLeft[i] = GetAllowedItems(_lists[3 * _n + i], false);
+            List<int>[][] allowedLeft = new List<int>[_n][];
             for (int i = 0; i < _n; i++)
                 if (_lists[_n + i] != null)
-                    allowedRight[i] = GetAllowedItems(_lists[_n + i], true);
+                    allowedRight[i] = GetAllowedItems(_lists[_n + i], false);
+            for (int i = 0; i < _n; i++)
+                if (_lists[3 * _n + i] != null)
+                    allowedLeft[i] = GetAllowedItems(_lists[3 * _n + i], true);
 
             int deleted = 0;
             for (int i = 0; i < _n; i++)
