@@ -121,10 +121,10 @@ namespace Skyscrapers
             int deleted = 0;
             for (int i = 0; i < _n; i++)
                 if (_lists[i] != null)
-                    deleted += _lists[i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedLeft, allowedRight));
+                    deleted += _lists[i].RemoveAll(tbl => CheckIfPermToRemove(tbl, _n - i - 1, allowedRight, allowedLeft));
             for (int i = 0; i < _n; i++)
                 if (_lists[2 * _n + i] != null)
-                    deleted += _lists[2 * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, _n - i - 1, allowedLeft, allowedRight));
+                    deleted += _lists[2 * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedRight, allowedLeft));
             return deleted;
         }
 
