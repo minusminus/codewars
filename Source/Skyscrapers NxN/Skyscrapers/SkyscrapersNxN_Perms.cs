@@ -45,7 +45,7 @@ namespace Skyscrapers
         }
 
 
-        private List<int>[] GetAllowedItems(List<int[]> list, bool backwards)
+        private List<int>[] GetAllowedItems(List<int[]> list)
         {
             bool[][] existing = new bool[_n][];
             for (int i = 0; i < _n; i++)
@@ -59,10 +59,7 @@ namespace Skyscrapers
             for (int i = 0; i < _n; i++)
             {
                 List<int> l = new List<int>();
-                if (backwards)
-                    res[_n - i - 1] = l;
-                else
-                    res[i] = l;
+                res[i] = l;
                 for (int j = 0; j < _n; j++)
                     if (existing[i][j])
                         l.Add(j + 1);
@@ -73,8 +70,8 @@ namespace Skyscrapers
         private bool CheckIfPermToRemove(int[] tbl, int pos, List<int>[][] allowedTop, List<int>[][] allowedBottom)
         {
             for (int i = 0; i < _n; i++)
-                if (((allowedTop[i] != null) && (!allowedTop[i][pos].Contains(tbl[pos])))
-                    || ((allowedBottom[_n - i - 1] != null) && (!allowedBottom[_n - i - 1][_n - pos - 1].Contains(tbl[pos]))))
+                if (((allowedTop[_n - i - 1] != null) && (!allowedTop[_n - i - 1][pos].Contains(tbl[i])))
+                    || ((allowedBottom[i] != null) && (!allowedBottom[i][_n - pos - 1].Contains(tbl[i]))))
                     return true;
             return false;
         }
@@ -84,15 +81,15 @@ namespace Skyscrapers
             //redukcja list poziomych (z prawej i lewej strony)
 
             //dla list gornych wyznaczamy macierz dopuszczalnych elementow na kazdej pozycji
-            //dla dolnych analogicznie tylko z odwroconym indeksem
+            //dla dolnych analogicznie
             List<int>[][] allowedTop = new List<int>[_n][];
             List<int>[][] allowedBottom = new List<int>[_n][];
             for (int i = 0; i < _n; i++)
                 if (_lists[i] != null)
-                    allowedTop[i] = GetAllowedItems(_lists[i], false);
+                    allowedTop[i] = GetAllowedItems(_lists[i]);
             for (int i = 0; i < _n; i++)
                 if (_lists[2 * _n + i] != null)
-                    allowedBottom[i] = GetAllowedItems(_lists[2 * _n + i], true);
+                    allowedBottom[i] = GetAllowedItems(_lists[2 * _n + i]);
 
             //potem filtrujemy listy boczne za pomoca tych macierzy
             int deleted = 0;
@@ -101,7 +98,7 @@ namespace Skyscrapers
                     deleted += _lists[_n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedTop, allowedBottom));
             for (int i = 0; i < _n; i++)
                 if (_lists[3 * _n + i] != null)
-                    deleted += _lists[3 * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, _n - i - 1, allowedTop, allowedBottom));
+                    deleted += _lists[3 * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedBottom, allowedTop));
             return deleted;
         }
 
@@ -113,15 +110,15 @@ namespace Skyscrapers
             List<int>[][] allowedLeft = new List<int>[_n][];
             for (int i = 0; i < _n; i++)
                 if (_lists[_n + i] != null)
-                    allowedRight[i] = GetAllowedItems(_lists[_n + i], false);
+                    allowedRight[i] = GetAllowedItems(_lists[_n + i]);
             for (int i = 0; i < _n; i++)
                 if (_lists[3 * _n + i] != null)
-                    allowedLeft[i] = GetAllowedItems(_lists[3 * _n + i], true);
+                    allowedLeft[i] = GetAllowedItems(_lists[3 * _n + i]);
 
             int deleted = 0;
             for (int i = 0; i < _n; i++)
                 if (_lists[i] != null)
-                    deleted += _lists[i].RemoveAll(tbl => CheckIfPermToRemove(tbl, _n - i - 1, allowedRight, allowedLeft));
+                    deleted += _lists[i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedLeft, allowedRight));
             for (int i = 0; i < _n; i++)
                 if (_lists[2 * _n + i] != null)
                     deleted += _lists[2 * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedRight, allowedLeft));
