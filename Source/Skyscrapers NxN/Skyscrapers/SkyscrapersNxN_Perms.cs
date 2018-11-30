@@ -39,9 +39,44 @@ namespace Skyscrapers
             }
 
             //wygenerowanie wynikowej tabeli
+            SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
+            for (int i = 0; i < _lists.Length; i++)
+                if (_lists[i] != null)
+                    for (int j = 0; j < _n; j++)
+                        data.SetSingleElement(GetDataRowCol(i, j), _lists[i][0][j]);
+            //_lists = null;
 
-            _lists = null;
-            return new int[_n][];
+            List<Tuple<int, int>> notSet = new List<Tuple<int, int>>();
+            for (int row = 0; row < _n; row++)
+                for (int col = 0; col < _n; col++)
+                    if (data.Data[row, col] == 0)
+                        notSet.Add(new Tuple<int, int>(row, col));
+
+            while (notSet.Count > 0)
+            {
+                int p = 0;
+                while (p < notSet.Count)
+                {
+                    int x = (data.SetInRow[notSet[p].Item1] | data.SetInCol[notSet[p].Item2]) ^ SkyscraperData_Perms.InitialValues[_n];
+                    if (data.CountBits(x) == 1)
+                    {
+                        data.SetSingleElementMask(notSet[p].Item1, notSet[p].Item2, x);
+                        notSet.RemoveAt(p);
+                    }
+                    else p++;
+                }
+            }
+
+            int[][] res = new int[_n][];
+            for (int i = 0; i < _n; i++)
+            {
+                res[i] = new int[_n];
+                for (int j = 0; j < _n; j++)
+                    res[i][j] = Array.IndexOf(SkyscraperData.Masks, data.Data[i, j]);
+            }
+
+            //data = null;
+            return res;
         }
 
 
@@ -123,6 +158,33 @@ namespace Skyscrapers
                 if (_lists[2 * _n + i] != null)
                     deleted += _lists[2 * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedRight, allowedLeft));
             return deleted;
+        }
+
+        private Tuple<int, int> GetDataRowCol(int listNum, int listIndex)
+        {
+            int row = 0, col = 0;
+
+            switch (listNum / _n)
+            {
+                case 0:
+                    row = listIndex;
+                    col = listNum % _n;
+                    break;
+                case 1:
+                    row = listNum % _n;
+                    col = _n - listIndex - 1;
+                    break;
+                case 2:
+                    row = _n - listIndex - 1;
+                    col = _n - listNum % _n - 1;
+                    break;
+                case 3:
+                    row = _n - listNum % _n - 1;
+                    col = listIndex;
+                    break;
+            }
+
+            return new Tuple<int, int>(row, col);
         }
 
     }

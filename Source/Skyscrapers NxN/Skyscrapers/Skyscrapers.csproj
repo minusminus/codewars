@@ -43,6 +43,7 @@
     <Compile Include="LineVisibilityChecker.cs" />
     <Compile Include="PermutationGen.cs" />
     <Compile Include="PermutationGenList.cs" />
+    <Compile Include="SkyscraperData_Perms.cs" />
     <Compile Include="SkyscraperData.cs" />
     <Compile Include="Skyscrapers4x4_Perms.cs" />
     <Compile Include="SkyscrapersNxN_Perms.cs" />
