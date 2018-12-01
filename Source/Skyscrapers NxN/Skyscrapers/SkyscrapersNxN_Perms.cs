@@ -30,13 +30,14 @@ namespace Skyscrapers
                 if (constraints[i] != 0)
                     _lists[i] = _precalc.GetList(constraints[i]);
 
-            //redukcja w poziomie i pionie wszystkich list
-            while (ReduceLists() > 0) ;
+            //redukcja list
+            ReduceLists();
 
             //wygenerowanie wynikowej tabeli
             SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
             PopulateResultsData(data);
 
+            //konwersja do wynikowego formatu
             int[][] res = new int[_n][];
             for (int i = 0; i < _n; i++)
             {
@@ -46,6 +47,17 @@ namespace Skyscrapers
             }
 
             return res;
+        }
+
+        private void ReduceLists()
+        {
+            while (true)
+            {
+                //redukcja w poziomie i pionie wszystkich list
+                while (ReduceListsHorizVert() > 0) ;
+                //redukcje par przeciwleglych
+                if (ReduceListsOpposite() == 0) return;
+            }
         }
 
         private List<int>[] GetAllowedItems(List<int[]> list)
@@ -97,9 +109,10 @@ namespace Skyscrapers
             return deleted;
         }
 
-        private int ReduceLists()
+        private int ReduceListsHorizVert()
         {
             //reduce horizontal
+            //z list gornych i dolnych wyznaczane dopuszczalne wartosci na pozycjach i na tej podstawie filtrowane listy prawe i lewe
             List<int>[][] allowedTop = CreateAllowedItemsList(0);   //top
             List<int>[][] allowedBottom = CreateAllowedItemsList(2);    //bottom
 
@@ -107,12 +120,56 @@ namespace Skyscrapers
             deleted += ReduceListsDir(3, allowedBottom, allowedTop);
 
             //reduce vertical
+            //analogicznie, na podstawie prawych i lewych filtrowane listy gorne i dolne
             allowedTop = CreateAllowedItemsList(1); //right
             allowedBottom = CreateAllowedItemsList(3);  //left
 
             deleted += ReduceListsDir(0, allowedBottom, allowedTop);
             deleted += ReduceListsDir(2, allowedTop, allowedBottom);
 
+            return deleted;
+        }
+
+        private int ReduceListsOpposite()
+        {
+            int deleted = 0;
+            //redukcja list przeciwleglych
+            //dla listy 1 generowane listy dopuszczalnych wartosci i lista 2 filtrowana na pozycjach gdzie w 1 jest tylko jeden element
+            //pionowe
+            for (int i = 0; i < _n; i++)
+                if ((_lists[i] != null) && (_lists[2 * _n + (_n - i - 1)] != null))
+                    deleted += ReduceListOppositePair(i, 2 * _n + (_n - i - 1));
+            //poziome
+            for (int i = 0; i < _n; i++)
+                if ((_lists[_n + i] != null) && (_lists[3 * _n + (_n - i - 1)] != null))
+                    deleted += ReduceListOppositePair(_n + i, 3 * _n + (_n - i - 1));
+            return deleted;
+        }
+
+        private int ReduceListOppositePair(int i1, int i2)
+        {
+            int deleted = ReduceListOppositePairSingle(i1, i2);
+
+            int currdeleted = 1;
+            while (currdeleted > 0)
+            {
+                int t = i1;
+                i1 = i2;
+                i2 = t;
+                currdeleted = ReduceListOppositePairSingle(i1, i2);
+                deleted += currdeleted;
+            }
+
+            return deleted;
+        }
+
+        private int ReduceListOppositePairSingle(int i1, int i2)
+        {
+            int deleted = 0;
+            List<int>[] allowed = GetAllowedItems(_lists[i1]);
+            for (int i = 0; i < _n; i++)
+                if (allowed[i].Count == 1)
+                    deleted += _lists[i2].RemoveAll(tbl => (tbl[_n - i - 1] != allowed[i][0]));
             return deleted;
         }
 
