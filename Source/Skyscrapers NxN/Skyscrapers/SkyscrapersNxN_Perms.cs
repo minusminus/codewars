@@ -134,7 +134,7 @@ namespace Skyscrapers
         {
             int deleted = 0;
             //redukcja list przeciwleglych
-            //dla listy 1 generowane listy dopuszczalnych wartosci i lista 2 filtrowana na pozycjach gdzie w 1 jest tylko jeden element
+            //dla listy 1 generowane listy dopuszczalnych wartosci i lista 2 filtrowana na odpowiadajacych pozycjach
             //pionowe
             for (int i = 0; i < _n; i++)
                 if ((_lists[i] != null) && (_lists[2 * _n + (_n - i - 1)] != null))
