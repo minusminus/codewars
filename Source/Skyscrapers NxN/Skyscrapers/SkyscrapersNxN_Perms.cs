@@ -168,8 +168,7 @@ namespace Skyscrapers
             int deleted = 0;
             List<int>[] allowed = GetAllowedItems(_lists[i1]);
             for (int i = 0; i < _n; i++)
-                if (allowed[i].Count == 1)
-                    deleted += _lists[i2].RemoveAll(tbl => (tbl[_n - i - 1] != allowed[i][0]));
+                deleted += _lists[i2].RemoveAll(tbl => (!allowed[i].Contains(tbl[_n - i - 1])));
             return deleted;
         }
 
