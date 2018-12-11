@@ -16,5 +16,11 @@ namespace Skyscrapers
             PrecalcData = precalcData;
             Idx = Enumerable.Range(0, PrecalcData.Count).ToList();
         }
+
+        public SkyscrapersNxNDataObject(SkyscrapersNxNDataObject src)
+        {
+            PrecalcData = src.PrecalcData;
+            Idx = src.Idx.ToList();
+        }
     }
 }

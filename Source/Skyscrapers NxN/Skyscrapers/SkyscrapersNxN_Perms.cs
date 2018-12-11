@@ -13,7 +13,6 @@ namespace Skyscrapers
     {
         private readonly int _n;
         private readonly SkyscrapersPrecalcData _precalc;
-        SkyscrapersNxNDataObject[] _lists;  //tablica list
 
         public SkyscrapersNxN_Perms(int n, SkyscrapersPrecalcData precalc)
         {
@@ -23,19 +22,14 @@ namespace Skyscrapers
 
         public int[][] Solve(int[] constraints)
         {
-            _lists = new SkyscrapersNxNDataObject[4 * _n];  //tablica list zainicjalizowana nulami
-
-            //zainicjalizowanie list dla wszystkich ograniczen
-            for (int i = 0; i < _lists.Length; i++)
-                if (constraints[i] != 0)
-                    _lists[i] = new SkyscrapersNxNDataObject(_precalc.GetList(constraints[i]));
+            SkyscraperNxNDataLists dataLists = new SkyscraperNxNDataLists(constraints, _n, _precalc);
 
             //redukcja list
-            ReduceLists();
+            ReduceLists(dataLists);
 
             //wygenerowanie wynikowej tabeli
             SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
-            PopulateResultsData(data);
+            PopulateResultsData(dataLists, data);
 
             //konwersja do wynikowego formatu
             int[][] res = new int[_n][];
@@ -49,14 +43,14 @@ namespace Skyscrapers
             return res;
         }
 
-        private void ReduceLists()
+        private void ReduceLists(SkyscraperNxNDataLists dataLists)
         {
             while (true)
             {
                 //redukcja w poziomie i pionie wszystkich list
-                while (ReduceListsHorizVert() > 0) ;
+                while (ReduceListsHorizVert(dataLists) > 0) ;
                 //redukcje par przeciwleglych
-                if (ReduceListsOpposite() == 0) return;
+                if (ReduceListsOpposite(dataLists) == 0) return;
             }
         }
 
@@ -91,64 +85,64 @@ namespace Skyscrapers
             return false;
         }
 
-        private List<int>[][] CreateAllowedItemsList(int nPart)
+        private List<int>[][] CreateAllowedItemsList(SkyscraperNxNDataLists dataLists, int nPart)
         {
             List<int>[][] res = new List<int>[_n][];
             for (int i = 0; i < _n; i++)
-                if (_lists[nPart * _n + i] != null)
-                    res[i] = GetAllowedItems(_lists[nPart * _n + i]);
+                if (dataLists.Lists[nPart * _n + i] != null)
+                    res[i] = GetAllowedItems(dataLists.Lists[nPart * _n + i]);
             return res;
         }
 
-        private int ReduceListsDir(int nPart, List<int>[][] allowedTop, List<int>[][] allowedBottom)
+        private int ReduceListsDir(SkyscraperNxNDataLists dataLists, int nPart, List<int>[][] allowedTop, List<int>[][] allowedBottom)
         {
             int deleted = 0;
             for (int i = 0; i < _n; i++)
-                if (_lists[nPart * _n + i] != null)
-                    deleted += _lists[nPart * _n + i].Idx.RemoveAll(ix => CheckIfPermToRemove(_lists[nPart * _n + i].PrecalcData[ix], i, allowedTop, allowedBottom));
+                if (dataLists.Lists[nPart * _n + i] != null)
+                    deleted += dataLists.Lists[nPart * _n + i].Idx.RemoveAll(ix => CheckIfPermToRemove(dataLists.Lists[nPart * _n + i].PrecalcData[ix], i, allowedTop, allowedBottom));
             return deleted;
         }
 
-        private int ReduceListsHorizVert()
+        private int ReduceListsHorizVert(SkyscraperNxNDataLists dataLists)
         {
             //reduce horizontal
             //z list gornych i dolnych wyznaczane dopuszczalne wartosci na pozycjach i na tej podstawie filtrowane listy prawe i lewe
-            List<int>[][] allowedTop = CreateAllowedItemsList(0);   //top
-            List<int>[][] allowedBottom = CreateAllowedItemsList(2);    //bottom
+            List<int>[][] allowedTop = CreateAllowedItemsList(dataLists, 0);   //top
+            List<int>[][] allowedBottom = CreateAllowedItemsList(dataLists, 2);    //bottom
 
-            int deleted = ReduceListsDir(1, allowedTop, allowedBottom);
-            deleted += ReduceListsDir(3, allowedBottom, allowedTop);
+            int deleted = ReduceListsDir(dataLists, 1, allowedTop, allowedBottom);
+            deleted += ReduceListsDir(dataLists, 3, allowedBottom, allowedTop);
 
             //reduce vertical
             //analogicznie, na podstawie prawych i lewych filtrowane listy gorne i dolne
-            allowedTop = CreateAllowedItemsList(1); //right
-            allowedBottom = CreateAllowedItemsList(3);  //left
+            allowedTop = CreateAllowedItemsList(dataLists, 1); //right
+            allowedBottom = CreateAllowedItemsList(dataLists, 3);  //left
 
-            deleted += ReduceListsDir(0, allowedBottom, allowedTop);
-            deleted += ReduceListsDir(2, allowedTop, allowedBottom);
+            deleted += ReduceListsDir(dataLists, 0, allowedBottom, allowedTop);
+            deleted += ReduceListsDir(dataLists, 2, allowedTop, allowedBottom);
 
             return deleted;
         }
 
-        private int ReduceListsOpposite()
+        private int ReduceListsOpposite(SkyscraperNxNDataLists dataLists)
         {
             int deleted = 0;
             //redukcja list przeciwleglych
             //dla listy 1 generowane listy dopuszczalnych wartosci i lista 2 filtrowana na odpowiadajacych pozycjach
             //pionowe
             for (int i = 0; i < _n; i++)
-                if ((_lists[i] != null) && (_lists[2 * _n + (_n - i - 1)] != null))
-                    deleted += ReduceListOppositePair(i, 2 * _n + (_n - i - 1));
+                if ((dataLists.Lists[i] != null) && (dataLists.Lists[2 * _n + (_n - i - 1)] != null))
+                    deleted += ReduceListOppositePair(dataLists, i, 2 * _n + (_n - i - 1));
             //poziome
             for (int i = 0; i < _n; i++)
-                if ((_lists[_n + i] != null) && (_lists[3 * _n + (_n - i - 1)] != null))
-                    deleted += ReduceListOppositePair(_n + i, 3 * _n + (_n - i - 1));
+                if ((dataLists.Lists[_n + i] != null) && (dataLists.Lists[3 * _n + (_n - i - 1)] != null))
+                    deleted += ReduceListOppositePair(dataLists, _n + i, 3 * _n + (_n - i - 1));
             return deleted;
         }
 
-        private int ReduceListOppositePair(int i1, int i2)
+        private int ReduceListOppositePair(SkyscraperNxNDataLists dataLists, int i1, int i2)
         {
-            int deleted = ReduceListOppositePairSingle(i1, i2);
+            int deleted = ReduceListOppositePairSingle(dataLists, i1, i2);
 
             int currdeleted = 1;
             while (currdeleted > 0)
@@ -156,19 +150,19 @@ namespace Skyscrapers
                 int t = i1;
                 i1 = i2;
                 i2 = t;
-                currdeleted = ReduceListOppositePairSingle(i1, i2);
+                currdeleted = ReduceListOppositePairSingle(dataLists, i1, i2);
                 deleted += currdeleted;
             }
 
             return deleted;
         }
 
-        private int ReduceListOppositePairSingle(int i1, int i2)
+        private int ReduceListOppositePairSingle(SkyscraperNxNDataLists dataLists, int i1, int i2)
         {
             int deleted = 0;
-            List<int>[] allowed = GetAllowedItems(_lists[i1]);
+            List<int>[] allowed = GetAllowedItems(dataLists.Lists[i1]);
             for (int i = 0; i < _n; i++)
-                deleted += _lists[i2].Idx.RemoveAll(ix => (!allowed[i].Contains(_lists[i2].PrecalcData[ix][_n - i - 1])));
+                deleted += dataLists.Lists[i2].Idx.RemoveAll(ix => (!allowed[i].Contains(dataLists.Lists[i2].PrecalcData[ix][_n - i - 1])));
             return deleted;
         }
 
@@ -199,13 +193,13 @@ namespace Skyscrapers
             return new Tuple<int, int>(row, col);
         }
 
-        private void PopulateResultsData(SkyscraperData_Perms data)
+        private void PopulateResultsData(SkyscraperNxNDataLists dataLists, SkyscraperData_Perms data)
         {
             //ustawienie elementow ze zredukowanych list
-            for (int i = 0; i < _lists.Length; i++)
-                if (_lists[i] != null)
+            for (int i = 0; i < dataLists.Lists.Length; i++)
+                if (dataLists.Lists[i] != null)
                     for (int j = 0; j < _n; j++)
-                        data.SetSingleElement(GetDataRowCol(i, j), _lists[i].PrecalcData[_lists[i].Idx[0]][j]);
+                        data.SetSingleElement(GetDataRowCol(i, j), dataLists.Lists[i].PrecalcData[dataLists.Lists[i].Idx[0]][j]);
 
             //lista nieustawionych elementow
             List<Tuple<int, int>> notSet = new List<Tuple<int, int>>();

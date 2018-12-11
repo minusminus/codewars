@@ -24,7 +24,6 @@ namespace Skyscrapers
 
         public List<int[]> GetList(int visibility)
         {
-            //return _visibilityLists[visibility - 1].ToList();
             return _visibilityLists[visibility - 1];
         }
 

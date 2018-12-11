@@ -45,6 +45,7 @@
     <Compile Include="PermutationGenList.cs" />
     <Compile Include="SkyscraperData_Perms.cs" />
     <Compile Include="SkyscraperData.cs" />
+    <Compile Include="SkyscraperNxNDataLists.cs" />
     <Compile Include="Skyscrapers4x4_Perms.cs" />
     <Compile Include="Skyscrapers6x6_Perms.cs" />
     <Compile Include="SkyscrapersNxNDataObject.cs" />
