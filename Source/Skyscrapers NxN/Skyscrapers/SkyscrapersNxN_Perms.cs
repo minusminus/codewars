@@ -13,7 +13,7 @@ namespace Skyscrapers
     {
         private readonly int _n;
         private readonly SkyscrapersPrecalcData _precalc;
-        List<int[]>[] _lists;  //tablica list
+        SkyscrapersNxNDataObject[] _lists;  //tablica list
 
         public SkyscrapersNxN_Perms(int n, SkyscrapersPrecalcData precalc)
         {
@@ -23,12 +23,12 @@ namespace Skyscrapers
 
         public int[][] Solve(int[] constraints)
         {
-            _lists = new List<int[]>[4 * _n];  //tablica list zainicjalizowana nulami
+            _lists = new SkyscrapersNxNDataObject[4 * _n];  //tablica list zainicjalizowana nulami
 
             //zainicjalizowanie list dla wszystkich ograniczen
             for (int i = 0; i < _lists.Length; i++)
                 if (constraints[i] != 0)
-                    _lists[i] = _precalc.GetList(constraints[i]);
+                    _lists[i] = new SkyscrapersNxNDataObject(_precalc.GetList(constraints[i]));
 
             //redukcja list
             ReduceLists();
@@ -60,15 +60,15 @@ namespace Skyscrapers
             }
         }
 
-        private List<int>[] GetAllowedItems(List<int[]> list)
+        private List<int>[] GetAllowedItems(SkyscrapersNxNDataObject data)
         {
             bool[][] existing = new bool[_n][];
             for (int i = 0; i < _n; i++)
                 existing[i] = new bool[_n];
 
-            foreach (int[] tbl in list)
+            foreach (int ix in data.Idx)
                 for (int i = 0; i < _n; i++)
-                    existing[i][tbl[i] - 1] = true;
+                    existing[i][data.PrecalcData[ix][i] - 1] = true;
 
             List<int>[] res = new List<int>[_n];
             for (int i = 0; i < _n; i++)
@@ -105,7 +105,7 @@ namespace Skyscrapers
             int deleted = 0;
             for (int i = 0; i < _n; i++)
                 if (_lists[nPart * _n + i] != null)
-                    deleted += _lists[nPart * _n + i].RemoveAll(tbl => CheckIfPermToRemove(tbl, i, allowedTop, allowedBottom));
+                    deleted += _lists[nPart * _n + i].Idx.RemoveAll(ix => CheckIfPermToRemove(_lists[nPart * _n + i].PrecalcData[ix], i, allowedTop, allowedBottom));
             return deleted;
         }
 
@@ -168,7 +168,7 @@ namespace Skyscrapers
             int deleted = 0;
             List<int>[] allowed = GetAllowedItems(_lists[i1]);
             for (int i = 0; i < _n; i++)
-                deleted += _lists[i2].RemoveAll(tbl => (!allowed[i].Contains(tbl[_n - i - 1])));
+                deleted += _lists[i2].Idx.RemoveAll(ix => (!allowed[i].Contains(_lists[i2].PrecalcData[ix][_n - i - 1])));
             return deleted;
         }
 
@@ -205,7 +205,7 @@ namespace Skyscrapers
             for (int i = 0; i < _lists.Length; i++)
                 if (_lists[i] != null)
                     for (int j = 0; j < _n; j++)
-                        data.SetSingleElement(GetDataRowCol(i, j), _lists[i][0][j]);
+                        data.SetSingleElement(GetDataRowCol(i, j), _lists[i].PrecalcData[_lists[i].Idx[0]][j]);
 
             //lista nieustawionych elementow
             List<Tuple<int, int>> notSet = new List<Tuple<int, int>>();

@@ -145,11 +145,11 @@ namespace Skyscrapers
             //for (int i = 0; i < _n; i++)
             //{
             //    //listy indeksow elementow dla masek
-            //    Dictionary<int, List<int>> rowels = new Dictionary<int, List<int>>();
+            //    Dictionary<int, PrecalcData<int>> rowels = new Dictionary<int, PrecalcData<int>>();
             //    for (int j = 0; j < _n; j++)
             //    {
             //        //rozbicie elementu (wybranie ustawionych bitow)
-            //        List<int> el = new List<int>();
+            //        PrecalcData<int> el = new PrecalcData<int>();
             //        for (int m = 1; m <= _n; m++)
             //            if ((d.Data[i, j] & SkyscraperData.Masks[m]) != 0) el.Add(SkyscraperData.Masks[m]);
             //        //wyznaczenie list z calego wiersza dla wszystkich par danego elementu 
@@ -158,7 +158,7 @@ namespace Skyscrapers
             //            {
             //                int p = el[f] | el[n];
             //                if (rowels.ContainsKey(p)) continue;
-            //                List<int> tl = new List<int>();
+            //                PrecalcData<int> tl = new PrecalcData<int>();
             //                for (int k = 0; k < _n; k++)
             //                    if ((d.Data[i, k] & p) == p) tl.Add(k);
             //                rowels.Add(p, tl);
