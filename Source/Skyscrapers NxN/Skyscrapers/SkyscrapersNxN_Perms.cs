@@ -25,6 +25,10 @@ namespace Skyscrapers
             //redukcja list
             SkyscraperNxNDataLists resLists = ReduceLists(new SkyscraperNxNDataLists(constraints, _n, _precalc));
 
+            int shortest;
+            if (!CheckListsAndFindShortest(resLists, out shortest)) Console.WriteLine("not CheckListAndFindShortest");
+            Console.WriteLine($"shortest = {shortest}");
+
             //wygenerowanie wynikowej tabeli
             SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
             PopulateResultsData(resLists, data);
@@ -45,15 +49,51 @@ namespace Skyscrapers
 
         private SkyscraperNxNDataLists ReduceLists(SkyscraperNxNDataLists dataLists)
         {
+            PerformListReduction(dataLists);
+            int shortest;
+            if (!CheckListsAndFindShortest(dataLists, out shortest)) return null;
+            if (shortest == -1) return dataLists;
+            for (int i = 0; i < dataLists.Lists[shortest].Idx.Count; i++)
+            {
+                SkyscraperNxNDataLists next = new SkyscraperNxNDataLists(dataLists);
+                next.Lists[shortest].Idx = new List<int>() {dataLists.Lists[shortest].Idx[i]};
+                SkyscraperNxNDataLists nextres = ReduceLists(next);
+                if (nextres != null) return nextres;
+            }
+            return null;
+        }
+
+        private void PerformListReduction(SkyscraperNxNDataLists dataLists)
+        {
             while (true)
             {
                 //redukcja w poziomie i pionie wszystkich list
                 while (ReduceListsHorizVert(dataLists) > 0) ;
                 //redukcje par przeciwleglych
-                if (ReduceListsOpposite(dataLists) == 0) return dataLists;
+                if (ReduceListsOpposite(dataLists) == 0) return;
             }
         }
 
+        private bool CheckListsAndFindShortest(SkyscraperNxNDataLists dataLists, out int shortestIndex)
+        {
+            shortestIndex = -1;
+            int currLen = int.MaxValue;
+
+            for(int i=0; i<dataLists.Lists.Length; i++)
+            {
+                if (dataLists.Lists[i] == null) continue;
+                SkyscrapersNxNDataObject list = dataLists.Lists[i];
+                if (list.Idx.Count == 0) return false;
+                if ((list.Idx.Count > 1) && (list.Idx.Count < currLen))
+                {
+                    currLen = list.Idx.Count;
+                    shortestIndex = i;
+                }
+            }
+
+            return true;
+        }
+        
         private List<int>[] GetAllowedItems(SkyscrapersNxNDataObject data)
         {
             bool[][] existing = new bool[_n][];

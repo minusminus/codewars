@@ -9,7 +9,7 @@ namespace Skyscrapers
     public class SkyscrapersNxNDataObject
     {
         public readonly List<int[]> PrecalcData;
-        public readonly List<int> Idx;
+        public List<int> Idx;
 
         public SkyscrapersNxNDataObject(List<int[]> precalcData )
         {
