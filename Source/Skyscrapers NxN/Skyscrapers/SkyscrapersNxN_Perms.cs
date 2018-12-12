@@ -22,16 +22,17 @@ namespace Skyscrapers
 
         public int[][] Solve(int[] constraints)
         {
-            SkyscraperNxNDataLists dataLists = new SkyscraperNxNDataLists(constraints, _n, _precalc);
-
             //redukcja list
-            ReduceLists(dataLists);
+            SkyscraperNxNDataLists resLists = ReduceLists(new SkyscraperNxNDataLists(constraints, _n, _precalc));
 
             //wygenerowanie wynikowej tabeli
             SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
-            PopulateResultsData(dataLists, data);
+            PopulateResultsData(resLists, data);
+            return ConvertToResultTable(data);
+        }
 
-            //konwersja do wynikowego formatu
+        private int[][] ConvertToResultTable(SkyscraperData_Perms data)
+        {
             int[][] res = new int[_n][];
             for (int i = 0; i < _n; i++)
             {
@@ -39,18 +40,17 @@ namespace Skyscrapers
                 for (int j = 0; j < _n; j++)
                     res[i][j] = Array.IndexOf(SkyscraperData.Masks, data.Data[i, j]);
             }
-
             return res;
         }
 
-        private void ReduceLists(SkyscraperNxNDataLists dataLists)
+        private SkyscraperNxNDataLists ReduceLists(SkyscraperNxNDataLists dataLists)
         {
             while (true)
             {
                 //redukcja w poziomie i pionie wszystkich list
                 while (ReduceListsHorizVert(dataLists) > 0) ;
                 //redukcje par przeciwleglych
-                if (ReduceListsOpposite(dataLists) == 0) return;
+                if (ReduceListsOpposite(dataLists) == 0) return dataLists;
             }
         }
 

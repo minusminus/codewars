@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +17,13 @@ namespace Skyscrapers
 
         public SkyscrapersPrecalcData(int n)
         {
+            Stopwatch sw = Stopwatch.StartNew();
             _visibilityLists = new List<int[]>[n];
             for (int i = 0; i < n; i++)
                 _visibilityLists[i] = new List<int[]>();
             PrepareData(n);
+            sw.Stop();
+            Console.WriteLine($"precalc: {sw.ElapsedMilliseconds} ms");
         }
 
         public List<int[]> GetList(int visibility)
