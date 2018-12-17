@@ -25,9 +25,11 @@ namespace Skyscrapers
             //redukcja list
             SkyscraperNxNDataLists resLists = ReduceLists(new SkyscraperNxNDataLists(constraints, _n, _precalc));
 
-            int shortest;
-            if (!CheckListsAndFindShortest(resLists, out shortest)) Console.WriteLine("not CheckListAndFindShortest");
-            Console.WriteLine($"shortest = {shortest}");
+            //int shortest;
+            //if (!CheckListsAndFindShortest(resLists, out shortest)) Console.WriteLine("not CheckListAndFindShortest");
+            //Console.WriteLine($"shortest = {shortest}");
+            if (resLists == null)
+                throw new Exception("solution not found");
 
             //wygenerowanie wynikowej tabeli
             SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
@@ -57,6 +59,7 @@ namespace Skyscrapers
             {
                 SkyscraperNxNDataLists next = new SkyscraperNxNDataLists(dataLists);
                 next.Lists[shortest].Idx = new List<int>() {dataLists.Lists[shortest].Idx[i]};
+                ReduceListsSingleItemOnList(next, shortest);
                 SkyscraperNxNDataLists nextres = ReduceLists(next);
                 if (nextres != null) return nextres;
             }
@@ -203,6 +206,59 @@ namespace Skyscrapers
             List<int>[] allowed = GetAllowedItems(dataLists.Lists[i1]);
             for (int i = 0; i < _n; i++)
                 deleted += dataLists.Lists[i2].Idx.RemoveAll(ix => (!allowed[i].Contains(dataLists.Lists[i2].PrecalcData[ix][_n - i - 1])));
+            return deleted;
+        }
+
+        private int ReduceListsSingleItemOnList(SkyscraperNxNDataLists dataLists, int singleItemIndex)
+        {
+            //Tuple<int, int> rowcol = GetDataRowCol(oneIndex);
+            int set = singleItemIndex/_n;   //strona kwadratu
+            int lvl = singleItemIndex%_n;  //indeks na stronie kwadratu
+            int orientation = set%2;   //wskazana lista jest pionowa (parzyste) czy pozioma (nieparzyste)
+            bool top = (set < 2);   //gorna czy dolna (prawa czy lewa)
+
+            int deleted = 0;
+            int[] row = dataLists.Lists[singleItemIndex].PrecalcData[dataLists.Lists[singleItemIndex].Idx[0]];
+            if (orientation == 1)
+            {   //parzyste - wskazana jest pozioma
+                for (int i = 0; i < _n; i++)
+                {
+                    if (top)
+                    {   //jest z prawej
+                        if (dataLists.Lists[0 + i] != null)
+                            deleted += dataLists.Lists[0 + i].Idx.RemoveAll(ix => dataLists.Lists[0 + i].PrecalcData[ix][lvl] == row[i]);
+                        if (dataLists.Lists[2 * _n + i] != null)
+                            deleted += dataLists.Lists[2*_n + i].Idx.RemoveAll(ix => dataLists.Lists[2*_n + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
+                    }
+                    else
+                    {   //jest z lewej
+                        if (dataLists.Lists[0 + i] != null)
+                            deleted += dataLists.Lists[0 + i].Idx.RemoveAll(ix => dataLists.Lists[0 + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
+                        if (dataLists.Lists[2 * _n + i] != null)
+                            deleted += dataLists.Lists[2 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[2 * _n + i].PrecalcData[ix][lvl] == row[i]);
+                    }
+                }
+            }
+            else
+            {   //nieparzyste - wskazana jest pionowa
+                for (int i = 0; i < _n; i++)
+                {
+                    if (top)
+                    {   //jest z lewej (gorna)
+                        if (dataLists.Lists[1 * _n + i] != null)
+                            deleted += dataLists.Lists[1 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[1 * _n + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
+                        if (dataLists.Lists[3 * _n + i] != null)
+                            deleted += dataLists.Lists[3 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[3 * _n + i].PrecalcData[ix][lvl] == row[i]);
+                    }
+                    else
+                    {   //jest z prawej (dolna)
+                        if (dataLists.Lists[1 * _n + i] != null)
+                            deleted += dataLists.Lists[1 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[1 * _n + i].PrecalcData[ix][lvl] == row[i]);
+                        if (dataLists.Lists[3 * _n + i] != null)
+                            deleted += dataLists.Lists[3 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[3 * _n + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
+                    }
+                }
+            }
             return deleted;
         }
 
