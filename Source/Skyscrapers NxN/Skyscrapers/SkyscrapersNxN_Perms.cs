@@ -23,7 +23,9 @@ namespace Skyscrapers
         public int[][] Solve(int[] constraints)
         {
             //redukcja list
-            SkyscraperNxNDataLists resLists = ReduceLists(new SkyscraperNxNDataLists(constraints, _n, _precalc));
+            SkyscraperNxNDataLists initData = new SkyscraperNxNDataLists(constraints, _n, _precalc);
+            PrepareInitialData(initData);
+            SkyscraperNxNDataLists resLists = ReduceLists(initData);
 
             //int shortest;
             //if (!CheckListsAndFindShortest(resLists, out shortest)) Console.WriteLine("not CheckListAndFindShortest");
@@ -64,6 +66,18 @@ namespace Skyscrapers
                 if (nextres != null) return nextres;
             }
             return null;
+        }
+
+        private void PrepareInitialData(SkyscraperNxNDataLists dataLists)
+        {
+            int deleted = 1;
+            while (deleted > 0)
+            {
+                deleted = 0;
+                for (int i = 0; i < dataLists.Lists.Length; i++)
+                    if ((dataLists.Lists[i] != null) && (dataLists.Lists[i].Idx.Count == 1))
+                        deleted += ReduceListsSingleItemOnList(dataLists, i);
+            }
         }
 
         private void PerformListReduction(SkyscraperNxNDataLists dataLists)
@@ -141,8 +155,12 @@ namespace Skyscrapers
         {
             int deleted = 0;
             for (int i = 0; i < _n; i++)
-                if (dataLists.Lists[nPart * _n + i] != null)
-                    deleted += dataLists.Lists[nPart * _n + i].Idx.RemoveAll(ix => CheckIfPermToRemove(dataLists.Lists[nPart * _n + i].PrecalcData[ix], i, allowedTop, allowedBottom));
+                if ((dataLists.Lists[nPart*_n + i] != null) && (dataLists.Lists[nPart*_n + i].Idx.Count > 1))
+                {
+                    deleted += dataLists.Lists[nPart*_n + i].Idx.RemoveAll(ix => CheckIfPermToRemove(dataLists.Lists[nPart*_n + i].PrecalcData[ix], i, allowedTop, allowedBottom));
+                    if (dataLists.Lists[nPart*_n + i].Idx.Count == 1)
+                        ReduceListsSingleItemOnList(dataLists, nPart*_n + i);
+                }
             return deleted;
         }
 
@@ -206,12 +224,13 @@ namespace Skyscrapers
             List<int>[] allowed = GetAllowedItems(dataLists.Lists[i1]);
             for (int i = 0; i < _n; i++)
                 deleted += dataLists.Lists[i2].Idx.RemoveAll(ix => (!allowed[i].Contains(dataLists.Lists[i2].PrecalcData[ix][_n - i - 1])));
+            if ((deleted > 0) && (dataLists.Lists[i2].Idx.Count == 1))
+                ReduceListsSingleItemOnList(dataLists, i2);
             return deleted;
         }
 
         private int ReduceListsSingleItemOnList(SkyscraperNxNDataLists dataLists, int singleItemIndex)
         {
-            //Tuple<int, int> rowcol = GetDataRowCol(oneIndex);
             int set = singleItemIndex/_n;   //strona kwadratu
             int lvl = singleItemIndex%_n;  //indeks na stronie kwadratu
             int orientation = set%2;   //wskazana lista jest pionowa (parzyste) czy pozioma (nieparzyste)
@@ -225,17 +244,13 @@ namespace Skyscrapers
                 {
                     if (top)
                     {   //jest z prawej
-                        if (dataLists.Lists[0 + i] != null)
-                            deleted += dataLists.Lists[0 + i].Idx.RemoveAll(ix => dataLists.Lists[0 + i].PrecalcData[ix][lvl] == row[i]);
-                        if (dataLists.Lists[2 * _n + i] != null)
-                            deleted += dataLists.Lists[2*_n + i].Idx.RemoveAll(ix => dataLists.Lists[2*_n + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 0 + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 2 * _n + i, _n - lvl - 1, row[i]);
                     }
                     else
                     {   //jest z lewej
-                        if (dataLists.Lists[0 + i] != null)
-                            deleted += dataLists.Lists[0 + i].Idx.RemoveAll(ix => dataLists.Lists[0 + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
-                        if (dataLists.Lists[2 * _n + i] != null)
-                            deleted += dataLists.Lists[2 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[2 * _n + i].PrecalcData[ix][lvl] == row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 0 + i, _n - lvl - 1, row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 2 * _n + (_n - i - 1), lvl, row[i]);
                     }
                 }
             }
@@ -245,20 +260,25 @@ namespace Skyscrapers
                 {
                     if (top)
                     {   //jest z lewej (gorna)
-                        if (dataLists.Lists[1 * _n + i] != null)
-                            deleted += dataLists.Lists[1 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[1 * _n + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
-                        if (dataLists.Lists[3 * _n + i] != null)
-                            deleted += dataLists.Lists[3 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[3 * _n + i].PrecalcData[ix][lvl] == row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 1 * _n + i, _n - lvl - 1, row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 3 * _n + (_n - i - 1), lvl, row[i]);
                     }
                     else
                     {   //jest z prawej (dolna)
-                        if (dataLists.Lists[1 * _n + i] != null)
-                            deleted += dataLists.Lists[1 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[1 * _n + i].PrecalcData[ix][lvl] == row[i]);
-                        if (dataLists.Lists[3 * _n + i] != null)
-                            deleted += dataLists.Lists[3 * _n + i].Idx.RemoveAll(ix => dataLists.Lists[3 * _n + i].PrecalcData[ix][_n - lvl - 1] == row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 1 * _n + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOne(dataLists, 3 * _n + i, _n - lvl - 1, row[i]);
                     }
                 }
             }
+            return deleted;
+        }
+
+        private int ReduceListsSingleItemOnListOne(SkyscraperNxNDataLists dataLists, int listIndex, int lvlIndex,
+            int rowValue)
+        {
+            int deleted = 0;
+            if (dataLists.Lists[listIndex] != null)
+                deleted += dataLists.Lists[listIndex].Idx.RemoveAll(ix => dataLists.Lists[listIndex].PrecalcData[ix][lvlIndex] != rowValue);
             return deleted;
         }
 
