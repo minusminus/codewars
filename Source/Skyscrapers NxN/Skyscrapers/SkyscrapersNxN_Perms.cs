@@ -244,13 +244,21 @@ namespace Skyscrapers
                 {
                     if (top)
                     {   //jest z prawej
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 0 + (_n - i - 1), lvl, row[i]);
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 2 * _n + i, _n - lvl - 1, row[i]);
+                        //prostopadle
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 0*_n + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 2*_n + i, _n - lvl - 1, row[i]);
+                        //rownolegle
+                        if (1*_n + i != singleItemIndex)
+                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 1*_n + i, row, false);
+                        deleted += ReduceListsSingleItemOnListOneEq(dataLists, 3*_n + i, row, true);
                     }
                     else
                     {   //jest z lewej
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 0 + i, _n - lvl - 1, row[i]);
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 2 * _n + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 0*_n + i, _n - lvl - 1, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 2*_n + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneEq(dataLists, 1*_n + i, row, true);
+                        if (3*_n + i != singleItemIndex)
+                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 3*_n + i, row, false);
                     }
                 }
             }
@@ -260,26 +268,51 @@ namespace Skyscrapers
                 {
                     if (top)
                     {   //jest z lewej (gorna)
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 1 * _n + i, _n - lvl - 1, row[i]);
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 3 * _n + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 1*_n + i, _n - lvl - 1, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 3*_n + (_n - i - 1), lvl, row[i]);
+                        if (0*_n + i != singleItemIndex)
+                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 0*_n + i, row, false);
+                        deleted += ReduceListsSingleItemOnListOneEq(dataLists, 2*_n + i, row, true);
                     }
                     else
                     {   //jest z prawej (dolna)
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 1 * _n + (_n - i - 1), lvl, row[i]);
-                        deleted += ReduceListsSingleItemOnListOne(dataLists, 3 * _n + i, _n - lvl - 1, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 1*_n + (_n - i - 1), lvl, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 3*_n + i, _n - lvl - 1, row[i]);
+                        deleted += ReduceListsSingleItemOnListOneEq(dataLists, 0*_n + i, row, true);
+                        if (2*_n + i != singleItemIndex)
+                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 2*_n + i, row, false);
                     }
                 }
             }
             return deleted;
         }
 
-        private int ReduceListsSingleItemOnListOne(SkyscraperNxNDataLists dataLists, int listIndex, int lvlIndex,
+        private int ReduceListsSingleItemOnListOneNonEq(SkyscraperNxNDataLists dataLists, int listIndex, int lvlIndex,
             int rowValue)
         {
-            int deleted = 0;
-            if (dataLists.Lists[listIndex] != null)
-                deleted += dataLists.Lists[listIndex].Idx.RemoveAll(ix => dataLists.Lists[listIndex].PrecalcData[ix][lvlIndex] != rowValue);
-            return deleted;
+            if (dataLists.Lists[listIndex] == null) return 0;
+            return dataLists.Lists[listIndex].Idx.RemoveAll(ix => dataLists.Lists[listIndex].PrecalcData[ix][lvlIndex] != rowValue);
+        }
+
+        private bool CheckIfSingleItemPermToRemove(int[] checkRow, int[] singleRow, bool backwards)
+        {
+            if (backwards)
+            {
+                for (int i = 0; i < _n; i++)
+                    if (checkRow[_n - i - 1] == singleRow[i]) return true;
+            }
+            else
+            {
+                for (int i = 0; i < _n; i++)
+                    if (checkRow[i] == singleRow[i]) return true;
+            }
+            return false;
+        }
+
+        private int ReduceListsSingleItemOnListOneEq(SkyscraperNxNDataLists dataLists, int listIndex, int[] singleRow, bool backwards)
+        {
+            if (dataLists.Lists[listIndex] == null) return 0;
+            return dataLists.Lists[listIndex].Idx.RemoveAll(ix => CheckIfSingleItemPermToRemove(dataLists.Lists[listIndex].PrecalcData[ix], singleRow, backwards));
         }
 
         private Tuple<int, int> GetDataRowCol(int listNum, int listIndex)
