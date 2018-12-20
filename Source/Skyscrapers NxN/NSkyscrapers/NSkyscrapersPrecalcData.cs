@@ -35,20 +35,14 @@ namespace NSkyscrapers
         }
 
         [Test]
-        public void TwoGetListGIvesDifferentObjects()
+        public void TwoGetListGivesSameObjects()
         {
             SkyscrapersPrecalcData obj = new SkyscrapersPrecalcData(4);
 
             List<int[]> l1 = obj.GetList(1);
             List<int[]> l2 = obj.GetList(1);
 
-            l1.Count.ShouldBe(l2.Count);
-            l1.Clear();
-            l1.Count.ShouldBe(0);
-            l2.Count.ShouldBeGreaterThan(0);
-
-            l1 = obj.GetList(1);
-            l1.Count.ShouldBe(l2.Count);
+            (l1 == l2).ShouldBeTrue();
         }
     }
 }
