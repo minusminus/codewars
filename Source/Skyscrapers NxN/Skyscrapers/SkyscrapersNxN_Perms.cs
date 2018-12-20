@@ -8,6 +8,11 @@ namespace Skyscrapers
 {
     /// <summary>
     /// rozwiazanie z wykorzystaniem list wszystkich permutacji N elementowego zbioru
+    /// 
+    /// listy filtrowane sa:
+    /// - za pomoca dopuszczalnych wartosci z list poprzecznych
+    /// - dopuszczalnych wartosci przez listy zredukowane do 1 elementu
+    /// - za pomoca dopuszczalnych wartosci z list przeciwleglych
     /// </summary>
     public class SkyscrapersNxN_Perms
     {
