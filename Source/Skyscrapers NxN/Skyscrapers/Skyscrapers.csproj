@@ -48,6 +48,7 @@
     <Compile Include="SkyscraperNxNDataLists.cs" />
     <Compile Include="Skyscrapers4x4_Perms.cs" />
     <Compile Include="Skyscrapers6x6_Perms.cs" />
+    <Compile Include="Skyscrapers7x7_Perms.cs" />
     <Compile Include="SkyscrapersNxNDataObject.cs" />
     <Compile Include="SkyscrapersNxN_Perms.cs" />
     <Compile Include="SkyscrapersPrecalcData.cs" />
