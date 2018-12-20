@@ -231,64 +231,34 @@ namespace Skyscrapers
             int side = singleItemIndex/_n;   //strona kwadratu
             int lvl = singleItemIndex%_n;  //indeks na stronie kwadratu
             int orientation = side%2;   //wskazana lista jest pionowa (parzyste) czy pozioma (nieparzyste)
-            bool top = (side < 2);   //gorna czy dolna (prawa czy lewa)
+            int top = (side/2);   //gorna czy dolna (prawa czy lewa)
 
             //przeciwlegla lista jest juz niepotrzebna i mozna ja usunac
             //Console.WriteLine($"{singleItemIndex}, opposite: {GetOppositeListIndex(singleItemIndex)}");
             //dataLists.Lists[GetOppositeListIndex(singleItemIndex)] = null;
 
-            int deleted = 0;
+            //odpowiednie indeksy w kolejnosci stron: gorna, dolna, prawa, lewa
+            int[][] sideindexes = new int[4][] {new int[] {3, 1, 0, 2}, new int[] {1, 3, 2, 0}, new int[] {0, 2, 1, 3}, new int[] {2, 0, 3, 1}};
+            int[] sideix = sideindexes[orientation*2 + top];
+
             int[] row = dataLists.Lists[singleItemIndex].PrecalcData[dataLists.Lists[singleItemIndex].Idx[0]];
-            if (orientation == 1)
-            {   //parzyste - wskazana jest pozioma
-                for (int i = 0; i < _n; i++)
-                {
-                    if (top)
-                    {   //jest z prawej
-                        //prostopadle
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 0*_n + (_n - i - 1), lvl, row[i]);
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 2*_n + i, _n - lvl - 1, row[i]);
-                        //rownolegle
-                        if (i != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 1*_n + i, row, false);
-                        if (_n - i - 1 != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 3*_n + i, row, true);
-                    }
-                    else
-                    {   //jest z lewej
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 0*_n + i, _n - lvl - 1, row[i]);
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 2*_n + (_n - i - 1), lvl, row[i]);
-                        if (_n - i - 1 != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 1*_n + i, row, true);
-                        if (i != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 3*_n + i, row, false);
-                    }
-                }
-            }
-            else
-            {   //nieparzyste - wskazana jest pionowa
-                for (int i = 0; i < _n; i++)
-                {
-                    if (top)
-                    {   //jest z lewej (gorna)
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 1*_n + i, _n - lvl - 1, row[i]);
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 3*_n + (_n - i - 1), lvl, row[i]);
-                        if (i != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 0*_n + i, row, false);
-                        if (_n - i - 1 != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 2*_n + i, row, true);
-                    }
-                    else
-                    {   //jest z prawej (dolna)
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 1*_n + (_n - i - 1), lvl, row[i]);
-                        deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, 3*_n + i, _n - lvl - 1, row[i]);
-                        if (_n - i - 1 != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 0*_n + i, row, true);
-                        if (i != lvl)
-                            deleted += ReduceListsSingleItemOnListOneEq(dataLists, 2*_n + i, row, false);
-                    }
-                }
-            }
+            int deleted = 0;
+            for (int i = 0; i < _n; i++)
+                deleted += ReduceListsSingleItemOnListSideReduction(dataLists, sideix[0], sideix[1], sideix[2], sideix[3], i, lvl, row);
+            return deleted;
+        }
+
+        private int ReduceListsSingleItemOnListSideReduction(SkyscraperNxNDataLists dataLists, int ieq1, int ieq2,
+            int inoneq1, int inoneq2, int i, int lvl, int[] row)
+        {
+            //prostopadle
+            int deleted = ReduceListsSingleItemOnListOneNonEq(dataLists, ieq1*_n + (_n - i - 1), lvl, row[i]);
+            deleted += ReduceListsSingleItemOnListOneNonEq(dataLists, ieq2*_n + i, _n - lvl - 1, row[i]);
+            //rownolegle
+            if (i != lvl)
+                deleted += ReduceListsSingleItemOnListOneEq(dataLists, inoneq1*_n + i, row, false);
+            if (_n - i - 1 != lvl)
+                deleted += ReduceListsSingleItemOnListOneEq(dataLists, inoneq2*_n + i, row, true);
             return deleted;
         }
 
