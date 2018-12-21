@@ -48,7 +48,7 @@ namespace Skyscrapers
             {
                 res[i] = new int[_n];
                 for (int j = 0; j < _n; j++)
-                    res[i][j] = Array.IndexOf(SkyscraperData.Masks, data.Data[i, j]);
+                    res[i][j] = Array.IndexOf(SkyscraperData_Perms.Masks, data.Data[i, j]);
             }
             return res;
         }
