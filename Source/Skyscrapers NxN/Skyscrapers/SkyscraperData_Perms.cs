@@ -11,7 +11,6 @@ namespace Skyscrapers
     {
         private const int MaxN = 8;
         public static readonly int[] Masks = new int[MaxN + 1] { 0, 1, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7 };
-        public static readonly int[] MasksRev = new int[MaxN + 1] { 0, Masks[1] ^ -1, Masks[2] ^ -1, Masks[3] ^ -1, Masks[4] ^ -1, Masks[5] ^ -1, Masks[6] ^ -1, Masks[7] ^ -1, Masks[8] ^ -1 };
         public static readonly int[] InitialValues = new int[MaxN + 1] { 0, 1, (Masks[2] - 1) | Masks[2], (Masks[3] - 1) | Masks[3], (Masks[4] - 1) | Masks[4], (Masks[5] - 1) | Masks[5], (Masks[6] - 1) | Masks[6], (Masks[7] - 1) | Masks[7], (Masks[8] - 1) | Masks[8] };
         public static readonly int[] ByteBitCount = new int[256]
         {
@@ -43,43 +42,25 @@ namespace Skyscrapers
             6, 7, 6, 7, 7, 8
         };
 
-        private readonly int _size;
         public readonly int[,] Data;
         public readonly int[] SetInRow;
         public readonly int[] SetInCol;
 
         public SkyscraperData_Perms(int N)
         {
-            _size = N;
             Data = new int[N, N];
             SetInRow = new int[N];
             SetInCol = new int[N];
         }
 
-        public int CountBits(int row, int col)
-        {
-            return CountBits(Data[row, col]);
-        }
-
         public int CountBits(int val)
         {
-            SkyscrapersCounters.CountBits++;
             return ByteBitCount[val];
-        }
-
-        public void SetElement(int row, int col, int num)
-        {
-            Data[row, col] |= SkyscraperData_Perms.Masks[num];
-        }
-
-        public void SetSingleElement(int row, int col, int num)
-        {
-            SetSingleElementMask(row, col, SkyscraperData_Perms.Masks[num]);
         }
 
         public void SetSingleElement(Tuple<int, int> pos, int num)
         {
-            SetSingleElement(pos.Item1, pos.Item2, num);
+            SetSingleElementMask(pos.Item1, pos.Item2, SkyscraperData_Perms.Masks[num]);
         }
 
         public void SetSingleElementMask(int row, int col, int mask)
@@ -88,11 +69,5 @@ namespace Skyscrapers
             SetInRow[row] |= mask;
             SetInCol[col] |= mask;
         }
-
-        public void SetMultiElementMask(int row, int col, int mask)
-        {
-            Data[row, col] = mask;
-        }
-
     }
 }

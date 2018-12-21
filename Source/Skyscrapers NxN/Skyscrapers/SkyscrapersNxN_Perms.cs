@@ -245,7 +245,7 @@ namespace Skyscrapers
                 if (dataLists.Lists[iopp].Idx.Count == 1)   //jezeli po redukcji listy przeciwleglej zostaje 1 element to mozna ta liste usunac, bo jest identyczna z biezaca
                     dataLists.Lists[iopp] = null;
                 else  //w przeciwnym wypadku zostanie 0 i nie ma potrzeby dalej redukowac, bo caly uklad jest niepoprawny
-                    return -1;
+                    return 0;
             }
 
             //odpowiednie indeksy w kolejnosci stron: gorna, dolna, prawa, lewa
