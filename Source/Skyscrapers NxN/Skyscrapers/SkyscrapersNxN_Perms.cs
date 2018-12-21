@@ -220,14 +220,14 @@ namespace Skyscrapers
             return deleted;
         }
 
-        private int ReduceListOppositePairSingle(SkyscraperNxNDataLists dataLists, int i1, int i2)
+        private int ReduceListOppositePairSingle(SkyscraperNxNDataLists dataLists, int i1, int i2, bool reducesingleitem = true)
         {
             int deleted = 0;
             List<int>[] allowed = GetAllowedItems(dataLists.Lists[i1]);
             for (int i = 0; i < _n; i++)
                 deleted += dataLists.Lists[i2].Idx.RemoveAll(ix => (!allowed[i].Contains(dataLists.Lists[i2].PrecalcData[ix][_n - i - 1])));
-            if ((deleted > 0) && (dataLists.Lists[i2].Idx.Count == 1))
-                ReduceListsSingleItemOnList(dataLists, i2);
+            if (reducesingleitem && (deleted > 0) && (dataLists.Lists[i2].Idx.Count == 1))
+                deleted += ReduceListsSingleItemOnList(dataLists, i2);
             return deleted;
         }
 
@@ -238,9 +238,15 @@ namespace Skyscrapers
             int orientation = side%2;   //wskazana lista jest pionowa (parzyste) czy pozioma (nieparzyste)
             int top = (side/2);   //gorna czy dolna (prawa czy lewa)
 
-            //przeciwlegla lista jest juz niepotrzebna i mozna ja usunac
-            //Console.WriteLine($"{singleItemIndex}, opposite: {GetOppositeListIndex(singleItemIndex)}");
-            //dataLists.Lists[GetOppositeListIndex(singleItemIndex)] = null;
+            int iopp = GetOppositeListIndex(singleItemIndex);
+            if (dataLists.Lists[iopp] != null)
+            {
+                ReduceListOppositePairSingle(dataLists, singleItemIndex, iopp, false);
+                if (dataLists.Lists[iopp].Idx.Count == 1)   //jezeli po redukcji listy przeciwleglej zostaje 1 element to mozna ta liste usunac, bo jest identyczna z biezaca
+                    dataLists.Lists[iopp] = null;
+                else  //w przeciwnym wypadku zostanie 0 i nie ma potrzeby dalej redukowac, bo caly uklad jest niepoprawny
+                    return -1;
+            }
 
             //odpowiednie indeksy w kolejnosci stron: gorna, dolna, prawa, lewa
             int[][] sideindexes = new int[4][] {new int[] {3, 1, 0, 2}, new int[] {1, 3, 2, 0}, new int[] {0, 2, 1, 3}, new int[] {2, 0, 3, 1}};
