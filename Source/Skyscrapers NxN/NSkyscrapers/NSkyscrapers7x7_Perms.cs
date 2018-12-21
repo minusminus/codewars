@@ -62,5 +62,65 @@ namespace NSkyscrapers
 
             SolveTestPuzzle(clues, expected);
         }
+
+        [Test]
+        public void Test_Attempt_1_Hard()
+        {
+            var clues = new[]
+            {
+                6, 4, 0, 2, 0, 0, 3, 0, 3, 3, 3, 0, 0, 4, 0, 5, 0, 5, 0, 2, 0, 0, 0, 0, 4, 0, 0, 3
+            };
+            var expected = new[]
+            {
+                new[] {2, 1, 6, 4, 3, 7, 5},
+                new[] {3, 2, 5, 7, 4, 6, 1},
+                new[] {4, 6, 7, 5, 1, 2, 3},
+                new[] {1, 3, 2, 6, 7, 5, 4},
+                new[] {5, 7, 1, 3, 2, 4, 6},
+                new[] {6, 4, 3, 2, 5, 1, 7},
+                new[] {7, 5, 4, 1, 6, 3, 2}
+            };
+            SolveTestPuzzle(clues, expected);
+        }
+
+        [Test]
+        public void Test_Attempt_2_Hard()
+        {
+            var clues = new[]
+            {
+                0, 0, 0, 5, 0, 0, 3, 0, 6, 3, 4, 0, 0, 0, 3, 0, 0, 0, 2, 4, 0, 2, 6, 2, 2, 2, 0, 0
+            };
+            var expected = new[]
+            {
+                new[] {3, 5, 6, 1, 7, 2, 4},
+                new[] {7, 6, 5, 2, 4, 3, 1},
+                new[] {2, 7, 1, 3, 6, 4, 5},
+                new[] {4, 3, 7, 6, 1, 5, 2},
+                new[] {6, 4, 2, 5, 3, 1, 7},
+                new[] {1, 2, 3, 4, 5, 7, 6},
+                new[] {5, 1, 4, 7, 2, 6, 3}
+            };
+            SolveTestPuzzle(clues, expected);
+        }
+
+        [Test]
+        public void Test_Attempt_3_VeryHard()
+        {
+            var clues = new[]
+            {
+                0, 0, 5, 0, 0, 0, 6, 4, 0, 0, 2, 0, 2, 0, 0, 5, 2, 0, 0, 0, 5, 0, 3, 0, 5, 0, 0, 3
+            };
+            var expected = new[]
+            {
+                new[] {3, 5, 6, 1, 7, 2, 4},
+                new[] {7, 6, 5, 2, 4, 3, 1},
+                new[] {2, 7, 1, 3, 6, 4, 5},
+                new[] {4, 3, 7, 6, 1, 5, 2},
+                new[] {6, 4, 2, 5, 3, 1, 7},
+                new[] {1, 2, 3, 4, 5, 7, 6},
+                new[] {5, 1, 4, 7, 2, 6, 3}
+            };
+            SolveTestPuzzle(clues, expected);
+        }
     }
 }

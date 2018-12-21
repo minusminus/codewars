@@ -27,6 +27,9 @@ namespace Skyscrapers
 
         public int[][] Solve(int[] constraints)
         {
+            //ograniczenia do logu
+            //Console.WriteLine($"{string.Join(", ", constraints)}");
+
             //redukcja list
             SkyscraperNxNDataLists initData = new SkyscraperNxNDataLists(constraints, _n, _precalc);
             PrepareInitialData(initData);
