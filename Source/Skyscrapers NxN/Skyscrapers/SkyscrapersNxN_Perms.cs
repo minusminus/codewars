@@ -65,9 +65,7 @@ namespace Skyscrapers
             if (!CheckListsAndFindShortest(dataLists, out shortest)) return null;
             if (shortest == -1)
             {
-                SkyscraperData_Perms tdata = new SkyscraperData_Perms(_n);
-                PopulateResultsData(dataLists, tdata);
-                data = tdata;
+                TryPopulateResultsData(dataLists, out data);
                 return dataLists;
             }
             for (int i = 0; i < dataLists.Lists[shortest].Idx.Count; i++)
@@ -76,17 +74,22 @@ namespace Skyscrapers
                 next.Lists[shortest].Idx = new List<int>() {dataLists.Lists[shortest].Idx[i]};
                 ReduceListsSingleItemOnList(next, shortest);
                 SkyscraperNxNDataLists nextres = ReduceLists(next, out data);
-                if (nextres != null)
-                {
-                    SkyscraperData_Perms tdata = new SkyscraperData_Perms(_n);
-                    if (PopulateResultsData(nextres, tdata))
-                    {
-                        data = tdata;
-                        return nextres;
-                    }
-                }
+                if ((nextres != null) && TryPopulateResultsData(nextres, out data))
+                    return nextres;
             }
             return null;
+        }
+
+        private bool TryPopulateResultsData(SkyscraperNxNDataLists dataLists, out SkyscraperData_Perms data)
+        {
+            data = null;
+            SkyscraperData_Perms tdata = new SkyscraperData_Perms(_n);
+            if (PopulateResultsData(dataLists, tdata))
+            {
+                data = tdata;
+                return true;
+            }
+            return false;
         }
 
         private void PrepareInitialData(SkyscraperNxNDataLists dataLists)
