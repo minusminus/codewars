@@ -33,14 +33,15 @@ namespace Skyscrapers
             //redukcja list
             SkyscraperNxNDataLists initData = new SkyscraperNxNDataLists(constraints, _n, _precalc);
             PrepareInitialData(initData);
-            SkyscraperNxNDataLists resLists = ReduceLists(initData);
+            SkyscraperData_Perms data;
+            SkyscraperNxNDataLists resLists = ReduceLists(initData, out data);
 
             if (resLists == null)
                 throw new Exception("solution not found");
 
             //wygenerowanie wynikowej tabeli
-            SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
-            PopulateResultsData(resLists, data);
+            //SkyscraperData_Perms data = new SkyscraperData_Perms(_n);
+            //PopulateResultsData(resLists, data);
             return ConvertToResultTable(data);
         }
 
@@ -56,19 +57,34 @@ namespace Skyscrapers
             return res;
         }
 
-        private SkyscraperNxNDataLists ReduceLists(SkyscraperNxNDataLists dataLists)
+        private SkyscraperNxNDataLists ReduceLists(SkyscraperNxNDataLists dataLists, out SkyscraperData_Perms data)
         {
+            data = null;
             PerformListReduction(dataLists);
             int shortest;
             if (!CheckListsAndFindShortest(dataLists, out shortest)) return null;
-            if (shortest == -1) return dataLists;
+            if (shortest == -1)
+            {
+                SkyscraperData_Perms tdata = new SkyscraperData_Perms(_n);
+                PopulateResultsData(dataLists, tdata);
+                data = tdata;
+                return dataLists;
+            }
             for (int i = 0; i < dataLists.Lists[shortest].Idx.Count; i++)
             {
                 SkyscraperNxNDataLists next = new SkyscraperNxNDataLists(dataLists);
                 next.Lists[shortest].Idx = new List<int>() {dataLists.Lists[shortest].Idx[i]};
                 ReduceListsSingleItemOnList(next, shortest);
-                SkyscraperNxNDataLists nextres = ReduceLists(next);
-                if (nextres != null) return nextres;
+                SkyscraperNxNDataLists nextres = ReduceLists(next, out data);
+                if (nextres != null)
+                {
+                    SkyscraperData_Perms tdata = new SkyscraperData_Perms(_n);
+                    if (PopulateResultsData(nextres, tdata))
+                    {
+                        data = tdata;
+                        return nextres;
+                    }
+                }
             }
             return null;
         }
@@ -337,7 +353,7 @@ namespace Skyscrapers
             return new Tuple<int, int>(row, col);
         }
 
-        private void PopulateResultsData(SkyscraperNxNDataLists dataLists, SkyscraperData_Perms data)
+        private bool PopulateResultsData(SkyscraperNxNDataLists dataLists, SkyscraperData_Perms data)
         {
             //ustawienie elementow ze zredukowanych list
             for (int i = 0; i < dataLists.Lists.Length; i++)
@@ -355,6 +371,7 @@ namespace Skyscrapers
             //ustawienie brakujacych elementow
             while (notSet.Count > 0)
             {
+                int savedcnt = notSet.Count;
                 int p = 0;
                 while (p < notSet.Count)
                 {
@@ -366,7 +383,10 @@ namespace Skyscrapers
                     }
                     else p++;
                 }
+                if ((notSet.Count > 0) && (savedcnt == notSet.Count))
+                    return false;
             }
+            return true;
         }
     }
 }
