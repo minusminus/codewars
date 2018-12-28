@@ -12,16 +12,22 @@ namespace BE
         public char x;
     }
 
+    /// <summary>
+    /// Algorytm:
+    /// 1. parsowany jest ciag wejsciowy w stalym formacie
+    /// 2. dla kazdego wspolczynnika wielomianu (liczonego z trojkata pitagorasa) generowany jest kolejny element (potega) wyniku
+    /// </summary>
     public class BE
     {
         public BinomialData ParseBinomial(string btxt)
         {
-            //(ax+b)^n
             BinomialData res = new BinomialData();
 
+            //(ax+b)^n
             string[] arr = btxt.Replace("(", string.Empty).Replace(")", string.Empty).Split('^');
             res.n = Int64.Parse(arr[1]);
 
+            //ax+b
             res.b = 1;
             string[] arr2 = arr[0].Split('+');
             if (arr2.Length == 1)
@@ -31,6 +37,7 @@ namespace BE
             }
             res.b *= Int64.Parse(arr2[arr2.Length - 1]);
 
+            //ax
             string s = arr[0].Remove(arr[0].Length - arr2[arr2.Length - 1].Length - 1);
             res.x = s[s.Length - 1];
             s = s.Remove(s.Length - 1);
