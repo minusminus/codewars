@@ -42,7 +42,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenerateCoefsTests.cs" />
     <Compile Include="NBE.cs" />
+    <Compile Include="ParseBinomialTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

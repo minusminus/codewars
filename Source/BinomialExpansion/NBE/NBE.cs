@@ -40,5 +40,11 @@ namespace NBE
             _testObj.Expand("(-2k-3)^3").ShouldBe("-8k^3-36k^2-54k-27");
             _testObj.Expand("(-7x-7)^0").ShouldBe("1");
         }
+
+        [Test]
+        public void TestMinusA()
+        {
+            _testObj.Expand("(-m+3)^3").ShouldBe("-m^3+9m^2-27m+27");
+        }
     }
 }
