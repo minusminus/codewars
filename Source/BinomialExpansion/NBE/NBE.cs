@@ -46,5 +46,12 @@ namespace NBE
         {
             _testObj.Expand("(-m+3)^3").ShouldBe("-m^3+9m^2-27m+27");
         }
+
+        [Test]
+        public void TestsFromKata()
+        {
+            _testObj.Expand("(-15g+0)^5").ShouldBe("-759375g^5");
+
+        }
     }
 }

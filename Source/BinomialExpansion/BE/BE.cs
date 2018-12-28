@@ -56,6 +56,7 @@ namespace BE
             if (index == data.n)
             {
                 Int64 lastc = (Int64)Math.Pow(data.b, data.n);
+                if (lastc == 0) return "";
                 return (lastc > 0 ? "+" : "") + lastc.ToString();
             }
 
