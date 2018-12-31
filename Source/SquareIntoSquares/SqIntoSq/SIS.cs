@@ -21,7 +21,7 @@ namespace SqIntoSq
             {
                 _solution.Push(i);
                 long nextn = (long)Math.Floor(Math.Sqrt(spaceleft - i*i));
-                if (Process(nextn, spaceleft - nextn*nextn)) return true;
+                if (Process(nextn, spaceleft - i*i)) return true;
                 _solution.Pop();
             }
             return false;
@@ -30,7 +30,7 @@ namespace SqIntoSq
         public string PrepareResult()
         {
             long[] arr = _solution.ToArray();
-            Array.Reverse(arr);
+            //Array.Reverse(arr);
             return string.Join(" ", arr);
         }
 
