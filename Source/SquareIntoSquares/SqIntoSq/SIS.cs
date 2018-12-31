@@ -25,7 +25,7 @@ namespace SqIntoSq
             {
                 _solution.Push(i);
                 long nextn = (long)Math.Floor(Math.Sqrt(spaceleft - i*i));
-                if (nextn >= i) nextn--;
+                if (nextn >= i) nextn = i - 1;
                 if (Process(nextn, spaceleft - i*i)) return true;
                 _solution.Pop();
             }
