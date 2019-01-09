@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 namespace SqIntoSq
 {
     /// <summary>
+    /// Rekurencyjne rozwiazanie przegladajace w glab od n-1.
+    /// Dopasowanie zaczyna sie od najwiekszych elementow do najmniejszych, dopasowywane jest pozostale pole powierzchni.
+    /// Petla w dol trwa dopoki suma kwadratow liczb do danego x jest wieksza rowna pozostalej powierzchni
+    /// i jezeli jest mniejsza, to nie ma mozliwosci dopasowania.
     /// 
     /// suma kwadratow n pierwszych liczb naturalnych: n(n+1)(2n+1)/6
     /// </summary>
@@ -21,6 +25,7 @@ namespace SqIntoSq
             {
                 _solution.Push(i);
                 long nextn = (long)Math.Floor(Math.Sqrt(spaceleft - i*i));
+                if (nextn >= i) nextn = i - 1;
                 if (Process(nextn, spaceleft - i*i)) return true;
                 _solution.Pop();
             }
@@ -29,17 +34,17 @@ namespace SqIntoSq
 
         public string PrepareResult()
         {
-            long[] arr = _solution.ToArray();
-            //Array.Reverse(arr);
-            return string.Join(" ", arr);
+            return string.Join(" ", _solution.ToArray());
         }
 
         public string Decompose(long n)
         {
+            if (n < 2) return null;
+
             _solution.Clear();
             if (Process(n - 1, n*n))
                 return PrepareResult();
-            return "";
+            return null;
         }
     }
 }
