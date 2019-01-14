@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="DTMCFR.cs" />
     <Compile Include="DTMCFRDataChunk.cs" />
+    <Compile Include="DTMCFRDataToAnalysis.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

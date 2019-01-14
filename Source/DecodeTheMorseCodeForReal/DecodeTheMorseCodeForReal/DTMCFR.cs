@@ -24,8 +24,20 @@ namespace DecodeTheMorseCodeForReal
             return res;
         }
 
+        public DTMCFRDataToAnalysis[] GetArrayToAnalysis(List<DTMCFRDataChunk> chunks, char symbol )
+        {
+            return chunks.Where(x => x.Symbol == symbol)
+                .GroupBy(x => x.Length)
+                .OrderBy(x => x.Key)
+                .Select(x => new DTMCFRDataToAnalysis() {Length = x.Key})
+                .ToArray();
+        }
+
         public string decodeBitsAdvanced(string bits)
         {
+            List<DTMCFRDataChunk> chunks = ChunkBits(bits);
+
+
             return "";
         }
 
