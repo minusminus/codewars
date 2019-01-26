@@ -30,18 +30,56 @@ namespace DecodeTheMorseCodeForReal
             return borders;
         }
 
-        public int MoveBorders(int[] borders, double[] means)
+        public int MoveBorders(DTMCFRDataToAnalysis[] data, int[] borders, double[] means)
         {
             int changed = 0;
 
+            int[] newborders = new int[borders.Length];
+            int bix = 0;
+            newborders[bix] = 0;
+            int currmean = 0;
+            for (int i = 1; i < data.Length; i++)
+            {
+                newborders[bix] = i;
+                if (Math.Abs(data[i].NormalizedLength - means[currmean]) > Math.Abs(data[i].NormalizedLength - means[currmean + 1]))
+                {
+                    if (newborders[bix] != borders[bix]) changed++;
+                    currmean++;
+                    bix++;
+                }
+                if (bix == newborders.Length) break;
+            }
+
+            newborders.CopyTo(borders, 0);
             return changed;
         }
 
-        public void Cluster(DTMCFRDataToAnalysis[] data, double[] means)
+        public void CalculateMeans(DTMCFRDataToAnalysis[] data, int[] borders, double[] means)
+        {
+            means[0] = 0;
+            for (int i = 0; i < borders[0]; i++)
+                means[0] += data[i].NormalizedLength;
+            means[0] /= borders[0];
+
+            for (int j = 1; j < borders.Length - 1; j++)
+            {
+
+            }
+
+            means[means.Length - 1] = 0;
+            for (int i = borders[borders.Length - 1]; i < data.Length; i++)
+                means[means.Length - 1] = data[i].NormalizedLength;
+            means[means.Length - 1] /= data.Length - borders[borders.Length - 1];
+        }
+
+        public int[] Cluster(DTMCFRDataToAnalysis[] data, double[] means)
         {
             NormalizeData(data);
 
             int[] borders = InitializeBorders(means.Length);
+            while (MoveBorders(data, borders, means) > 0)
+                CalculateMeans(data, borders, means);
+            return borders;
         }
     }
 }

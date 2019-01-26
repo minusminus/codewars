@@ -60,5 +60,29 @@ namespace NDecodeTheMorseCodeForReal
             },
                 new double[] {0, 1.0*(1.0/20.0), 2.0*(1.0/20.0), 3.0*(1.0/20.0), 1});
         }
+
+        private void CheckMoveBorders(DTMCFRDataToAnalysis[] data, int[] borders, double[] means, int[] expectedborders, int expectedchange)
+        {
+            _testObj.MoveBorders(data, borders, means).ShouldBe(expectedchange);
+            for (int i = 0; i < borders.Length; i++)
+                borders[i].ShouldBe(expectedborders[i]);
+        }
+
+        [Test]
+        public void MoveBordersTest()
+        {
+            DTMCFRDataToAnalysis[] data = new DTMCFRDataToAnalysis[]
+            {
+                new DTMCFRDataToAnalysis() {Length = 1},
+                new DTMCFRDataToAnalysis() {Length = 2},
+                new DTMCFRDataToAnalysis() {Length = 3},
+                new DTMCFRDataToAnalysis() {Length = 4},
+                new DTMCFRDataToAnalysis() {Length = 5}
+            };  //normalized: 0, 0.25, 0.5, 0.75, 1
+            _testObj.NormalizeData(data);
+
+            CheckMoveBorders(data, new int[2] { 0, 0 }, new double[3] { 0.25, 0.5, 0.75 }, new int[2] { 2, 3 }, 2);
+            CheckMoveBorders(data, new int[2] { 2, 3 }, new double[3] { 0.25, 0.5, 0.75 }, new int[2] { 2, 3 }, 0);
+        }
     }
 }
