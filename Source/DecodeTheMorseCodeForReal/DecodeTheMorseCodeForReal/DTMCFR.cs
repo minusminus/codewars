@@ -36,7 +36,12 @@ namespace DecodeTheMorseCodeForReal
         public string decodeBitsAdvanced(string bits)
         {
             List<DTMCFRDataChunk> chunks = ChunkBits(bits);
+            DTMCFRDataToAnalysis[] arr0 = GetArrayToAnalysis(chunks, '0');
+            DTMCFRDataToAnalysis[] arr1 = GetArrayToAnalysis(chunks, '1');
 
+            DTMCFRClustering clustering = new DTMCFRClustering();
+            int[] borders0 = clustering.Cluster(arr0, new double[2] {0, 0});
+            int[] borders1 = clustering.Cluster(arr1, new double[3] {0, 0, 0});
 
             return "";
         }
