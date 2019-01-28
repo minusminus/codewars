@@ -54,22 +54,18 @@ namespace DecodeTheMorseCodeForReal
             return changed;
         }
 
+
+        private double CalculateSingleMean(DTMCFRDataToAnalysis[] data, int ixfrom, int ixto)
+        {
+            return data.Skip(ixfrom).Take(ixto - ixfrom).Average(x => x.NormalizedLength);
+        }
+
         public void CalculateMeans(DTMCFRDataToAnalysis[] data, int[] borders, double[] means)
         {
-            means[0] = 0;
-            for (int i = 0; i < borders[0]; i++)
-                means[0] += data[i].NormalizedLength;
-            means[0] /= borders[0];
-
-            for (int j = 1; j < borders.Length - 1; j++)
-            {
-
-            }
-
-            means[means.Length - 1] = 0;
-            for (int i = borders[borders.Length - 1]; i < data.Length; i++)
-                means[means.Length - 1] = data[i].NormalizedLength;
-            means[means.Length - 1] /= data.Length - borders[borders.Length - 1];
+            means[0] = CalculateSingleMean(data, 0, borders[0]);
+            for (int i = 1; i < borders.Length; i++)
+                means[i] = CalculateSingleMean(data, borders[i - 1], borders[i]);
+            means[means.Length - 1] = CalculateSingleMean(data, borders[borders.Length - 1], data.Length);
         }
 
         public int[] Cluster(DTMCFRDataToAnalysis[] data, double[] means)
