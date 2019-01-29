@@ -99,10 +99,57 @@ namespace DecodeTheMorseCodeForReal
             return DecodeChunks(chunks, borders0, borders1);
         }
 
+        private static readonly Dictionary<string, char> MorseCode = new Dictionary<string, char>
+        {
+            {".-", 'A'},
+            {"-...", 'B'},
+            {"-.-.", 'C'},
+            {"-..", 'D'},
+            {".", 'E'},
+            {"..-.", 'F'},
+            {"--.", 'G'},
+            {"....", 'H'},
+            {"..", 'I'},
+            {".---", 'J'},
+            {"-.-", 'K'},
+            {".-..", 'L'},
+            {"--", 'M'},
+            {"-.", 'N'},
+            {"---", 'O'},
+            {".--.", 'P'},
+            {"--.-", 'Q'},
+            {".-.", 'R'},
+            {"...", 'S'},
+            {"-", 'T'},
+            {"..-", 'U'},
+            {"...-", 'V'},
+            {".--", 'W'},
+            {"-..-", 'X'},
+            {"-.--", 'Y'},
+            {"--..", 'Z'},
+            {"-----", '0'},
+            {".----", '1'},
+            {"..---", '2'},
+            {"...--", '3'},
+            {"....-", '4'},
+            {".....", '5'},
+            {"-....", '6'},
+            {"--...", '7'},
+            {"---..", '8'},
+            {"----.", '9'}
+        };
+
+
         public string decodeMorse(string morseCode)
         {
             // Map morse code using map Preloaded.MORSE_CODE
-            return "";
+
+            string[] tbl = morseCode.Replace("   ", " | ")
+                .Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder res = new StringBuilder();
+            foreach (string s in tbl)
+                res.Append(s == "|" ? ' ' : MorseCode[s]);
+            return res.ToString();
         }
     }
 }
