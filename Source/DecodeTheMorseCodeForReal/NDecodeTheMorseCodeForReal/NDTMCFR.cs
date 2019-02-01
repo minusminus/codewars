@@ -27,5 +27,23 @@ namespace NDecodeTheMorseCodeForReal
                     "000000001101101001110000011000000111111010011111001111110000000000"))
                 .ShouldBe("HEY");
         }
+
+        [Test]
+        public void DashesOnly()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    "000000001111011110111100011110111101111000111101111011110000000000"))
+                .ShouldBe("MMM");
+        }
+
+        [Test]
+        public void DotsOnly()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    "000000001101101101100011011011011000110110110110000000000000"))
+                .ShouldBe("HHH");
+        }
     }
 }
