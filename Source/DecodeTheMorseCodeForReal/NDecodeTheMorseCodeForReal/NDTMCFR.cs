@@ -45,5 +45,14 @@ namespace NDecodeTheMorseCodeForReal
                     "000000001101101101100011011011011000110110110110000000000000"))
                 .ShouldBe("HHH");
         }
+
+        [Test]
+        public void ESpaceETest()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    "10000001"))
+                .ShouldBe("E E");
+        }
     }
 }
