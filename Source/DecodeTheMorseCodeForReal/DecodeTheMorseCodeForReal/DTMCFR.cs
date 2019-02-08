@@ -8,31 +8,6 @@ namespace DecodeTheMorseCodeForReal
 {
     public class DTMCFR
     {
-        public List<DTMCFRDataChunk> ChunkBits(string bits)
-        {
-            List<DTMCFRDataChunk> res = new List<DTMCFRDataChunk>();
-
-            foreach (char c in bits)
-            {
-                if ((res.Count == 0) || (res.Last().Symbol != c))
-                    res.Add(new DTMCFRDataChunk() {Symbol = c, Length = 0});
-                res.Last().Length++;
-            }
-            if (res.First().Symbol == '0') res.RemoveAt(0);
-            if (res.Last().Symbol == '0') res.RemoveAt(res.Count - 1);
-
-            return res;
-        }
-
-        public DTMCFRDataToAnalysis[] GetArrayToAnalysis(List<DTMCFRDataChunk> chunks, char symbol )
-        {
-            return chunks.Where(x => x.Symbol == symbol)
-                .GroupBy(x => x.Length)
-                .OrderBy(x => x.Key)
-                .Select(x => new DTMCFRDataToAnalysis() {Length = x.Key})
-                .ToArray();
-        }
-
         private void ConvertBordersToLengths(int[] borders, DTMCFRDataToAnalysis[] arr)
         {
             for (int i = 0; i < borders.Length; i++)
@@ -86,17 +61,22 @@ namespace DecodeTheMorseCodeForReal
 
         public string decodeBitsAdvanced(string bits)
         {
-            List<DTMCFRDataChunk> chunks = ChunkBits(bits);
-            DTMCFRDataToAnalysis[] arr0 = GetArrayToAnalysis(chunks, '0');
-            DTMCFRDataToAnalysis[] arr1 = GetArrayToAnalysis(chunks, '1');
+            DTMCFRChunker chunker = new DTMCFRChunker();
+            List<DTMCFRDataChunk> chunks = chunker.ChunkBits(bits);
+            DTMCFRDataToAnalysis[] arr0 = chunker.GetArrayToAnalysis(chunks, '0');
+            DTMCFRDataToAnalysis[] arr1 = chunker.GetArrayToAnalysis(chunks, '1');
+            //DTMCFRDataToAnalysis[] arr = chunker.GetArrayToAnalysis(chunks);
 
             DTMCFRClustering clustering = new DTMCFRClustering();
-            int[] borders0 = clustering.Cluster(arr0, new double[3] {1.0/14.0, 6.0/14.0, 13.0/14.0}); //pause between: dots/dashes 1 unit, characters 3 units, words 7 units [7 units long: 1/7 * 1/2, 6/14, 13/14]
-            int[] borders1 = clustering.Cluster(arr1, new double[2] {1.0/6.0, 5.0/6.0});    //dot 1 unit, dash 3 units [3 units long, dot in half of first unit - 1/3 * 1/2, dash in half of last - 5/6]
+            int[] borders0 = clustering.Cluster(arr0, new double[3] { 1.0 / 14.0, 6.0 / 14.0, 13.0 / 14.0 }); //pause between: dots/dashes 1 unit, characters 3 units, words 7 units [7 units long: 1/7 * 1/2, 6/14, 13/14]
+            int[] borders1 = clustering.Cluster(arr1, new double[2] { 1.0 / 6.0, 5.0 / 6.0 });    //dot 1 unit, dash 3 units [3 units long, dot in half of first unit - 1/3 * 1/2, dash in half of last - 5/6]
             ConvertBordersToLengths(borders0, arr0);
             ConvertBordersToLengths(borders1, arr1);
+            //int[] borders = clustering.Cluster(arr, new double[3] { 1.0 / 14.0, 6.0 / 14.0, 13.0 / 14.0 }); //pause between: dots/dashes 1 unit, characters 3 units, words 7 units [7 units long: 1/7 * 1/2, 6/14, 13/14]
+            //ConvertBordersToLengths(borders, arr);
 
             return DecodeChunks(chunks, borders0, borders1);
+            //return DecodeChunks(chunks, borders);
         }
 
 

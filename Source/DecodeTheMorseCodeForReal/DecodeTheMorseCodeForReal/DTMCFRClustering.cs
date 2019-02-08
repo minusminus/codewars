@@ -12,16 +12,6 @@ namespace DecodeTheMorseCodeForReal
     /// </summary>
     public class DTMCFRClustering
     {
-        public void NormalizeData(DTMCFRDataToAnalysis[] data)
-        {
-            double normCoef = 1.0/(data[data.Length - 1].Length - data[0].Length);
-
-            data[0].NormalizedLength = 0;
-            data[data.Length - 1].NormalizedLength = 1;
-            for (int i = 1; i <= data.Length - 2; i++)
-                data[i].NormalizedLength = (data[i].Length - data[0].Length)*normCoef;
-        }
-
         public int[] InitializeBorders(int meansCount)
         {
             int[] borders = new int[meansCount - 1];
@@ -70,8 +60,6 @@ namespace DecodeTheMorseCodeForReal
 
         public int[] Cluster(DTMCFRDataToAnalysis[] data, double[] means)
         {
-            NormalizeData(data);
-
             int[] borders = InitializeBorders(means.Length);
             while (MoveBorders(data, borders, means) > 0)
                 CalculateMeans(data, borders, means);

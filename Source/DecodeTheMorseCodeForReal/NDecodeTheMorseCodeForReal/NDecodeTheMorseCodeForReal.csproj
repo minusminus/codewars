@@ -43,8 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NDTMCFR.cs" />
+    <Compile Include="NDTMCFRChunker.cs" />
     <Compile Include="NDTMCFRClustering.cs" />
-    <Compile Include="NDTMCFRInternalTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

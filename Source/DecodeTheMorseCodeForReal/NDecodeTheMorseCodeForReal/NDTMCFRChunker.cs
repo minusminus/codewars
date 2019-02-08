@@ -10,9 +10,9 @@ using Shouldly;
 namespace NDecodeTheMorseCodeForReal
 {
     [TestFixture]
-    public class NDTMCFRInternalTests
+    public class NDTMCFRChunker
     {
-        private readonly DTMCFR _testObj = new DTMCFR();
+        private readonly DTMCFRChunker _testObj = new DTMCFRChunker();
 
         private List<DTMCFRDataChunk> CreateDefaultChunksList()
         {
@@ -57,7 +57,10 @@ namespace NDecodeTheMorseCodeForReal
             DTMCFRDataToAnalysis[] tbl = _testObj.GetArrayToAnalysis(chunks, symbol);
             tbl.Length.ShouldBe(expected.Length);
             for (int i = 0; i < tbl.Length; i++)
+            {
                 tbl[i].Length.ShouldBe(expected[i].Length);
+                tbl[i].NormalizedLength.ShouldBe(expected[i].NormalizedLength);
+            }
         }
 
         [Test]
@@ -68,36 +71,18 @@ namespace NDecodeTheMorseCodeForReal
             CheckArrayToAnalysis(chunks, '0',
                 new DTMCFRDataToAnalysis[]
                 {
-                    new DTMCFRDataToAnalysis() {Length = 1},
-                    new DTMCFRDataToAnalysis() {Length = 2},
-                    new DTMCFRDataToAnalysis() {Length = 5}
+                    new DTMCFRDataToAnalysis() {Length = 1, NormalizedLength = 0},
+                    new DTMCFRDataToAnalysis() {Length = 2, NormalizedLength = 0.25},
+                    new DTMCFRDataToAnalysis() {Length = 5, NormalizedLength = 1}
                 });
 
             CheckArrayToAnalysis(chunks, '1',
                 new DTMCFRDataToAnalysis[]
                 {
-                    new DTMCFRDataToAnalysis() {Length = 1},
-                    new DTMCFRDataToAnalysis() {Length = 2},
-                    new DTMCFRDataToAnalysis() {Length = 3}
+                    new DTMCFRDataToAnalysis() {Length = 1, NormalizedLength = 0},
+                    new DTMCFRDataToAnalysis() {Length = 2, NormalizedLength = 0.25},
+                    new DTMCFRDataToAnalysis() {Length = 3, NormalizedLength = 0.5}
                 });
-        }
-
-        [Test]
-        public void Experiments()
-        {
-            List<DTMCFRDataChunk> expected = CreateDefaultChunksList();
-
-            var tbl =
-                expected.Where(x => x.Symbol == '1')
-                    .GroupBy(x => x.Length)
-                    .OrderBy(x => x.Key)
-                    .Select(x => new DTMCFRDataToAnalysis() {Length = x.Key})
-                    .ToArray();
-            Console.WriteLine(tbl.Count().ToString());
-            foreach (var e in tbl)
-            {
-                Console.WriteLine(e.Length.ToString());
-            }
         }
     }
 }
