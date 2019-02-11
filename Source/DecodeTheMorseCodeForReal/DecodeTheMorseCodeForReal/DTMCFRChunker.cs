@@ -42,7 +42,7 @@ namespace DecodeTheMorseCodeForReal
             DTMCFRDataToAnalysis[] res = chunks.Where(x => x.Symbol == symbol)
                 .GroupBy(x => x.Length)
                 .OrderBy(x => x.Key)
-                .Select(x => new DTMCFRDataToAnalysis() { Length = x.Key })
+                .Select(x => new DTMCFRDataToAnalysis() { Length = x.Key, Cluster = -1})
                 .ToArray();
             NormalizeData(res, chunks);
             return res;

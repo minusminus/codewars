@@ -43,6 +43,7 @@
     <Compile Include="DTMCFR.cs" />
     <Compile Include="DTMCFRChunker.cs" />
     <Compile Include="DTMCFRClustering.cs" />
+    <Compile Include="DTMCFRClustering2.cs" />
     <Compile Include="DTMCFRDataChunk.cs" />
     <Compile Include="DTMCFRDataToAnalysis.cs" />
     <Compile Include="Preloaded.cs" />

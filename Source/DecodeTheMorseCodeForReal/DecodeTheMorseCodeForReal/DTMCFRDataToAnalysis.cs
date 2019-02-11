@@ -10,5 +10,6 @@ namespace DecodeTheMorseCodeForReal
     {
         public int Length;
         public double NormalizedLength;
+        public int Cluster;
     }
 }
