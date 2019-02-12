@@ -16,16 +16,21 @@ namespace DecodeTheMorseCodeForReal
         {
             int changed = 0;
 
+            int[] meansix = means.Select((mean, i) => new {mean, i})
+                .Where(x => x.mean > -1)
+                .Select(x => x.i)
+                .ToArray();
+
             int currmean = 0;
             for (int i = 0; i < data.Length; i++)
             {
-                for (int j = currmean; j < means.Length - 1; j++)
+                for (int j = currmean; j < meansix.Length - 1; j++)
                 {
-                    if (Math.Abs(data[i].NormalizedLength - means[currmean]) <= Math.Abs(data[i].NormalizedLength - means[currmean + 1])) break;
+                    if (Math.Abs(data[i].NormalizedLength - means[meansix[currmean]]) <= Math.Abs(data[i].NormalizedLength - means[meansix[currmean + 1]])) break;
                     currmean++;
                 }
-                if (data[i].Cluster != currmean) changed++;
-                data[i].Cluster = currmean;
+                if (data[i].Cluster != meansix[currmean]) changed++;
+                data[i].Cluster = meansix[currmean];
             }
 
             return changed;
@@ -33,13 +38,11 @@ namespace DecodeTheMorseCodeForReal
 
         public void CalculateMeans(DTMCFRDataToAnalysis[] data, double[] means)
         {
-            //for (int i = 0; i < means.Length; i++)
-            //    means[i] = data.Where(x => x.Cluster == i).Average(x => x.NormalizedLength);
-            for (int i = 0; i < means.Length; i++) means[i] = 0;
+            for (int i = 0; i < means.Length; i++) means[i] = -1;
             data.GroupBy(x => new {ID = x.Cluster})
                 .Select(g => new {ID = g.Key.ID, Avg = g.Average(p => p.NormalizedLength)})
                 .ToList()
-                .ForEach(x=>means[x.ID]=x.Avg);
+                .ForEach(x => means[x.ID] = x.Avg);
         }
 
         public void Cluster(DTMCFRDataToAnalysis[] data, double[] means)
