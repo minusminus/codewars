@@ -34,6 +34,15 @@ namespace NDecodeTheMorseCodeForReal
             _testObj.decodeMorse(
                 _testObj.decodeBitsAdvanced(
                     "000000001111011110111100011110111101111000111101111011110000000000"))
+                .ShouldBe("OOO");
+        }
+
+        [Test]
+        public void DashesOnlyShorter()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    "000000001111011110001111011110001111011110000000000"))
                 .ShouldBe("MMM");
         }
 
