@@ -29,6 +29,15 @@ namespace NDecodeTheMorseCodeForReal
         }
 
         [Test]
+        public void SingleWord2()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    "00000000000111011111111011111011111000000101100011111100000111110011101100000100000"))
+                .ShouldBe("JUDE");
+        }
+
+        [Test]
         public void DashesOnly()
         {
             _testObj.decodeMorse(
