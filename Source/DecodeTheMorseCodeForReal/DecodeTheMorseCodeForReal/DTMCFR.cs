@@ -36,17 +36,6 @@ namespace DecodeTheMorseCodeForReal
             return res.ToString();
         }
 
-        public void CheckClustersFor0(DTMCFRDataToAnalysis[] arr, double[] means)
-        {
-            //sa przerwy miedzy elementami i miedzy slowami, nie ma miedzy znakami
-            if ((means[1] == -1) && (means[0] != -1) && (means[2] != -1))
-            {
-                for (int i = 0; i < arr.Length; i++)
-                    if (arr[i].Cluster == 2)
-                        arr[i].Cluster = 1;
-            }
-        }
-
         public string decodeBitsAdvanced(string bits)
         {
             DTMCFRChunker chunker = new DTMCFRChunker();
@@ -57,9 +46,10 @@ namespace DecodeTheMorseCodeForReal
             DTMCFRClustering2 clustering = new DTMCFRClustering2();
             double[] means0 = new double[3] {1.0/14.0, 6.0/14.0, 13.0/14.0};
             clustering.Cluster(arr0, means0); //pause between: dots/dashes 1 unit, characters 3 units, words 7 units [7 units long: 1/7 * 1/2, 6/14, 13/14]
-            CheckClustersFor0(arr0, means0);
             double[] means1 = new double[2] {1.0/6.0, 5.0/6.0};
             clustering.Cluster(arr1, means1);    //dot 1 unit, dash 3 units [3 units long, dot in half of first unit - 1/3 * 1/2, dash in half of last - 5/6]
+            DTMCFRReclustering reclustering = new DTMCFRReclustering();
+            reclustering.Recluster(arr0, means0, arr1, means1);
 
             return DecodeChunks2(chunks, arr0, arr1);
         }
