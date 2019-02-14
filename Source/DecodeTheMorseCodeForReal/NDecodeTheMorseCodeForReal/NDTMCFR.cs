@@ -72,5 +72,23 @@ namespace NDecodeTheMorseCodeForReal
                     "10000001"))
                 .ShouldBe("E E");
         }
+
+        [Test]
+        public void EmptyString()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    ""))
+                .ShouldBe("");
+        }
+
+        [Test]
+        public void OnlyZeroes()
+        {
+            _testObj.decodeMorse(
+                _testObj.decodeBitsAdvanced(
+                    "00000000000000000000"))
+                .ShouldBe("");
+        }
     }
 }

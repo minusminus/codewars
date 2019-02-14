@@ -22,7 +22,7 @@ namespace DecodeTheMorseCodeForReal
                 res.Last().Length++;
             }
             if (res.First().Symbol == '0') res.RemoveAt(0);
-            if (res.Last().Symbol == '0') res.RemoveAt(res.Count - 1);
+            if (res.Any() && (res.Last().Symbol == '0')) res.RemoveAt(res.Count - 1);
 
             return res;
         }
