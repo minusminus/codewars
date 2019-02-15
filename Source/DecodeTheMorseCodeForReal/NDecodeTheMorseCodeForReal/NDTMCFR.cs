@@ -106,6 +106,15 @@ namespace NDecodeTheMorseCodeForReal
             ExecTest(
                 "1001",
                 "EE");
+            ExecTest(
+                "10001",
+                "EE");
+            ExecTest(
+                "100001",
+                "EE");
+            ExecTest(
+                "10000001",
+                "E E");
         }
 
         [Test]
@@ -160,6 +169,14 @@ namespace NDecodeTheMorseCodeForReal
             //.- --. -..- AGX (8- 1-0, 0-1)
             //-- --.-.-- M?  (8- 1-1, 0-0)
             //- - --. -.-- TTGY (7-cluster 1)
+        }
+
+        [Test]
+        public void SingleSpecialTest()
+        {
+            ExecTest(
+                "1001",
+                "EE");
         }
     }
 }

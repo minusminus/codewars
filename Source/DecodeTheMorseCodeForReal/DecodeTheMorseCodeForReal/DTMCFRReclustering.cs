@@ -14,7 +14,9 @@ namespace DecodeTheMorseCodeForReal
         public void Recluster(DTMCFRDataToAnalysis[] arr0, double[] means0, DTMCFRDataToAnalysis[] arr1, double[] means1)
         {
             EmptyCluster1For0(arr0, means0);
+            EmptyClusters01For0(arr0, means0);
             ChangeClusters0BasedOn1(arr0, arr1);
+            //ChangeToCluster0BasedOnUnitLength(arr0, arr1);
         }
 
         private void EmptyCluster1For0(DTMCFRDataToAnalysis[] arr0, double[] means0)
@@ -25,6 +27,18 @@ namespace DecodeTheMorseCodeForReal
                 for (int i = 0; i < arr0.Length; i++)
                     if (arr0[i].Cluster == 2)
                         arr0[i].Cluster = 1;
+                means0[1] = means0[2];
+                means0[2] = -1;
+            }
+        }
+
+        private void EmptyClusters01For0(DTMCFRDataToAnalysis[] arr0, double[] means0)
+        {
+            //tylko 2 dla zer, robimy z niej 1
+            if ((means0[1] == -1) && (means0[0] == -1) && (means0[2] != -1))
+            {
+                for (int i = 0; i < arr0.Length; i++)
+                    arr0[i].Cluster = 1;
                 means0[1] = means0[2];
                 means0[2] = -1;
             }
@@ -47,6 +61,19 @@ namespace DecodeTheMorseCodeForReal
             {
                 if ((oneBorder0 > -1) && (arr0[i].Cluster > 0) && (arr0[i].Length <= oneBorder0)) arr0[i].Cluster = 0;
                 else if ((oneBorder1 > -1) && (arr0[i].Cluster > 1) && (arr0[i].Length <= oneBorder1)) arr0[i].Cluster = 1;
+            }
+        }
+
+        private void ChangeToCluster0BasedOnUnitLength(DTMCFRDataToAnalysis[] arr0, DTMCFRDataToAnalysis[] arr1)
+        {
+            int zeroMaxLen0 = GetMaxBorderForCluster(arr0, 0);
+            int zeroMaxLen1 = GetMaxBorderForCluster(arr0, 1);
+            int oneMaxLen0 = GetMaxBorderForCluster(arr1, 0);
+            int oneMaxLen1 = GetMaxBorderForCluster(arr1, 1);
+
+            if (zeroMaxLen1 < oneMaxLen0*3)
+            {
+                
             }
         }
     }
