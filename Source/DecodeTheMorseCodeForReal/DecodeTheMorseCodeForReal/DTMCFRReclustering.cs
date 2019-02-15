@@ -45,11 +45,8 @@ namespace DecodeTheMorseCodeForReal
 
             for (int i = 0; i < arr0.Length; i++)
             {
-                if (arr0[i].Cluster > 0)
-                {
-                    if ((oneBorder0 > -1) && (arr0[i].Length <= oneBorder0)) arr0[i].Cluster = 0;
-                    else if ((oneBorder1 > -1) && (arr0[i].Length <= oneBorder1)) arr0[i].Cluster = 1;
-                }
+                if ((oneBorder0 > -1) && (arr0[i].Cluster > 0) && (arr0[i].Length <= oneBorder0)) arr0[i].Cluster = 0;
+                else if ((oneBorder1 > -1) && (arr0[i].Cluster > 1) && (arr0[i].Length <= oneBorder1)) arr0[i].Cluster = 1;
             }
         }
     }
