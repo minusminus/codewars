@@ -102,6 +102,9 @@ namespace NDecodeTheMorseCodeForReal
                 "E");
             ExecTest(
                 "101",
+                "I");
+            ExecTest(
+                "1001",
                 "EE");
         }
 
@@ -127,7 +130,13 @@ namespace NDecodeTheMorseCodeForReal
                 "E");
             ExecTest(
                 "110011",
-                "EE");
+                "I");
+            ExecTest(
+                "111110000011111",
+                "I");
+            ExecTest(
+                "11111100111111",
+                "M");
         }
 
         [Test]

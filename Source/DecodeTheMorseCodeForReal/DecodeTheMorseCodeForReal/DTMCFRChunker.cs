@@ -31,7 +31,8 @@ namespace DecodeTheMorseCodeForReal
         {
             int lmax = chunks.Max(x => x.Length);
             int lmin = chunks.Min(x => x.Length);
-            double normCoef = 1.0 / (lmax - lmin);
+            double normCoef = 1.0;
+            if ((lmax - lmin) > 0) normCoef = 1.0/(lmax - lmin);
 
             for (int i = 0; i < data.Length; i++)
                 data[i].NormalizedLength = (data[i].Length - lmin) * normCoef;
