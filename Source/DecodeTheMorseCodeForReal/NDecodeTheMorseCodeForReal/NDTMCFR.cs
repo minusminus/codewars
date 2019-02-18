@@ -12,7 +12,7 @@ namespace NDecodeTheMorseCodeForReal
 
         private void ExecTest(string bits, string expected)
         {
-            _testObj.decodeMorse(_testObj.decodeBitsAdvanced(bits)).ShouldBe(expected);
+            _testObj.decodeMorse(_testObj.decodeBitsAdvanced(bits)).ShouldBe(expected, "bits: " + bits);
         }
 
         [Test]
