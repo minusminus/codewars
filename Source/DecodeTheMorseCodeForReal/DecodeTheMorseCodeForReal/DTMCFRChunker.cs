@@ -40,6 +40,27 @@ namespace DecodeTheMorseCodeForReal
                 data[i].NormalizedLength = (data[i].Length - lmin) * normCoef;
         }
 
+        public void NormalizeData2(DTMCFRDataToAnalysis[] data, List<DTMCFRDataChunk> chunks)
+        {
+            //lmin zredukowane do 1 - wszystkie wartosci znormalizowane przez lmin
+            //dalej normalizacja do przedzialow o dl 7
+            //najdluzsza jedynka musi byc zredukowana do ??? zeby pasowala do drugiego przedzialu
+
+            double lmax = chunks.Max(x => x.Length);
+            double lmin = chunks.Min(x => x.Length);
+
+            lmax /= lmin;   //lmin sprowadzone do wartosci 1
+            double normCoef = 1.0/7.0;
+            //if ((lmax - 1.0) > 0) normCoef = 1.0/(lmax - 1.0);
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i].NormalizedLengthToMin = data[i].Length/lmin;
+                data[i].NormalizedLength = (data[i].NormalizedLengthToMin - 1.0)*normCoef;
+            }
+        }
+
+
         public DTMCFRDataToAnalysis[] GetArrayToAnalysis(List<DTMCFRDataChunk> chunks, char symbol)
         {
             DTMCFRDataToAnalysis[] res = chunks.Where(x => x.Symbol == symbol)
@@ -48,6 +69,17 @@ namespace DecodeTheMorseCodeForReal
                 .Select(x => new DTMCFRDataToAnalysis() { Length = x.Key, Cluster = -1})
                 .ToArray();
             NormalizeData(res, chunks);
+            return res;
+        }
+
+        public DTMCFRDataToAnalysis[] GetArrayToAnalysis(List<DTMCFRDataChunk> chunks)
+        {
+            DTMCFRDataToAnalysis[] res = chunks
+                .GroupBy(x => x.Length)
+                .OrderBy(x => x.Key)
+                .Select(x => new DTMCFRDataToAnalysis() { Length = x.Key, Cluster = -1 })
+                .ToArray();
+            NormalizeData2(res, chunks);
             return res;
         }
     }

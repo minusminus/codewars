@@ -60,7 +60,7 @@ namespace NDecodeTheMorseCodeForReal
         {
             ExecTest(
                 //"000000001101101101100011011011011000110110110110000000000000"))  //ten przyklad nie pasuje do podzialu 1-3-7, przerwa pomiedzy znakami jest za krotka
-                "00000000110011001100110000110011001100110000110011001100110000000000000",
+                "000000001100110011001100000011001100110011000000110011001100110000000000000",
                 "HHH");
         }
 
