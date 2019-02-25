@@ -52,7 +52,7 @@ namespace DecodeTheMorseCodeForReal
             int maxOneLength = chunks.Where(x => x.Symbol == '1').Max(x => x.Length);
 
             double lengthNorm = 1.0 / lmin;
-            if (maxOneLength / lmin > maxOneScale) lengthNorm *= maxOneScale / maxOneLength;
+            if (maxOneLength * lengthNorm > maxOneScale) lengthNorm = maxOneScale / (maxOneLength * lengthNorm);
 
             //double normCoef = 1.0/7.0;
             for (int i = 0; i < data.Length; i++)
