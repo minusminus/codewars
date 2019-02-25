@@ -94,7 +94,7 @@ namespace DecodeTheMorseCodeForReal
             DTMCFRClustering2 clustering = new DTMCFRClustering2();
             //double[] means0 = new double[3] { 1.0 / 14.0, 6.0 / 14.0, 13.0 / 14.0 };
             //double[] means = new double[3] { 1.0 / 14.0, 6.0 / 14.0, 13.0 / 14.0 };
-            double[] means = new double[3] { 1.0, 3.5, 6.5 };
+            double[] means = new double[3] { 1.0, 3.0, 7.0 };
             clustering.Cluster(arr, means); //pause between: dots/dashes 1 unit, characters 3 units, words 7 units [7 units long: 1/7 * 1/2, 6/14, 13/14]
 
             //DTMCFRReclustering reclustering = new DTMCFRReclustering();

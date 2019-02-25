@@ -27,7 +27,8 @@ namespace DecodeTheMorseCodeForReal
             {
                 for (int j = currmean; j < meansix.Length - 1; j++)
                 {
-                    if (Math.Abs(data[i].NormalizedLength - means[meansix[currmean]]) <= Math.Abs(data[i].NormalizedLength - means[meansix[currmean + 1]])) break;
+                    //if (Math.Abs(data[i].NormalizedLength - means[meansix[currmean]]) <= Math.Abs(data[i].NormalizedLength - means[meansix[currmean + 1]])) break;
+                    if (Math.Abs(data[i].NormalizedLength - means[meansix[currmean]]) < Math.Abs(data[i].NormalizedLength - means[meansix[currmean + 1]])) break;
                     currmean++;
                 }
                 if (data[i].Cluster != meansix[currmean]) changed++;

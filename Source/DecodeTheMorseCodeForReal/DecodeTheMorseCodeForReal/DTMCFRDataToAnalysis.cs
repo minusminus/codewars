@@ -9,7 +9,6 @@ namespace DecodeTheMorseCodeForReal
     public class DTMCFRDataToAnalysis
     {
         public int Length;
-        public double NormalizedLengthToMin;
         public double NormalizedLength;
         public int Cluster;
     }
