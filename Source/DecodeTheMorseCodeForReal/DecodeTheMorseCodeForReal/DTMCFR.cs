@@ -52,6 +52,7 @@ namespace DecodeTheMorseCodeForReal
                         break;
                 }
             });
+            //Console.WriteLine(res.ToString());
             return res.ToString();
         }
 

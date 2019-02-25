@@ -45,14 +45,14 @@ namespace DecodeTheMorseCodeForReal
             //lmin zredukowane do 1 - wszystkie wartosci znormalizowane przez lmin
             //dalej normalizacja do przedzialow o dl 7
             //najdluzsza jedynka musi byc zredukowana do 4.5 zeby pasowala do drugiego przedzialu
-            const double maxOneScale = 4.5;
+            const double maxOneScale = 4.75;
 
             double lmax = chunks.Max(x => x.Length);
             double lmin = chunks.Min(x => x.Length);
             int maxOneLength = chunks.Where(x => x.Symbol == '1').Max(x => x.Length);
 
             double lengthNorm = 1.0 / lmin;
-            if (maxOneLength * lengthNorm > maxOneScale) lengthNorm = maxOneScale / (maxOneLength * lengthNorm);
+            if (maxOneLength * lengthNorm > maxOneScale) lengthNorm = maxOneScale / maxOneLength;
 
             //double normCoef = 1.0/7.0;
             for (int i = 0; i < data.Length; i++)
