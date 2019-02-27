@@ -45,7 +45,7 @@ namespace DecodeTheMorseCodeForReal
             //lmin zredukowane do 1 - wszystkie wartosci znormalizowane przez lmin
             //dalej normalizacja do przedzialow o dl 7
             //najdluzsza jedynka musi byc zredukowana do 4.5 zeby pasowala do drugiego przedzialu
-            const double maxOneScale = 4.75;
+            const double maxOneScale = 4.5;
 
             double lmax = chunks.Max(x => x.Length);
             double lmin = chunks.Min(x => x.Length);

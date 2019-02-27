@@ -97,24 +97,73 @@ namespace DecodeTheMorseCodeForReal
             //double[] means = new double[3] { 1.0 / 14.0, 6.0 / 14.0, 13.0 / 14.0 };
             double[] means = new double[3] { 1.0, 3.0, 7.0 };
             clustering.Cluster(arr, means); //pause between: dots/dashes 1 unit, characters 3 units, words 7 units [7 units long: 1/7 * 1/2, 6/14, 13/14]
+            //Console.WriteLine($"means: {means[0]} | {means[1]} | {means[2]}");
+
+            //chunks.ForEach(x => Console.Write($"({x.Symbol}, {x.Length}) "));
+            //Console.WriteLine("");
+            //foreach (var x in arr)
+            //    Console.Write($"{x.Length}={x.Cluster} ");
+            //Console.WriteLine("");
 
             //DTMCFRReclustering reclustering = new DTMCFRReclustering();
             //reclustering.Recluster(arr0, means0, arr1, means1);
 
-            return DecodeChunks(chunks, arr);
+            //return DecodeChunks(chunks, arr);
+            //string morse = DecodeChunks(chunks, arr);
+            //return morse;
+            return TryDecodeAndMoveOneLeft(chunks, arr);
+        }
+
+        public string TryDecodeAndMoveOneLeft(List<DTMCFRDataChunk> chunks, DTMCFRDataToAnalysis[] arr)
+        {
+            string morse = DecodeChunks(chunks, arr);
+            string s;
+            while (!TryDecodeMorse(morse, out s))
+            {
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (arr[i].Cluster == 1)
+                    {
+                        if (i == 0) return "";
+                        arr[i - 1].Cluster = 1;
+                        break;
+                    }
+                }
+                morse = DecodeChunks(chunks, arr);
+            }
+            return morse;
+        }
+
+        public bool TryDecodeMorse(string morseCode, out string decoded)
+        {
+            decoded = "";
+            string[] tbl = morseCode.Replace("   ", " | ")
+                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder res = new StringBuilder();
+            foreach (string s in tbl)
+            {
+                //res.Append(s == "|" ? ' ' : Preloaded.MORSE_CODE[s]);
+                if (s == "|")
+                    res.Append(' ');
+                else
+                {
+                    string c;
+                    if (!Preloaded.MORSE_CODE.TryGetValue(s, out c)) return false;
+                    res.Append(c);
+                }
+            }
+            decoded = res.ToString();
+            return true;
         }
 
         public string decodeMorse(string morseCode)
         {
+            // Map morse code using map Preloaded.MORSE_CODE
             if (string.IsNullOrEmpty(morseCode) || string.IsNullOrWhiteSpace(morseCode)) return "";
 
-            // Map morse code using map Preloaded.MORSE_CODE
-            string[] tbl = morseCode.Replace("   ", " | ")
-                .Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder res = new StringBuilder();
-            foreach (string s in tbl)
-                res.Append(s == "|" ? ' ' : Preloaded.MORSE_CODE[s]);
-            return res.ToString();
+            string res;
+            TryDecodeMorse(morseCode, out res);
+            return res;
         }
     }
 }
