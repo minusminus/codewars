@@ -27,27 +27,13 @@ namespace DecodeTheMorseCodeForReal
             return res;
         }
 
-        public void NormalizeData(DTMCFRDataToAnalysis[] data, List<DTMCFRDataChunk> chunks)
-        {
-            int lmax = chunks.Max(x => x.Length);
-            int lmin = chunks.Min(x => x.Length);
-            //if (lmax / lmin < 7) lmax = lmin * 7;
-
-            double normCoef = 1.0;
-            if ((lmax - lmin) > 0) normCoef = 1.0/(lmax - lmin);
-
-            for (int i = 0; i < data.Length; i++)
-                data[i].NormalizedLength = (data[i].Length - lmin) * normCoef;
-        }
-
         public void NormalizeData2(DTMCFRDataToAnalysis[] data, List<DTMCFRDataChunk> chunks)
         {
-            //lmin zredukowane do 1 - wszystkie wartosci znormalizowane przez lmin
-            //dalej normalizacja do przedzialow o dl 7
-            //najdluzsza jedynka musi byc zredukowana do 4.5 zeby pasowala do drugiego przedzialu
+            //lmin reduced to length of 1 unit
+            //longest 1 reduced to 4.5 - to fit cluster 1
             const double maxOneScale = 4.5;
 
-            double lmax = chunks.Max(x => x.Length);
+            //double lmax = chunks.Max(x => x.Length);
             double lmin = chunks.Min(x => x.Length);
             int maxOneLength = chunks.Where(x => x.Symbol == '1').Max(x => x.Length);
 
@@ -56,18 +42,6 @@ namespace DecodeTheMorseCodeForReal
 
             for (int i = 0; i < data.Length; i++)
                 data[i].NormalizedLength = data[i].Length * lengthNorm;
-        }
-
-
-        public DTMCFRDataToAnalysis[] GetArrayToAnalysis(List<DTMCFRDataChunk> chunks, char symbol)
-        {
-            DTMCFRDataToAnalysis[] res = chunks.Where(x => x.Symbol == symbol)
-                .GroupBy(x => x.Length)
-                .OrderBy(x => x.Key)
-                .Select(x => new DTMCFRDataToAnalysis() { Length = x.Key, Cluster = -1})
-                .ToArray();
-            NormalizeData(res, chunks);
-            return res;
         }
 
         public DTMCFRDataToAnalysis[] GetArrayToAnalysis(List<DTMCFRDataChunk> chunks)

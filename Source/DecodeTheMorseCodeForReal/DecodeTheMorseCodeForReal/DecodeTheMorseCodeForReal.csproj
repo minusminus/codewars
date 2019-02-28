@@ -46,7 +46,7 @@
     <Compile Include="DTMCFRClustering2.cs" />
     <Compile Include="DTMCFRDataChunk.cs" />
     <Compile Include="DTMCFRDataToAnalysis.cs" />
-    <Compile Include="DTMCFRReclustering.cs" />
+    <Compile Include="DTMCFRDecoder.cs" />
     <Compile Include="Preloaded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -16,7 +16,7 @@ namespace DecodeTheMorseCodeForReal
         {
             int changed = 0;
 
-            //wszystkie istniejace srednie (moze byc mniej niz inicjalnie)
+            //all existing means (can be less then in initial table)
             int[] meansix = means.Select((mean, i) => new {mean, i})
                 .Where(x => x.mean > -1)
                 .Select(x => x.i)
