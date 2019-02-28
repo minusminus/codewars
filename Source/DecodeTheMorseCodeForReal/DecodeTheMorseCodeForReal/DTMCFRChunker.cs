@@ -54,7 +54,6 @@ namespace DecodeTheMorseCodeForReal
             double lengthNorm = 1.0 / lmin;
             if (maxOneLength * lengthNorm > maxOneScale) lengthNorm = maxOneScale / maxOneLength;
 
-            //double normCoef = 1.0/7.0;
             for (int i = 0; i < data.Length; i++)
                 data[i].NormalizedLength = data[i].Length * lengthNorm;
         }
