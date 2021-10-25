@@ -1,0 +1,17 @@
+Raytracing tunelu.
+Tunel po³o¿ony na osi Z.
+Obraz renderowany jest w krokach (oldskulowy software rendering) w kwadratach 8x8 (albo innych zdefiniowanych).
+Wartoœci wyjœciowe z dok³adnoœci¹ do 2 miejsc po przecinku.
+
+1. Basic:
+Kamera w punkcie (0,0) patrzy w stronê -Z.
+Na wyjœciu tablica WxH wspolrzednych Z widocznych z kamery w tym miejscu.
+
+2. Advanced:
+Kamera w dowolnym punkcie wewn¹trz tunelu, patrzy w dowolnym kierunku.
+Wyjœcie j.w.
+
+3. Pro:
+Tunel teksturowany, dodatkowo obraca siê. Mo¿na by tu skupiæ siê te¿ na wysokiej wydajnoœci.
+Tekstura o zadanym rozmiarze, rozpoczyna siê od [Z=0, X=0].
+Na wyjœciu wspó³rzêdne tekstury widoczne z kamery w tym miejscu.

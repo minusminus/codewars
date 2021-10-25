@@ -1,0 +1,6 @@
+Na podstawie:
+https://www.codeproject.com/Articles/5292572/Stern-Brocot-Trees-and-their-Applications
+
+można zrobić kilka zadań:
+- algorytm drzewa Stern-Brocota
+- rozkład wyniku p/q na zestawy zębatek (jak w podanym przykładzie w epilogu)
