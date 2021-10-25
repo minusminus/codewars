@@ -41,6 +41,18 @@ namespace CodeWars.Solutions.RomanNumerals
         public static string ToRoman(int n) => 
             ((n > 0) && (n < 4000)) ? ConvertToRoman(n) : "";
 
+        public static int FromRoman(string romanNumeral)
+        {
+            try
+            {
+                return ConvertFromRoman(romanNumeral);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         private static string ConvertToRoman(int n) =>
             string.Join("",
                 SplitNumberToDigtsBackwards(n)
@@ -54,18 +66,6 @@ namespace CodeWars.Solutions.RomanNumerals
             {
                 yield return n % 10;
                 n /= 10;
-            }
-        }
-
-        public static int FromRoman(string romanNumeral)
-        {
-            try
-            {
-                return ConvertFromRoman(romanNumeral);
-            }
-            catch
-            {
-                return 0;
             }
         }
 
