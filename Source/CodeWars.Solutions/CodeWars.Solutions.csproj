@@ -72,6 +72,7 @@
     <Compile Include="Reflection\ReflectionGetAllMethods.cs" />
     <Compile Include="Reflection\ReflectionGetType.cs" />
     <Compile Include="RomanNumerals\RomanNumerals.cs" />
+    <Compile Include="RomanNumerals\RomanNumeralsHelper.cs" />
     <Compile Include="Rot13\Rot13.cs" />
     <Compile Include="Rot13\RotWithShift.cs" />
     <Compile Include="Skyscrapers NxN\LineVisibilityChecker.cs" />
