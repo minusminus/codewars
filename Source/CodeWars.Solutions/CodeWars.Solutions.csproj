@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{864EA54D-6A55-4C21-8886-448CA00E2BC2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeWars.Solutions</RootNamespace>
+    <AssemblyName>CodeWars.Solutions</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BinomialExpansion\BE.cs" />
+    <Compile Include="CanYouGetTheLoop\GTL.cs" />
+    <Compile Include="CanYouGetTheLoop\LoopDetector.cs" />
+    <Compile Include="ConsecutiveKPrimes\ConsecutiveKPrimes.cs" />
+    <Compile Include="CountdownLongestWord\CLWWordsDict.cs" />
+    <Compile Include="CountdownLongestWord\CLWWordsGenNK.cs" />
+    <Compile Include="CountdownLongestWord\CountdownLongestWord.cs" />
+    <Compile Include="CountingChangeCombinations\CCC.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFR.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFRChunker.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFRClustering.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFRClustering2.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFRDataChunk.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFRDataToAnalysis.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\DTMCFRDecoder.cs" />
+    <Compile Include="DecodeTheMorseCodeForReal\Preloaded.cs" />
+    <Compile Include="DecodeTheMorseCode\MorseCodeDecoder.cs" />
+    <Compile Include="GettingAlongWithIntegerPartitions\GAWIP.cs" />
+    <Compile Include="GettingAlongWithIntegerPartitions\GAWIP2.cs" />
+    <Compile Include="GoingToZeroOrInfinity\GTZ.cs" />
+    <Compile Include="JosephusSurvivor\JosephusSurvivor.cs" />
+    <Compile Include="KPrimes\KPrimes.cs" />
+    <Compile Include="NextSmallerNumberWithSameDigits\NextSmallerNumberWithSameDigits.cs" />
+    <Compile Include="PrimesInNumbers\PrimesInNumbers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\ReflectionAddMemberResults.cs" />
+    <Compile Include="Reflection\ReflectionCallMeBack.cs" />
+    <Compile Include="Reflection\ReflectionCompleteInvoke.cs" />
+    <Compile Include="Reflection\ReflectionGetAllMethods.cs" />
+    <Compile Include="Reflection\ReflectionGetType.cs" />
+    <Compile Include="RomanNumerals\RomanNumerals.cs" />
+    <Compile Include="Rot13\Rot13.cs" />
+    <Compile Include="Rot13\RotWithShift.cs" />
+    <Compile Include="Skyscrapers NxN\LineVisibilityChecker.cs" />
+    <Compile Include="Skyscrapers NxN\PermutationGen.cs" />
+    <Compile Include="Skyscrapers NxN\PermutationGenList.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscraperData.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscraperData_Perms.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscraperNxNDataLists.cs" />
+    <Compile Include="Skyscrapers NxN\Skyscrapers4x4.cs" />
+    <Compile Include="Skyscrapers NxN\Skyscrapers4x4_Perms.cs" />
+    <Compile Include="Skyscrapers NxN\Skyscrapers6x6.cs" />
+    <Compile Include="Skyscrapers NxN\Skyscrapers6x6_Perms.cs" />
+    <Compile Include="Skyscrapers NxN\Skyscrapers7x7.cs" />
+    <Compile Include="Skyscrapers NxN\Skyscrapers7x7_Perms.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersCounters.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersNxN.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersNxNDataObject.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersNxNDataReductor.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersNxNDataValidator.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersNxN_Perms.cs" />
+    <Compile Include="Skyscrapers NxN\SkyscrapersPrecalcData.cs" />
+    <Compile Include="SquareIntoSquares\SIS.cs" />
+    <Compile Include="TakeANumberAndSumItsDigitsRTCP\SumDigPower.cs" />
+    <Compile Include="Tools\NumbersTheory.cs" />
+    <Compile Include="Tools\PrimeNumbersCheck.cs" />
+    <Compile Include="Tools\PrimeNumbersFactors.cs" />
+    <Compile Include="Tools\PrimeNumbersList.cs" />
+    <Compile Include="TwiceLinear\TwiceLinear.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
