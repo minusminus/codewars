@@ -49,6 +49,8 @@
     <Compile Include="CountdownLongestWord\CLWWordsGenNK.cs" />
     <Compile Include="CountdownLongestWord\CountdownLongestWord.cs" />
     <Compile Include="CountingChangeCombinations\CCC.cs" />
+    <Compile Include="DecodeTheMorseCodeAdvanced\MorseCode.cs" />
+    <Compile Include="DecodeTheMorseCodeAdvanced\MorseCodeDecoderAdvanced.cs" />
     <Compile Include="DecodeTheMorseCodeForReal\DTMCFR.cs" />
     <Compile Include="DecodeTheMorseCodeForReal\DTMCFRChunker.cs" />
     <Compile Include="DecodeTheMorseCodeForReal\DTMCFRClustering.cs" />
