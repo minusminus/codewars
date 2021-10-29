@@ -117,6 +117,7 @@
     <Compile Include="Skyscrapers NxN\NSkyscrapersNxNApplyConstraints.cs" />
     <Compile Include="Skyscrapers NxN\NSkyscrapersPrecalcData.cs" />
     <Compile Include="SquareIntoSquares\NSIS.cs" />
+    <Compile Include="SumStringsAsNumbers\SumStringsTests.cs" />
     <Compile Include="TakeANumberAndSumItsDigitsRTCP\SumDigPowerTests.cs" />
     <Compile Include="Tools\NumberTheoryTests.cs" />
     <Compile Include="Tools\PrimeNumbersCheckTests.cs" />

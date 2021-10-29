@@ -97,6 +97,7 @@
     <Compile Include="Skyscrapers NxN\SkyscrapersNxN_Perms.cs" />
     <Compile Include="Skyscrapers NxN\SkyscrapersPrecalcData.cs" />
     <Compile Include="SquareIntoSquares\SIS.cs" />
+    <Compile Include="SumStringsAsNumbers\SumStrings.cs" />
     <Compile Include="TakeANumberAndSumItsDigitsRTCP\SumDigPower.cs" />
     <Compile Include="Tools\NumbersTheory.cs" />
     <Compile Include="Tools\PrimeNumbersCheck.cs" />
