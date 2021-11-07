@@ -79,6 +79,7 @@
     <Compile Include="BinomialExpansion\GenerateCoefsTests.cs" />
     <Compile Include="BinomialExpansion\BETests.cs" />
     <Compile Include="BinomialExpansion\ParseBinomialTests.cs" />
+    <Compile Include="BurrowsWheelerTransformation\BWTTests.cs" />
     <Compile Include="CanYouGetTheLoop\NGTLTests.cs" />
     <Compile Include="ConsecutiveKPrimes\NConsecutiveKPrimes.cs" />
     <Compile Include="CountdownLongestWord\NCLWWordsGenNK.cs" />
