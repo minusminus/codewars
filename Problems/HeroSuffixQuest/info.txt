@@ -1,0 +1,3 @@
+Nty suffix posortowanej tablicy sufiksów, tablica posortowana StringComparer.Ordinal.
+
+Bohater będzie musiał otworzyć zestaw drzwi, żeby suciec przed powodzią. Nad drzwiami tekst do przetworzenia, na drzwiach numer sufiksu będący hasłem do otwarcia drzwi.

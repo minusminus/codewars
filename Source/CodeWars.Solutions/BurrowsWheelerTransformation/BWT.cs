@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 namespace CodeWars.Solutions.BurrowsWheelerTransformation
 {
     /// <summary>
+    /// Encode:
+    /// 1. Generuje liste sufiksów
+    /// 2. Sortuje listę sortowaniem Ordinal, ale ze specjalnym założeniem, że koniec oryginalnego ciągu (wirutalny znak na końcu ciągu wejściowego) jest ostatnim znakiem alfabetu
+    /// 3. Na podstawie sufiksów i ciągu wejściowego generuje ostatni znak w każdym wierszu i wyznacza pozycję wejściowego ciągu w macierzy
     /// 
+    /// Decode:
+    /// 1. Generuje pierwszą kolumnę macierzy sortując ostatnią kolumnę (wejściowy ciąg) z zachowaniem kolejności identycznych elementów z wejściowego ciągu
+    /// 2. Generuje kolejne znaki oryginalnego ciągu na podstawie tablicy przejść
     /// </summary>
     public static class BWT
     {
