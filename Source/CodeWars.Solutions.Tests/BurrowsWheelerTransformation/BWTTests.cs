@@ -10,11 +10,11 @@ namespace CodeWars.Solutions.Tests.BurrowsWheelerTransformation
     [TestFixture]
     public class BWTTests
     {
-        [TestCase("banana", "bnnaaa", 3)]
-        [TestCase("banaca", "nbcaaa", 3)]
+        [TestCase("banana", "nnbaaa", 3)]
+        [TestCase("banaca", "cnbaaa", 3)]
         [TestCase("banac", "nbcaa", 2)]
-        [TestCase("ban ana", "nb naaa", 4)]
-        [TestCase("bAnanA", "bnnAaA", 3)]
+        [TestCase("ban ana", "nnb aaa", 4)]
+        [TestCase("bAnanA", "nbnAaA", 3)]
         [TestCase("bananabar", "nnbbraaaa", 4)]
         [TestCase("Humble Bundle", "e emnllbduuHB", 2)]
         [TestCase("Mellow Yellow", "ww MYeelllloo", 1)]
@@ -25,8 +25,8 @@ namespace CodeWars.Solutions.Tests.BurrowsWheelerTransformation
             result.Item2.ShouldBe(expectedIndex);
         }
 
-        [TestCase("bnnaaa", 3, "banana")]
-        [TestCase("nbcaaa", 3, "banaca")]
+        [TestCase("nnbaaa", 3, "banana")]
+        [TestCase("cnbaaa", 3, "banaca")]
         [TestCase("nbcaa", 2, "banac")]
         [TestCase("nnbbraaaa", 4, "bananabar")]
         [TestCase("e emnllbduuHB", 2, "Humble Bundle")]
@@ -38,6 +38,7 @@ namespace CodeWars.Solutions.Tests.BurrowsWheelerTransformation
         }
 
         [TestCase("banana")]
+        [TestCase("banaca")]
         [TestCase("Humble Bundle")]
         [TestCase("Mellow Yellow")]
         public void CustomTest(string input)
@@ -57,6 +58,10 @@ namespace CodeWars.Solutions.Tests.BurrowsWheelerTransformation
             Console.WriteLine("-= custom sorted:");
             foreach (var item in rotations.OrderBy(x => x, new CustomStringComparer()))
                 Console.WriteLine(item);
+
+            char c1 = 'a';
+            char c2 = 'b';
+            Console.WriteLine((c1 < c2).ToString());
         }
 
         private class CustomStringComparer : IComparer<string>

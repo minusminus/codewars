@@ -8,9 +8,9 @@ namespace CodeWars.Solutions.BurrowsWheelerTransformation
 {
     /// <summary>
     /// Encode:
-    /// 1. Generuje liste sufiksów
-    /// 2. Sortuje listę sortowaniem Ordinal, ale ze specjalnym założeniem, że koniec oryginalnego ciągu (wirutalny znak na końcu ciągu wejściowego) jest ostatnim znakiem alfabetu
-    /// 3. Na podstawie sufiksów i ciągu wejściowego generuje ostatni znak w każdym wierszu i wyznacza pozycję wejściowego ciągu w macierzy
+    /// 1. Generuje liste indeksów pierwszego znaku obroconej wartosci wejściowego stringa
+    /// 2. Sortuje listę indeksów jako listę obróconych stringów
+    /// 3. Na podstawie listy indeksów i ciągu wejściowego generuje ostatni znak w każdym wierszu i wyznacza pozycję wejściowego ciągu w macierzy
     /// 
     /// Decode:
     /// 1. Generuje pierwszą kolumnę macierzy sortując ostatnią kolumnę (wejściowy ciąg) z zachowaniem kolejności identycznych elementów z wejściowego ciągu
@@ -18,50 +18,69 @@ namespace CodeWars.Solutions.BurrowsWheelerTransformation
     /// </summary>
     public static class BWT
     {
-        private class BWTStringComparer : IComparer<string>
+        private class BWTStringComparer : IComparer<int>
         {
-            public int Compare(string x, string y)
-            {
-                if (x == y) return 0;
-                if (x.StartsWith(y)) return -1;
-                if (y.StartsWith(x)) return 1;
+            private readonly string _baseString;
 
-                return StringComparer.Ordinal.Compare(x, y);
+            public BWTStringComparer(string baseString)
+            {
+                this._baseString = baseString;
+            }
+
+            public int Compare(int x, int y)
+            {
+                for (int i = 0; i < _baseString.Length; i++)
+                {
+                    if (_baseString[(x + i) % _baseString.Length] != _baseString[(y + i) % _baseString.Length])
+                        return (_baseString[(x + i) % _baseString.Length] < _baseString[(y + i) % _baseString.Length]) ? -1 : 1;
+                }
+                return 0;
             }
         }
 
-        public static Tuple<string, int> Encode(string s) => 
-            GetSuffixes(s)
-                .SortSuffixes()
+        public static Tuple<string, int> Encode(string s) =>
+            GetRotationStartIndexes(s)
+                .SortSuffixes(s)
                 .GetLastColumnAndOriginalTextIndex(s);
 
-        private static IEnumerable<string> GetSuffixes(string s) => 
+        private static IEnumerable<int> GetRotationStartIndexes(string s) =>
             Enumerable
-                .Range(0, s.Length)
-                .Select(i => s.Substring(i, s.Length - i));
+                .Range(0, s.Length);
 
-        private static IEnumerable<string> SortSuffixes(this IEnumerable<string> suffixes) =>
-            suffixes
-                .OrderBy(x => x, new BWTStringComparer());
+        private static IEnumerable<int> SortSuffixes(this IEnumerable<int> rotationStartIndexes, string originalString) =>
+            rotationStartIndexes
+                .OrderBy(x => x, new BWTStringComparer(originalString));
 
-        private static Tuple<string, int> GetLastColumnAndOriginalTextIndex(this IEnumerable<string> sortedSuffixes, string originalString)
+        private static Tuple<string, int> GetLastColumnAndOriginalTextIndex(this IEnumerable<int> sortedRotationStartIndexes, string originalString)
         {
             int foundIndex = -1;
 
-            char CheckIndexAndGetLastCharInRow(string suffix, int currentIndex)
+            char CheckIndexAndGetLastCharInRow(int rotationStartIndex, int currentIndex)
             {
-                if (suffix.Length == originalString.Length) foundIndex = currentIndex;
-                return originalString[(originalString.Length - suffix.Length - 1 + originalString.Length) % originalString.Length];
+                if (rotationStartIndex == 0) foundIndex = currentIndex;
+                return originalString[(rotationStartIndex - 1 + originalString.Length) % originalString.Length];
             }
 
             return new Tuple<string, int>(
-                string.Join("", sortedSuffixes.Select((suffix, i) => CheckIndexAndGetLastCharInRow(suffix, i))), 
+                string.Join("", sortedRotationStartIndexes.Select((rotationStartIndex, i) => CheckIndexAndGetLastCharInRow(rotationStartIndex, i))), 
                 foundIndex);
         }
 
         public static string Decode(string s, int i)
         {
+            int[] firstRowMapper = GenerateFirstRowIndexes(s);
+
+            Console.WriteLine(s);
+            Console.WriteLine(string.Join(",", firstRowMapper.Select(j => j.ToString())));
             return string.Empty;
+        }
+
+        private static int[] GenerateFirstRowIndexes(string lastRow)
+        {
+            return Enumerable
+                .Range(0, lastRow.Length)
+                .OrderBy(i => lastRow[i])
+                .ToArray();
         }
     }
 }
