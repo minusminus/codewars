@@ -24,18 +24,19 @@ namespace CodeWars.Solutions.BurrowsWheelerTransformation
 
             public BWTStringComparer(string baseString)
             {
-                this._baseString = baseString;
+                _baseString = baseString;
             }
 
             public int Compare(int x, int y)
             {
                 for (int i = 0; i < _baseString.Length; i++)
-                {
-                    if (_baseString[(x + i) % _baseString.Length] != _baseString[(y + i) % _baseString.Length])
-                        return (_baseString[(x + i) % _baseString.Length] < _baseString[(y + i) % _baseString.Length]) ? -1 : 1;
-                }
+                    if (GetBaseChar(x, i) != GetBaseChar(y, i))
+                        return (GetBaseChar(x, i) < GetBaseChar(y, i)) ? -1 : 1;
                 return 0;
             }
+
+            private char GetBaseChar(int startIndex, int position) =>
+                _baseString[(startIndex + position) % _baseString.Length];
         }
 
         public static Tuple<string, int> Encode(string s) =>
