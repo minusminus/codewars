@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeWars.Solutions.BurrowsWheelerTransformation
 {
@@ -13,8 +12,11 @@ namespace CodeWars.Solutions.BurrowsWheelerTransformation
     /// 3. Na podstawie listy indeksów i ciągu wejściowego generuje ostatni znak w każdym wierszu i wyznacza pozycję wejściowego ciągu w macierzy
     /// 
     /// Decode:
-    /// 1. Generuje pierwszą kolumnę macierzy sortując ostatnią kolumnę (wejściowy ciąg) z zachowaniem kolejności identycznych elementów z wejściowego ciągu
-    /// 2. Generuje kolejne znaki oryginalnego ciągu na podstawie tablicy przejść
+    /// 1. Generuje tablicę ilości porzedzających identycznych znaków i słownik ilości znaków poprzedzających bieżący.
+    /// 2. Generuje kolejne znaki oryginalnego ciągu na podstawie obu tablic przejść
+    /// 
+    /// Oparte w większości na:
+    /// https://michaeldipperstein.github.io/bwt.html
     /// </summary>
     public static class BWT
     {
@@ -67,21 +69,54 @@ namespace CodeWars.Solutions.BurrowsWheelerTransformation
                 foundIndex);
         }
 
-        public static string Decode(string s, int i)
-        {
-            int[] firstRowMapper = GenerateFirstRowIndexes(s);
+        public static string Decode(string s, int i) => 
+            string.IsNullOrEmpty(s)
+                ? string.Empty
+                : DecodeString(s, i,
+                        GetPrecedingSymbolsCount(s, out ConcurrentDictionary<char, int> symbolsCount),
+                        GetSymbolsLessThanCurrent(symbolsCount))
+                    .ReverseAndBuildString();
 
-            Console.WriteLine(s);
-            Console.WriteLine(string.Join(",", firstRowMapper.Select(j => j.ToString())));
-            return string.Empty;
-        }
-
-        private static int[] GenerateFirstRowIndexes(string lastRow)
+        private static int[] GetPrecedingSymbolsCount(string input, out ConcurrentDictionary<char, int> symbolsCount)
         {
-            return Enumerable
-                .Range(0, lastRow.Length)
-                .OrderBy(i => lastRow[i])
+            ConcurrentDictionary<char, int> counts = new ConcurrentDictionary<char, int>();
+            symbolsCount = counts;
+            return input
+                .Select(c =>
+                {
+                    counts.AddOrUpdate(c, 1, (key, value) => value + 1);
+                    return counts[c] - 1;
+                })
                 .ToArray();
         }
+
+        private static Dictionary<char, int> GetSymbolsLessThanCurrent(ConcurrentDictionary<char, int> symbolsCount)
+        {
+            var orderedSymbolsCount = symbolsCount
+                .OrderBy(x => x.Key)
+                .ToArray();
+
+            int currentSum = 0;
+            Dictionary<char, int> symbolsLessThanCurrent = new Dictionary<char, int>() { { orderedSymbolsCount[0].Key, currentSum } };
+            for (int i = 1; i < orderedSymbolsCount.Length; i++)
+            {
+                currentSum += orderedSymbolsCount[i - 1].Value;
+                symbolsLessThanCurrent[orderedSymbolsCount[i].Key] = currentSum;
+            }
+            return symbolsLessThanCurrent;
+        }
+
+        private static IEnumerable<char> DecodeString(string encoded, int originalStringIndex, int[] precedingSymbolsCount, Dictionary<char, int> symbolsLessThanCurrent)
+        {
+            int currentIndex = originalStringIndex;
+            for(int i=0; i < encoded.Length; i++)
+            {
+                yield return encoded[currentIndex];
+                currentIndex = precedingSymbolsCount[currentIndex] + symbolsLessThanCurrent[encoded[currentIndex]];
+            }
+        }
+
+        private static string ReverseAndBuildString(this IEnumerable<char> reversedChars) =>
+            string.Join("", reversedChars.Reverse());
     }
 }
