@@ -15,7 +15,7 @@ namespace CodeWars.Solutions.Tests.BurrowsWheelerTransformation
         [TestCase("bananabar", "nnbbraaaa", 4)]
         [TestCase("Humble Bundle", "e emnllbduuHB", 2)]
         [TestCase("Mellow Yellow", "ww MYeelllloo", 1)]
-        [TestCase("", "", -1)]
+        [TestCase("", "", 0)]
         public void Encode__EncodesCorrectly(string input, string expectedEncoded, int expectedIndex)
         {
             var result = BWT.Encode(input);

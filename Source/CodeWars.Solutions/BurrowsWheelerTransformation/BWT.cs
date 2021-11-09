@@ -42,7 +42,9 @@ namespace CodeWars.Solutions.BurrowsWheelerTransformation
         }
 
         public static Tuple<string, int> Encode(string s) =>
-            GetRotationStartIndexes(s)
+            string.IsNullOrEmpty(s)
+            ? new Tuple<string, int>(string.Empty, 0)
+            : GetRotationStartIndexes(s)
                 .SortSuffixes(s)
                 .GetLastColumnAndOriginalTextIndex(s);
 
