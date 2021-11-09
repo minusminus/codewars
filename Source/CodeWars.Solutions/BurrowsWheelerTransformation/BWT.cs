@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Burrows-Wheeler-Transformation
+ * https://www.codewars.com/kata/54ce4c6804fcc440a1000ecb
+ */
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;

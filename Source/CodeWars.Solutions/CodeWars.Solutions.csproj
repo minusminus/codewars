@@ -61,6 +61,7 @@
     <Compile Include="DecodeTheMorseCodeForReal\DTMCFRDecoder.cs" />
     <Compile Include="DecodeTheMorseCodeForReal\Preloaded.cs" />
     <Compile Include="DecodeTheMorseCode\MorseCodeDecoder.cs" />
+    <Compile Include="GetThePlusMethod\GetThePlusMethod.cs" />
     <Compile Include="GettingAlongWithIntegerPartitions\GAWIP.cs" />
     <Compile Include="GettingAlongWithIntegerPartitions\GAWIP2.cs" />
     <Compile Include="GoingToZeroOrInfinity\GTZ.cs" />

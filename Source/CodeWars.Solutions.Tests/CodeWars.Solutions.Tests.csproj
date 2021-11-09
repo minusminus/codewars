@@ -90,6 +90,7 @@
     <Compile Include="DecodeTheMorseCodeForReal\NDTMCFRChunker.cs" />
     <Compile Include="DecodeTheMorseCodeForReal\NDTMCFRClustering.cs" />
     <Compile Include="DecodeTheMorseCode\MorseCodeDecoderTests.cs" />
+    <Compile Include="GetThePlusMethod\GetThePlusMethodTests.cs" />
     <Compile Include="GettingAlongWithIntegerPartitions\NGAWIP.cs" />
     <Compile Include="GoingToZeroOrInfinity\NGTZ.cs" />
     <Compile Include="JosephusSurvivor\NJosephusSurvivor.cs" />
