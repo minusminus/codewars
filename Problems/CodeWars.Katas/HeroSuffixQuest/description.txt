@@ -1,0 +1,17 @@
+Hero suffix quest
+
+- *Who dares to disturb us?*
+- I am.
+- *What do you want from us?*
+- The Great Book of Water.
+- *... you have to unlock all the doors to reach the water chamber, there you will be rewarded.  
+The password is nth ordered suffix of text engraved above each door.  
+If you fail, you will drown.  
+This is your challenge. Prepare your hero.*
+
+&nbsp;
+
+... and a mossy inscription above the entrance says:  
+*Thou shall* `FindPassword(string engravedText, int numberOnTheDoor)`.  
+*Thou shall be quicketh.*  
+*Beware the order of same items, all shall be preserveth.*
