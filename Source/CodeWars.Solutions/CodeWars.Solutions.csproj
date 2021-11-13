@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BecomeImmortal\BecomeImmortal.cs" />
     <Compile Include="BinomialExpansion\BE.cs" />
     <Compile Include="BurrowsWheelerTransformation\BWT.cs" />
     <Compile Include="CanYouGetTheLoop\GTL.cs" />

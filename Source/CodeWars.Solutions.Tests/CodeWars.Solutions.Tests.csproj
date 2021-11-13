@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BecomeImmortal\BecomeImmortalTests.cs" />
     <Compile Include="BinomialExpansion\GenerateCoefsTests.cs" />
     <Compile Include="BinomialExpansion\BETests.cs" />
     <Compile Include="BinomialExpansion\ParseBinomialTests.cs" />
