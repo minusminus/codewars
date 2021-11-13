@@ -28,26 +28,31 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
         }
 
-        [TestCase(10L, 8L, 0L, NoT, 224u + 184L)]
-        [TestCase(15L, 8L, 0L, NoT, 224u + 644L)]
-        [TestCase(10L, 8L, 1L, NoT, 168u + 168L)]
-        [TestCase(15L, 8L, 1L, NoT, 168u + 588L)]
+        [TestCase(10L, 8L, 0L, NoT, 224L + 184L)]
+        [TestCase(15L, 8L, 0L, NoT, 224L + 644L)]
+        [TestCase(10L, 8L, 1L, NoT, 168L + 168L)]
+        [TestCase(15L, 8L, 1L, NoT, 168L + 588L)]
+        [TestCase(5L, 4L, 0L, NoT, 24L + 22L)]
+        [TestCase(5L, 4L, 1L, NoT, 12L + 18L)]
         public void ElderAge_WithPartOnRight__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
         }
 
-        [TestCase(8L, 10L, 0L, NoT, 224u + 184L)]
-        [TestCase(8L, 15L, 0L, NoT, 224u + 644L)]
-        [TestCase(8L, 10L, 1L, NoT, 168u + 168L)]
-        [TestCase(8L, 15L, 1L, NoT, 168u + 588L)]
+        [TestCase(8L, 10L, 0L, NoT, 224L + 184L)]
+        [TestCase(8L, 15L, 0L, NoT, 224L + 644L)]
+        [TestCase(8L, 10L, 1L, NoT, 168L + 168L)]
+        [TestCase(8L, 15L, 1L, NoT, 168L + 588L)]
+        [TestCase(4L, 5L, 0L, NoT, 24L + 22L)]
+        [TestCase(4L, 5L, 1L, NoT, 12L + 18L)]
         public void ElderAge_WithPartBelow__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
         }
 
-        [TestCase(10L, 10L, 0L, NoT, 224u + 184u + 184u + 2L)]
-        [TestCase(15L, 15L, 0L, NoT, 224u + 644u + 644u + 168L)]
+        [TestCase(10L, 10L, 0L, NoT, 224L + 184L + 184L + 2L)]
+        [TestCase(15L, 15L, 0L, NoT, 224L + 644L + 644L + 168L)]
+        [TestCase(5L, 45L, 3L, NoT, 4323L)]
         public void ElderAge_OnRightAndBelow__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
