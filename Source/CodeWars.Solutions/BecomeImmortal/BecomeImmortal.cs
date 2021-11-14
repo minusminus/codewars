@@ -5,8 +5,8 @@
  * Wartości xor generują w macierzy "munchkin squares".
  * Koncepcja jest po części opisana tutaj: https://blog.valerauko.net/2018/02/11/munching-the-squares-of-immortality/
  * 
- * W maksymalnym kwadracie są wszystkie permutacje wartości, można obliczyć jego wartość jako sumę ciągu arytmetycznego x ilość wierszy (bok kwadratu).
- * Dalej rekurencyjnie w 3 prostokąty: po prawej, na dole, po skosie na dole (prawo-dół).
+ * W maksymalnym prostokącie są wszystkie permutacje wartości, można obliczyć jego wartość jako sumę ciągu arytmetycznego x ilość wierszy (bok prostokąta).
+ * Dalej rekurencyjnie w 2 prostokąty: po prawej (uzupełnienie do końca) i na dole (tej samej szerokości).
  */
 using System;
 
@@ -14,19 +14,45 @@ namespace CodeWars.Solutions.BecomeImmortal
 {
     public static class BecomeImmortal
     {
-        public static long ElderAge(long m, long n, long l, long t) => 
-            CalculateRect(0, m, 0, n, l) % t;
+        private static int level;
+
+        private static void LevelDown()
+        {
+            level++;
+            Console.WriteLine($"{level}");
+        }
+
+        private static void LevelUp()
+        {
+            Console.WriteLine($"-{level}");
+            level--;
+        }
+
+        public static long ElderAge(long m, long n, long l, long t)
+        {
+            level = 0;
+            return CalculateRect(0, m, 0, n, l) % t;
+        }
 
         private static long CalculateRect(long startX, long widthX, long startY, long widthY, long l)
         {
-            if ((widthX == 0) || (widthY == 0)) return 0;
+            if ((widthX <= 0) || (widthY <= 0)) return 0;
+            LevelDown();
+            Console.WriteLine($"xy: ({startX}, {startY}), w: ({widthX}, {widthY})");
+            if ((widthX == 1) && (widthY == 1)) 
+            {
+                LevelUp();
+                return SubtractL(startX ^ startY, l); 
+            }
 
-            long largestPowerOf2 = GetLargestPowerOf2(Math.Min(widthX, widthY));
+            long largestPowerOf2 = GetLargestPowerOf2(Math.Max(widthX, widthY));
+            Console.WriteLine($"powerof2: {largestPowerOf2}");
 
-            return SumInSquare(startX ^ startY, largestPowerOf2, l)
-                + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, largestPowerOf2, l)
-                + CalculateRect(startX, largestPowerOf2, startY + largestPowerOf2, widthY - largestPowerOf2, l)
-                + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY + largestPowerOf2, widthY - largestPowerOf2, l);
+            long res = SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
+                + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l)
+                + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l);
+            LevelUp();
+            return res;
         }
 
         private static long GetLargestPowerOf2(long x)
@@ -37,8 +63,13 @@ namespace CodeWars.Solutions.BecomeImmortal
             return value;
         }
 
-        private static long SumInSquare(long firstValue, long width, long l) => 
-            width * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + width - 1, l));
+        private static long SumInRect(long firstValue, long rowWidth, long numberOfRows, long l)
+        {
+            //return numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l));
+            long res = numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l));
+            Console.WriteLine($"first: {firstValue}, width: {rowWidth}, numRows: {numberOfRows}, result: {res}");
+            return res;
+        }
 
         private static long SubtractL(long value, long l) =>
             value < (2 * l) ? 0 : value - l;
