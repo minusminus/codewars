@@ -14,45 +14,19 @@ namespace CodeWars.Solutions.BecomeImmortal
 {
     public static class BecomeImmortal
     {
-        private static int level;
-
-        private static void LevelDown()
-        {
-            level++;
-            Console.WriteLine($"{level}");
-        }
-
-        private static void LevelUp()
-        {
-            Console.WriteLine($"-{level}");
-            level--;
-        }
-
-        public static long ElderAge(long m, long n, long l, long t)
-        {
-            level = 0;
-            return CalculateRect(0, m, 0, n, l) % t;
-        }
+        public static long ElderAge(long m, long n, long l, long t) =>
+            CalculateRect(0, m, 0, n, l) % t;
 
         private static long CalculateRect(long startX, long widthX, long startY, long widthY, long l)
         {
             if ((widthX <= 0) || (widthY <= 0)) return 0;
-            LevelDown();
-            Console.WriteLine($"xy: ({startX}, {startY}), w: ({widthX}, {widthY})");
-            if ((widthX == 1) && (widthY == 1)) 
-            {
-                LevelUp();
-                return SubtractL(startX ^ startY, l); 
-            }
+            if ((widthX == 1) && (widthY == 1)) return SubtractL(startX ^ startY, l);
 
             long largestPowerOf2 = GetLargestPowerOf2(Math.Max(widthX, widthY));
-            Console.WriteLine($"powerof2: {largestPowerOf2}");
 
-            long res = SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
+            return SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
                 + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l)
                 + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l);
-            LevelUp();
-            return res;
         }
 
         private static long GetLargestPowerOf2(long x)
@@ -63,16 +37,11 @@ namespace CodeWars.Solutions.BecomeImmortal
             return value;
         }
 
-        private static long SumInRect(long firstValue, long rowWidth, long numberOfRows, long l)
-        {
-            //return numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l));
-            long res = numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l));
-            Console.WriteLine($"first: {firstValue}, width: {rowWidth}, numRows: {numberOfRows}, result: {res}");
-            return res;
-        }
+        private static long SumInRect(long firstValue, long rowWidth, long numberOfRows, long l) =>
+            numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l));
 
         private static long SubtractL(long value, long l) =>
-            value < (2 * l) ? 0 : value - l;
+            (value - l < 0) ? 0 : value - l;
 
         private static long SumSequence(long firstValue, long lastValue) =>
             firstValue == lastValue

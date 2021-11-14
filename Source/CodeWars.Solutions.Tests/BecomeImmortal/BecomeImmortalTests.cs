@@ -21,7 +21,7 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(4L, 4L, 1L, NoT, 12L)]
         [TestCase(8L, 8L, 1L, NoT, 168L)]
         [TestCase(2L, 2L, 2L, NoT, 0L)]
-        [TestCase(4L, 4L, 2L, NoT, 0L)]
+        [TestCase(4L, 4L, 2L, NoT, 4L)]
         [TestCase(8L, 8L, 2L, NoT, 120L)]
         public void ElderAge_FullSquares_WithL__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
@@ -53,13 +53,13 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(10L, 10L, 0L, NoT, 224L + 184L + 184L + 2L)]
         [TestCase(15L, 15L, 0L, NoT, 224L + 644L + 644L + 168L)]
         [TestCase(5L, 45L, 3L, NoT, 4323L)]
-        [TestCase(545L, 435L, 342L, NoT, 808451L)]
+        [TestCase(545L, 435L, 342L, NoT, 11808528L)]
         public void ElderAge_OnRightAndBelow__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
         }
 
-        [Ignore("tymczosowo wyłączone")]
+        [Ignore("tymczasowo wyłączone")]
         [TestCase(8L, 5L, 1L, 100L, 5L)]
         [TestCase(8L, 8L, 0L, 100007L, 224L)]
         [TestCase(25L, 31L, 0L, 100007L, 11925L)]
@@ -70,6 +70,16 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         public void ElderAge__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
+        }
+
+        [TestCase(8L, 8L, 0L, NoT)]
+        [TestCase(545L, 435L, 342L, NoT)]
+        [TestCase(545L, 435L, 342L, 1000007L)]
+        public void ElderAge_CompareToBruteForce__REturnsCorrectly(long m, long n, long l, long t)
+        {
+            long orig = CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t);
+            long bruteforce = CodeWars.Solutions.BecomeImmortal.BecomeImmortalBF.ElderAge(m, n, l, t);
+            orig.ShouldBe(bruteforce);
         }
     }
 }
