@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Shouldly;
 using CodeWars.Solutions.BecomeImmortal;
+using System;
 
 namespace CodeWars.Solutions.Tests.BecomeImmortal
 {
@@ -59,14 +60,14 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
         }
 
-        [Ignore("tymczasowo wyłączone")]
+        //[Ignore("tymczasowo wyłączone")]
         [TestCase(8L, 5L, 1L, 100L, 5L)]
         [TestCase(8L, 8L, 0L, 100007L, 224L)]
         [TestCase(25L, 31L, 0L, 100007L, 11925L)]
         [TestCase(5L, 45L, 3L, 1000007L, 4323L)]
         [TestCase(31L, 39L, 7L, 2345L, 1586L)]
         [TestCase(545L, 435L, 342L, 1000007L, 808451L)]
-        [TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
+        //[TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
         public void ElderAge__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
@@ -80,6 +81,12 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
             long orig = CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t);
             long bruteforce = CodeWars.Solutions.BecomeImmortal.BecomeImmortalBF.ElderAge(m, n, l, t);
             orig.ShouldBe(bruteforce);
+        }
+
+        [TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
+        public void ElderAge__RequiredSpeedTest(long m, long n, long l, long t, long expected)
+        {
+            CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
         }
     }
 }
