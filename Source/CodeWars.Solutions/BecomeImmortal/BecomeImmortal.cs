@@ -9,56 +9,29 @@
  * Dalej rekurencyjnie w 2 prostokąty: po prawej (uzupełnienie do końca) i na dole (tej samej szerokości).
  */
 using System;
-using System.Collections.Generic;
 
 namespace CodeWars.Solutions.BecomeImmortal
 {
     public static class BecomeImmortal
     {
-        private class Area
+        public static long ElderAge(long m, long n, long l, long newp) =>
+            CalculateRect(0, m, 0, n, l, newp);// % newp;
+
+        private static long CalculateRect(long startX, long widthX, long startY, long widthY, long l, long newp)
         {
-            public long StartX, WidthX, StartY, WidthY;
+            if ((widthX <= 0) || (widthY <= 0)) return 0;
+            if ((widthX == 1) && (widthY == 1)) return SubtractL(startX ^ startY, l);
 
-            public Area(long startX, long widthX, long startY, long widthY)
-            {
-                StartX = startX;
-                WidthX = widthX;
-                StartY = startY;
-                WidthY = widthY;
-            }
-        }
+            long largestPowerOf2 = GetLargestPowerOf2(Math.Max(widthX, widthY));
 
-        public static long ElderAge(long m, long n, long l, long newp)
-        {
-            List<Area> areas = new List<Area>() { new Area(0, m, 0, n) };
+            //return SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
+            //    + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)
+            //    + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp);
 
-            long sum = 0;
-            int i = 0;
-            while (i < areas.Count)
-            {
-                if (i % 10000 == 0) Console.WriteLine($"{i}, {areas.Count}");
-                sum += CalculateRect(areas[i], l, areas);
-                i++;
-            }
-            return sum % newp;
-        }
+            return ((SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
+                + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)) % newp
+                + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp)) % newp;
 
-        private static long CalculateRect(Area area, long l, List<Area> areas)
-        {
-            //if ((area.WidthX <= 0) || (area.WidthY <= 0)) return 0;
-            if ((area.WidthX == 1) && (area.WidthY == 1)) return SubtractL(area.StartX ^ area.StartY, l);
-
-            long largestPowerOf2 = GetLargestPowerOf2(Math.Max(area.WidthX, area.WidthY));
-
-            if ((area.WidthX - largestPowerOf2) > 0)
-                areas.Add(new Area(area.StartX + largestPowerOf2, area.WidthX - largestPowerOf2, area.StartY, Math.Min(largestPowerOf2, area.WidthY)));
-            if ((area.WidthY - largestPowerOf2) > 0)
-                areas.Add(new Area(area.StartX, area.WidthX, area.StartY + largestPowerOf2, area.WidthY - largestPowerOf2));
-            return SumInRect(area.StartX ^ area.StartY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(area.WidthX, area.WidthY)), l);
-
-            //return SumInRect(area.StartX ^ area.StartY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(area.WidthX, area.WidthY)), l)
-            //    + CalculateRect(area.StartX + largestPowerOf2, area.WidthX - largestPowerOf2, area.StartY, Math.Min(largestPowerOf2, area.WidthY), l)
-            //    + CalculateRect(area.StartX, area.WidthX, area.StartY + largestPowerOf2, area.WidthY - largestPowerOf2, l);
 
             //wersja w 3 strony z mniejszą ilością zagłębień wywołań
             //long newWidthOnRight = widthX - largestPowerOf2;
@@ -71,7 +44,7 @@ namespace CodeWars.Solutions.BecomeImmortal
 
         private static long GetLargestPowerOf2(long x)
         {
-            uint value = 1u << 63;
+            long value = 1L << 62;
             while (((x & value) == 0) && (value != 0))
                 value >>= 1;
             return value;
