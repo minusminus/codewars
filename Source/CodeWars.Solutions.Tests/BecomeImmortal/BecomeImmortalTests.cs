@@ -76,7 +76,8 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(8L, 8L, 0L, NoT)]
         [TestCase(545L, 435L, 342L, NoT)]
         [TestCase(545L, 435L, 342L, 1000007L)]
-        public void ElderAge_CompareToBruteForce__REturnsCorrectly(long m, long n, long l, long t)
+        //[TestCase(28827050410L, 35165045587L, 7109602L, 13719506L)]
+        public void ElderAge_CompareToBruteForce__ReturnsCorrectly(long m, long n, long l, long t)
         {
             long orig = CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t);
             long bruteforce = CodeWars.Solutions.BecomeImmortal.BecomeImmortalBF.ElderAge(m, n, l, t);

@@ -20,7 +20,7 @@ namespace CodeWars.Solutions.BecomeImmortal
         private static long CalculateRect(long startX, long widthX, long startY, long widthY, long l, long newp)
         {
             if ((widthX <= 0) || (widthY <= 0)) return 0;
-            if ((widthX == 1) && (widthY == 1)) return SubtractL(startX ^ startY, l);
+            if ((widthX == 1) && (widthY == 1)) return SubtractL(startX ^ startY, l) % newp;
 
             long largestPowerOf2 = GetLargestPowerOf2(Math.Max(widthX, widthY));
 
@@ -28,7 +28,7 @@ namespace CodeWars.Solutions.BecomeImmortal
             //    + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)
             //    + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp);
 
-            return ((SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
+            return ((SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l) % newp
                 + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)) % newp
                 + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp)) % newp;
 
