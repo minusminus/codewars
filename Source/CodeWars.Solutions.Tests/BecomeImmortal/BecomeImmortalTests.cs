@@ -84,6 +84,7 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         }
 
         [TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
+        [Timeout(1000)]
         public void ElderAge__RequiredSpeedTest(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
