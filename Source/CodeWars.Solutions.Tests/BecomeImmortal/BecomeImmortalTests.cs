@@ -1,14 +1,12 @@
 ﻿using NUnit.Framework;
 using Shouldly;
-using CodeWars.Solutions.BecomeImmortal;
-using System;
 
 namespace CodeWars.Solutions.Tests.BecomeImmortal
 {
     [TestFixture]
     public class BecomeImmortalTests
     {
-        const long NoT = 1000000000L;
+        const long NoT = long.MaxValue;
 
         [TestCase(2L, 2L, 0L, NoT, 2L)]
         [TestCase(4L, 4L, 0L, NoT, 24L)]
@@ -67,7 +65,7 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(5L, 45L, 3L, 1000007L, 4323L)]
         [TestCase(31L, 39L, 7L, 2345L, 1586L)]
         [TestCase(545L, 435L, 342L, 1000007L, 808451L)]
-        //[TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
+        [TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
         public void ElderAge__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
@@ -76,7 +74,6 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(8L, 8L, 0L, NoT)]
         [TestCase(545L, 435L, 342L, NoT)]
         [TestCase(545L, 435L, 342L, 1000007L)]
-        //[TestCase(28827050410L, 35165045587L, 7109602L, 13719506L)]
         public void ElderAge_CompareToBruteForce__ReturnsCorrectly(long m, long n, long l, long t)
         {
             long orig = CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t);

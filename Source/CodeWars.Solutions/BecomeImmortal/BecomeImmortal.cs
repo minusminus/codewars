@@ -24,22 +24,10 @@ namespace CodeWars.Solutions.BecomeImmortal
 
             long largestPowerOf2 = GetLargestPowerOf2(Math.Max(widthX, widthY));
 
-            //return SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
-            //    + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)
-            //    + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp);
-
-            return ((SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l) % newp
-                + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)) % newp
-                + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp)) % newp;
-
-
-            //wersja w 3 strony z mniejszą ilością zagłębień wywołań
-            //long newWidthOnRight = widthX - largestPowerOf2;
-            //long newHeightOnBottom = widthY - largestPowerOf2;
-            //return SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l)
-            //    + ((newWidthOnRight <= 0) ? 0 : CalculateRect(startX + largestPowerOf2, newWidthOnRight, startY, Math.Min(largestPowerOf2, widthY), l))
-            //    + ((newHeightOnBottom <= 0) ? 0 : CalculateRect(startX, Math.Min(largestPowerOf2, widthX), startY + largestPowerOf2, newHeightOnBottom, l))
-            //    + (((newWidthOnRight <= 0) || (newHeightOnBottom <= 0)) ? 0 : CalculateRect(startX + largestPowerOf2, newWidthOnRight, startY + largestPowerOf2, newHeightOnBottom, l));
+            long result = SumInRect(startX ^ startY, largestPowerOf2, Math.Min(largestPowerOf2, Math.Min(widthX, widthY)), l, newp);
+            result = (result + CalculateRect(startX + largestPowerOf2, widthX - largestPowerOf2, startY, Math.Min(largestPowerOf2, widthY), l, newp)) % newp;
+            result = (result + CalculateRect(startX, widthX, startY + largestPowerOf2, widthY - largestPowerOf2, l, newp)) % newp;
+            return result;
         }
 
         private static long GetLargestPowerOf2(long x)
@@ -50,13 +38,13 @@ namespace CodeWars.Solutions.BecomeImmortal
             return value;
         }
 
-        private static long SumInRect(long firstValue, long rowWidth, long numberOfRows, long l) =>
-            numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l));
+        private static long SumInRect(long firstValue, long rowWidth, long numberOfRows, long l, long newp) =>
+            (numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l), newp)) % newp;
 
         private static long SubtractL(long value, long l) =>
             (value < l) ? 0 : value - l;
 
-        private static long SumSequence(long firstValue, long lastValue) =>
-            (lastValue - firstValue + 1) * (firstValue + lastValue) / 2;
+        private static long SumSequence(long firstValue, long lastValue, long newp) =>
+            (((lastValue - firstValue + 1) % newp) * ((firstValue + lastValue) % newp) / 2) % newp;
     }
 }
