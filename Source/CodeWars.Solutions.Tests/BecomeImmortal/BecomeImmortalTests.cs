@@ -53,6 +53,7 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(15L, 15L, 0L, NoT, 224L + 644L + 644L + 168L)]
         [TestCase(5L, 45L, 3L, NoT, 4323L)]
         [TestCase(545L, 435L, 342L, NoT, 11808528L)]
+        [TestCase(889L, 288L, 14L, NoT, 113323600L)]
         public void ElderAge_OnRightAndBelow__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
@@ -66,6 +67,9 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(31L, 39L, 7L, 2345L, 1586L)]
         [TestCase(545L, 435L, 342L, 1000007L, 808451L)]
         [TestCase(28827050410L, 35165045587L, 7109602L, 13719506L, 5456283L)]
+        [TestCase(889L, 288L, 14L, 145L, 10L)]
+        [TestCase(47L, 538L, 9L, 33L, 18L)]
+        [TestCase(11587433864866L, 502445594067L, 2949916L, 29797545L, 15976513L)]
         public void ElderAge__ReturnsCorrectly(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
@@ -74,6 +78,8 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         [TestCase(8L, 8L, 0L, NoT)]
         [TestCase(545L, 435L, 342L, NoT)]
         [TestCase(545L, 435L, 342L, 1000007L)]
+        [TestCase(889L, 288L, 14L, 145L)]
+        [TestCase(47L, 538L, 9L, 33L)]
         public void ElderAge_CompareToBruteForce__ReturnsCorrectly(long m, long n, long l, long t)
         {
             long orig = CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t);
@@ -86,6 +92,17 @@ namespace CodeWars.Solutions.Tests.BecomeImmortal
         public void ElderAge__RequiredSpeedTest(long m, long n, long l, long t, long expected)
         {
             CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t).ShouldBe(expected);
+        }
+
+        [TestCase(10L, 10L, 0L, NoT)]   //224L + 184L + 184L + 2L
+        [TestCase(10L, 10L, 0L, 5L)]
+        [TestCase(10L, 10L, 0L, 7L)]
+        [TestCase(10L, 10L, 3L, 7L)]
+        public void ProlemsTests(long m, long n, long l, long t)
+        {
+            long orig = CodeWars.Solutions.BecomeImmortal.BecomeImmortal.ElderAge(m, n, l, t);
+            long bruteforce = CodeWars.Solutions.BecomeImmortal.BecomeImmortalBF.ElderAge(m, n, l, t);
+            orig.ShouldBe(bruteforce);
         }
     }
 }

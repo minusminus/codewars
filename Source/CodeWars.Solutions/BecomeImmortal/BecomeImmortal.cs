@@ -9,6 +9,7 @@
  * Dalej rekurencyjnie w 2 prostokąty: po prawej (uzupełnienie do końca) i na dole (tej samej szerokości).
  */
 using System;
+using System.Numerics;
 
 namespace CodeWars.Solutions.BecomeImmortal
 {
@@ -39,12 +40,44 @@ namespace CodeWars.Solutions.BecomeImmortal
         }
 
         private static long SumInRect(long firstValue, long rowWidth, long numberOfRows, long l, long newp) =>
-            (numberOfRows * SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l), newp)) % newp;
+            MulMod(numberOfRows, SumSequence(SubtractL(firstValue, l), SubtractL(firstValue + rowWidth - 1, l), newp), newp);
 
         private static long SubtractL(long value, long l) =>
-            (value < l) ? 0 : value - l;
+            (value < l) ? 0 : (value - l);
 
-        private static long SumSequence(long firstValue, long lastValue, long newp) =>
-            (((lastValue - firstValue + 1) % newp) * ((firstValue + lastValue) % newp) / 2) % newp;
+        //private static long SumSequence(long firstValue, long lastValue, long newp) =>
+        //    ((lastValue - firstValue + 1) * ((firstValue + lastValue) % newp) / 2) % newp;
+
+        //private static long SumSequence(long firstValue, long lastValue, long newp)
+        //{
+        //    long n = lastValue - firstValue + 1;
+        //    //return (n * firstValue + n * (n - 1) / 2) % newp;
+        //    return ((n * ((2 * firstValue + n - 1)%newp)) / 2) % newp;
+        //}
+
+        private static long SumSequence(long firstValue, long lastValue, long newp)
+        {
+            BigInteger bigFirstValue = firstValue;
+            BigInteger bigLastValue = lastValue;
+            BigInteger bigNewp = newp;
+            return (long)(((bigLastValue - bigFirstValue + 1) * (bigFirstValue + bigLastValue) / 2) % bigNewp);
+        }
+
+        //private static long SumSequence(long firstValue, long lastValue, long newp) =>
+        //    (MulMod((lastValue - firstValue + 1), (firstValue + lastValue), newp) / 2) % newp;
+
+        private static long MulMod(long a, long b, long mod)
+        {
+            long res = 0;
+            a = a % mod;
+            while (b > 0)
+            {
+                if (b % 2 == 1)
+                    res = (res + a) % mod;
+                a = (a * 2) % mod;
+                b /= 2;
+            }
+            return res % mod;
+        }
     }
 }
