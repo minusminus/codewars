@@ -7,6 +7,8 @@
  * 
  * W maksymalnym prostokącie są wszystkie permutacje wartości, można obliczyć jego wartość jako sumę ciągu arytmetycznego x ilość wierszy (bok prostokąta).
  * Dalej rekurencyjnie w 2 prostokąty: po prawej (uzupełnienie do końca) i na dole (tej samej szerokości).
+ * 
+ * Suma ciągu liczona ze wzoru: n*a1 + n*(n-1)/2 -> dlatego można zrobić MulModDiv2 bo zawsze n, lub n-1 jest parzyste
  */
 using System;
 using System.Numerics;
@@ -50,21 +52,17 @@ namespace CodeWars.Solutions.BecomeImmortal
 
         //private static long SumSequence(long firstValue, long lastValue, long newp)
         //{
-        //    long n = lastValue - firstValue + 1;
-        //    //return (n * firstValue + n * (n - 1) / 2) % newp;
-        //    return ((n * ((2 * firstValue + n - 1)%newp)) / 2) % newp;
+        //    BigInteger bigFirstValue = firstValue;
+        //    BigInteger bigLastValue = lastValue;
+        //    BigInteger bigNewp = newp;
+        //    return (long)(((bigLastValue - bigFirstValue + 1) * (bigFirstValue + bigLastValue) / 2) % bigNewp);
         //}
 
         private static long SumSequence(long firstValue, long lastValue, long newp)
         {
-            BigInteger bigFirstValue = firstValue;
-            BigInteger bigLastValue = lastValue;
-            BigInteger bigNewp = newp;
-            return (long)(((bigLastValue - bigFirstValue + 1) * (bigFirstValue + bigLastValue) / 2) % bigNewp);
+            long n = lastValue - firstValue + 1;
+            return (MulMod(n, firstValue, newp) + MulModDiv2(n, n - 1, newp)) % newp;
         }
-
-        //private static long SumSequence(long firstValue, long lastValue, long newp) =>
-        //    (MulMod((lastValue - firstValue + 1), (firstValue + lastValue), newp) / 2) % newp;
 
         private static long MulMod(long a, long b, long mod)
         {
@@ -72,12 +70,15 @@ namespace CodeWars.Solutions.BecomeImmortal
             a = a % mod;
             while (b > 0)
             {
-                if (b % 2 == 1)
+                if ((b & 1) == 1)
                     res = (res + a) % mod;
                 a = (a * 2) % mod;
                 b /= 2;
             }
             return res % mod;
         }
+
+        private static long MulModDiv2(long a, long b, long mod) => 
+            (a & 1) == 0 ? MulMod(a / 2, b, mod) : MulMod(a, b / 2, mod);
     }
 }
