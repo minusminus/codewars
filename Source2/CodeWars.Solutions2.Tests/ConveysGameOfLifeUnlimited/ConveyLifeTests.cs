@@ -56,7 +56,7 @@ namespace CodeWars.Solutions2.Tests.ConveysGameOfLifeUnlimited
         public void RightColumnWithOnes__ResultResized()
         {
             int[,] testCase = new int[,] { { 1, 0, 1 }, { 0, 1, 1 }, { 1, 0, 1 } };
-            int[,] expected = new int[,] { { 0, 0, 1, 0 }, { 1, 0, 1, 1 }, { 0, 1, 1, 0 } };
+            int[,] expected = new int[,] { { 0, 0, 1, 0 }, { 1, 0, 1, 1 }, { 0, 0, 1, 0 } };
 
             ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
         }

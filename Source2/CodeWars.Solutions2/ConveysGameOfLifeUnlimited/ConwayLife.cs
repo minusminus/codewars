@@ -46,8 +46,26 @@ namespace CodeWars.Solutions2.ConveysGameOfLifeUnlimited
             if (leftResize > 0)
                 for (int i = 1; i < height - 1; i++)
                 {
-                    int aliveNeighbours = CalculateNeighbours(cells, width, height, 0, i);
-                    result[0, i + topResize] = DieOrBeBorn(aliveNeighbours);
+                    int aliveNeighbours = CalculateNeighbours(cells, width, height, -1, i);
+                    result[i + topResize, 0] = DieOrBeBorn(aliveNeighbours);
+                }
+            if (rightResize > 0)
+                for (int i = 1; i < height - 1; i++)
+                {
+                    int aliveNeighbours = CalculateNeighbours(cells, width, height, width, i);
+                    result[i + topResize, width + leftResize + rightResize - 1] = DieOrBeBorn(aliveNeighbours);
+                }
+            if (topResize > 0)
+                for (int i = 1; i < width - 1; i++)
+                {
+                    int aliveNeighbours = CalculateNeighbours(cells, width, height, i, -1);
+                    result[0, i + leftResize] = DieOrBeBorn(aliveNeighbours);
+                }
+            if (bottomResize > 0)
+                for (int i = 1; i < width - 1; i++)
+                {
+                    int aliveNeighbours = CalculateNeighbours(cells, width, height, i, height);
+                    result[height + topResize + bottomResize - 1, i + leftResize] = DieOrBeBorn(aliveNeighbours);
                 }
 
             return result;
