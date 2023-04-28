@@ -16,4 +16,8 @@
     <PackageReference Include="Shouldly" Version="4.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CodeWars.Solutions2\CodeWars.Solutions2.csproj" />
+  </ItemGroup>
+
 </Project>
