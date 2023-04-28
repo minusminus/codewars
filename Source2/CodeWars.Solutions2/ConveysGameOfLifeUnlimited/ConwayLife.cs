@@ -7,7 +7,7 @@
 /// </summary>
 public class ConwayLife
 {
-    private static readonly int[,] EmptyResult = new int[,] { };
+    private static readonly int[,] EmptyResult = { };
     private const int Dead = 0;
     private const int Alive = 1;
 
@@ -24,7 +24,7 @@ public class ConwayLife
         return nextCells;
     }
 
-    private static bool IsEmpty(in int[,] cells) => 
+    private static bool IsEmpty(in int[,] cells) =>
         (cells.GetLength(0) * cells.GetLength(1)) == 0;
 
     private static int[,] CalculateNextGeneration(in int[,] cells)
@@ -41,8 +41,8 @@ public class ConwayLife
         for (int y = 0 - topResize; y < height + bottomResize; y++)
             for (int x = 0 - leftResize; x < width + rightResize; x++)
             {
-                int aliveNeighbours = CalculateNeighbours(cells, width, height, x, y);
-                result[y + topResize, x + leftResize] = LiveDieOrBeBorn(GetCellsValue(cells, width, height, x, y), aliveNeighbours);
+                int aliveNeighbors = CalculateNeighbors(cells, width, height, x, y);
+                result[y + topResize, x + leftResize] = LiveDieOrBeBorn(GetCellsValue(cells, width, height, x, y), aliveNeighbors);
             }
 
         return result;
@@ -64,7 +64,7 @@ public class ConwayLife
         return 0;
     }
 
-    private static int CalculateNeighbours(in int[,] cells, int width, int height, int positionX, int positionY)
+    private static int CalculateNeighbors(in int[,] cells, int width, int height, int positionX, int positionY)
     {
         int result = 0;
 
@@ -75,21 +75,21 @@ public class ConwayLife
         return result - GetCellsValue(cells, width, height, positionX, positionY);
     }
 
-    private static int GetCellsValue(in int[,] cells, int width, int height, int x, int y) => 
+    private static int GetCellsValue(in int[,] cells, int width, int height, int x, int y) =>
         (x >= 0) && (x < width) && (y >= 0) && (y < height)
             ? cells[y, x]
             : Dead;
 
-    private static int LiveDieOrBeBorn(int currentState, int aliveNeighbours) => 
+    private static int LiveDieOrBeBorn(int currentState, int aliveNeighbors) =>
         currentState == Alive
-            ? DieOrStayAlive(aliveNeighbours)
-            : DieOrBeBorn(aliveNeighbours);
+            ? DieOrStayAlive(aliveNeighbors)
+            : DieOrBeBorn(aliveNeighbors);
 
-    private static int DieOrStayAlive(int aliveNeighbours) =>
-        ((aliveNeighbours == 2) || (aliveNeighbours == 3)) ? Alive : Dead;
+    private static int DieOrStayAlive(int aliveNeighbors) =>
+        (aliveNeighbors is 2 or 3) ? Alive : Dead;
 
-    private static int DieOrBeBorn(int aliveNeighbours) =>
-        (aliveNeighbours == 3) ? Alive : Dead;
+    private static int DieOrBeBorn(int aliveNeighbors) =>
+        (aliveNeighbors == 3) ? Alive : Dead;
 
     private static int[,] CropGeneration(in int[,] cells)
     {
@@ -102,11 +102,11 @@ public class ConwayLife
 
         if ((leftCrop == 0) && (rightCrop == 0) && (topCrop == 0) && (bottomCrop == 0)) return cells;
 
-        int newHight = Math.Max(height - topCrop - bottomCrop, 0);
+        int newHeight = Math.Max(height - topCrop - bottomCrop, 0);
         int newWidth = Math.Max(width - leftCrop - rightCrop, 0);
-        int[,] croppedCells = new int[newHight, newWidth];
+        int[,] croppedCells = new int[newHeight, newWidth];
 
-        for (int y = 0; y < newHight; y++)
+        for (int y = 0; y < newHeight; y++)
             for (int x = 0; x < newWidth; x++)
                 croppedCells[y, x] = cells[y + topCrop, x + leftCrop];
 
@@ -116,7 +116,7 @@ public class ConwayLife
     private static int GetRowsToCrop(in int[,] cells, int width, int height, int startRow, int step) =>
         GetEmptyToCrop(IsRowEmpty, cells, height, width, startRow, step);
 
-    private static int GetColumnsToCrop(in int[,] cells, int width, int height, int startColumn, int step) => 
+    private static int GetColumnsToCrop(in int[,] cells, int width, int height, int startColumn, int step) =>
         GetEmptyToCrop(IsColumnEmpty, cells, width, height, startColumn, step);
 
     private static int GetEmptyToCrop(Func<int[,], int, int, bool> isEmpty, in int[,] cells, int indexUpperBound, int countedElementUpperBound, int startIndex, int step)
