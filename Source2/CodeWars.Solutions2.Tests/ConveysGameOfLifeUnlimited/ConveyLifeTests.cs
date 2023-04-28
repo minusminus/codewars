@@ -60,5 +60,14 @@ namespace CodeWars.Solutions2.Tests.ConveysGameOfLifeUnlimited
 
             ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
         }
+
+        [Test]
+        public void FourWayResize__ResultResized()
+        {
+            int[,] testCase = new int[,] { { 1, 1, 1 }, { 1, 0, 1 }, { 1, 1, 1 } };
+            int[,] expected = new int[,] { { 0, 0, 1, 0, 0 }, { 0, 1, 0, 1, 0 }, { 1, 0, 0, 0, 1 }, { 0, 1, 0, 1, 0 }, { 0, 0, 1, 0, 0 } };
+
+            ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
+        }
     }
 }

@@ -43,30 +43,15 @@ namespace CodeWars.Solutions2.ConveysGameOfLifeUnlimited
                     int aliveNeighbours = CalculateNeighbours(cells, width, height, x, y);
                     result[y + topResize, x + leftResize] = LiveDieOrBeBorn(cells[y, x], aliveNeighbours);
                 }
+
             if (leftResize > 0)
-                for (int i = 1; i < height - 1; i++)
-                {
-                    int aliveNeighbours = CalculateNeighbours(cells, width, height, -1, i);
-                    result[i + topResize, 0] = DieOrBeBorn(aliveNeighbours);
-                }
+                CalculateAddedRow(cells, width, height, -1, topResize, 0, result);
             if (rightResize > 0)
-                for (int i = 1; i < height - 1; i++)
-                {
-                    int aliveNeighbours = CalculateNeighbours(cells, width, height, width, i);
-                    result[i + topResize, width + leftResize + rightResize - 1] = DieOrBeBorn(aliveNeighbours);
-                }
+                CalculateAddedRow(cells, width, height, width, topResize, width + leftResize + rightResize - 1, result);
             if (topResize > 0)
-                for (int i = 1; i < width - 1; i++)
-                {
-                    int aliveNeighbours = CalculateNeighbours(cells, width, height, i, -1);
-                    result[0, i + leftResize] = DieOrBeBorn(aliveNeighbours);
-                }
+                CalculateAddedColumn(cells, width, height, -1, leftResize, 0, result);
             if (bottomResize > 0)
-                for (int i = 1; i < width - 1; i++)
-                {
-                    int aliveNeighbours = CalculateNeighbours(cells, width, height, i, height);
-                    result[height + topResize + bottomResize - 1, i + leftResize] = DieOrBeBorn(aliveNeighbours);
-                }
+                CalculateAddedColumn(cells, width, height, height, leftResize, height + topResize + bottomResize - 1, result);
 
             return result;
         }
@@ -85,6 +70,24 @@ namespace CodeWars.Solutions2.ConveysGameOfLifeUnlimited
                 if (cells[i - 1, column] + cells[i, column] + cells[i + 1, column] == 3)
                     return 1;
             return 0;
+        }
+
+        private static void CalculateAddedRow(in int[,] cells, int width, int height, int cellsX, int topResize, int resultY, int[,] result)
+        {
+            for (int i = 1; i < height - 1; i++)
+            {
+                int aliveNeighbours = CalculateNeighbours(cells, width, height, cellsX, i);
+                result[i + topResize, resultY] = DieOrBeBorn(aliveNeighbours);
+            }
+        }
+
+        private static void CalculateAddedColumn(in int[,] cells, int width, int height, int cellsY, int leftResize, int resultX, int[,] result)
+        {
+            for (int i = 1; i < width - 1; i++)
+            {
+                int aliveNeighbours = CalculateNeighbours(cells, width, height, i, cellsY);
+                result[resultX, i + leftResize] = DieOrBeBorn(aliveNeighbours);
+            }
         }
 
         private static int CalculateNeighbours(in int[,] cells, int width, int height, int positionX, int positionY)
