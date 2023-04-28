@@ -114,12 +114,12 @@ public class ConwayLife
     }
 
     private static int GetRowsToCrop(in int[,] cells, int width, int height, int startRow, int step) =>
-        GetEmptyToCrop(IsRowEmpty, cells, height, width, startRow, step);
+        CountEmptyToCrop(IsRowEmpty, cells, height, width, startRow, step);
 
     private static int GetColumnsToCrop(in int[,] cells, int width, int height, int startColumn, int step) =>
-        GetEmptyToCrop(IsColumnEmpty, cells, width, height, startColumn, step);
+        CountEmptyToCrop(IsColumnEmpty, cells, width, height, startColumn, step);
 
-    private static int GetEmptyToCrop(Func<int[,], int, int, bool> isEmpty, in int[,] cells, int indexUpperBound, int countedElementUpperBound, int startIndex, int step)
+    private static int CountEmptyToCrop(Func<int[,], int, int, bool> isEmpty, in int[,] cells, int indexUpperBound, int countedElementUpperBound, int startIndex, int step)
     {
         int result = 0;
         int index = startIndex;
