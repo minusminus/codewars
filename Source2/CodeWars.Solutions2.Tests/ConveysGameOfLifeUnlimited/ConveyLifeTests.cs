@@ -69,5 +69,41 @@ namespace CodeWars.Solutions2.Tests.ConveysGameOfLifeUnlimited
 
             ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
         }
+
+        [Test]
+        public void TopToCrop__ResultCropped()
+        {
+            int[,] testCase = new int[,] { { 0, 1, 0 }, { 0, 0, 1 }, { 1, 1, 0 } };
+            int[,] expected = new int[,] { { 1, 0, 1 }, { 0, 1, 0 } };
+
+            ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
+        }
+
+        [Test]
+        public void BottomToCrop__ResultCropped()
+        {
+            int[,] testCase = new int[,] { { 1, 1, 0 }, { 0, 0, 1 }, { 0, 1, 0 } };
+            int[,] expected = new int[,] { { 0, 1, 0 }, { 1, 0, 1 } };
+
+            ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
+        }
+
+        [Test]
+        public void LeftToCrop__ResultCropped()
+        {
+            int[,] testCase = new int[,] { { 0, 0, 1 }, { 1, 0, 1 }, { 0, 1, 0 } };
+            int[,] expected = new int[,] { { 1, 0 }, { 0, 1 }, { 1, 0 } };
+
+            ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
+        }
+
+        [Test]
+        public void RightToCrop__ResultCropped()
+        {
+            int[,] testCase = new int[,] { { 1, 0, 0 }, { 1, 0, 1 }, { 0, 1, 0 } };
+            int[,] expected = new int[,] { { 0, 1 }, { 1, 0 }, { 0, 1 } };
+
+            ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
+        }
     }
 }
