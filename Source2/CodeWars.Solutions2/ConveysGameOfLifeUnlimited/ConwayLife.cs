@@ -13,15 +13,13 @@ public class ConwayLife
 
     public static int[,] GetGeneration(int[,] cells, int generation)
     {
-        if (IsEmpty(cells))
-            return EmptyResult;
+        if (IsEmpty(cells)) return EmptyResult;
 
         int[,] nextCells = cells;
         for (int i = 0; i < generation; i++)
         {
             nextCells = CropGeneration(CalculateNextGeneration(nextCells));
-            if (IsEmpty(nextCells))
-                return EmptyResult;
+            if (IsEmpty(nextCells)) return EmptyResult;
         }
         return nextCells;
     }
@@ -115,40 +113,33 @@ public class ConwayLife
         return croppedCells;
     }
 
-    private static int GetRowsToCrop(in int[,] cells, int width, int height, int startRow, int step)
+    private static int GetRowsToCrop(in int[,] cells, int width, int height, int startRow, int step) =>
+        GetEmptyToCrop(IsRowEmpty, cells, height, width, startRow, step);
+
+    private static int GetColumnsToCrop(in int[,] cells, int width, int height, int startColumn, int step) => 
+        GetEmptyToCrop(IsColumnEmpty, cells, width, height, startColumn, step);
+
+    private static int GetEmptyToCrop(Func<int[,], int, int, bool> isEmpty, in int[,] cells, int indexUpperBound, int countedElementUpperBound, int startIndex, int step)
     {
         int result = 0;
-        int row = startRow;
+        int index = startIndex;
         do
         {
-            if (!IsRowEmpty(cells, width, row)) break;
+            if (!isEmpty(cells, countedElementUpperBound, index)) break;
             result++;
-            row += step;
-        } while ((row >= 0) && (row < height));
+            index += step;
+        } while ((index >= 0) && (index < indexUpperBound));
         return result;
     }
 
-    private static int GetColumnsToCrop(in int[,] cells, int width, int height, int startColumn, int step)
-    {
-        int result = 0;
-        int column = startColumn;
-        do
-        {
-            if (!IsColumnEmpty(cells, height, column)) break;
-            result++;
-            column += step;
-        } while ((column >= 0) && (column < width));
-        return result;
-    }
-
-    private static bool IsRowEmpty(in int[,] cells, int width, int row)
+    private static bool IsRowEmpty(int[,] cells, int width, int row)
     {
         for (int i = 0; i < width; i++)
             if (cells[row, i] == Alive) return false;
         return true;
     }
 
-    private static bool IsColumnEmpty(in int[,] cells, int height, int column)
+    private static bool IsColumnEmpty(int[,] cells, int height, int column)
     {
         for (int i = 0; i < height; i++)
             if (cells[i, column] == Alive) return false;
