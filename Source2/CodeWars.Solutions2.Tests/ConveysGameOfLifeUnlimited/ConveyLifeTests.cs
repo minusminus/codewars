@@ -18,14 +18,6 @@ namespace CodeWars.Solutions2.Tests.ConveysGameOfLifeUnlimited
         }
 
         [Test]
-        public void EmptyInput__ReturnsEmpty()
-        {
-            int[,] emptyArray = new int[,] { };
-
-            ConwayLife.GetGeneration(emptyArray, 1).ShouldBe(emptyArray);
-        }
-
-        [Test]
         public void TopLineWithOnes__ResultResized()
         {
             int[,] testCase = new int[,] { { 1, 1, 1 }, { 0, 1, 1 }, { 1, 1, 0 } };
@@ -102,6 +94,23 @@ namespace CodeWars.Solutions2.Tests.ConveysGameOfLifeUnlimited
         {
             int[,] testCase = new int[,] { { 1, 0, 0 }, { 1, 0, 1 }, { 0, 1, 0 } };
             int[,] expected = new int[,] { { 0, 1 }, { 1, 0 }, { 0, 1 } };
+
+            ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
+        }
+
+        [Test]
+        public void EmptyInput__ReturnsEmpty()
+        {
+            int[,] emptyArray = new int[,] { };
+
+            ConwayLife.GetGeneration(emptyArray, 1).ShouldBe(emptyArray);
+        }
+
+        [Test]
+        public void CroppedToEmpty__ReturnsEmpty()
+        {
+            int[,] testCase = new int[,] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
+            int[,] expected = new int[,] { };
 
             ConwayLife.GetGeneration(testCase, 1).ShouldBe(expected);
         }

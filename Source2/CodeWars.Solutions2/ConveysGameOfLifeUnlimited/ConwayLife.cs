@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace CodeWars.Solutions2.ConveysGameOfLifeUnlimited
 {
@@ -103,8 +102,8 @@ namespace CodeWars.Solutions2.ConveysGameOfLifeUnlimited
 
             if ((leftCrop == 0) && (rightCrop == 0) && (topCrop == 0) && (bottomCrop == 0)) return cells;
 
-            int newHight = height - topCrop - bottomCrop;
-            int newWidth = width - leftCrop - rightCrop;
+            int newHight = Math.Max(height - topCrop - bottomCrop, 0);
+            int newWidth = Math.Max(width - leftCrop - rightCrop, 0);
             int[,] croppedCells = new int[newHight, newWidth];
 
             for (int y = 0; y < newHight; y++)
