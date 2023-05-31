@@ -20,4 +20,8 @@
     <ProjectReference Include="..\CodeWars.Solutions2\CodeWars.Solutions2.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BlaineIsAPain\" />
+  </ItemGroup>
+
 </Project>
