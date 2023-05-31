@@ -3,7 +3,7 @@
 /// <summary>
 /// Key of track node.
 /// </summary>
-internal readonly struct TrackNodeKey
+public readonly struct TrackNodeKey
 {
     public readonly int Row;
     public readonly int Column;

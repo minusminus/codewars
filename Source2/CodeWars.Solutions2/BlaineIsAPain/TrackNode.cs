@@ -3,14 +3,20 @@
 /// <summary>
 /// Track node.
 /// </summary>
-internal class TrackNode
+public class TrackNode
 {
     public readonly TrackNodeKey TrackNodeKey;
+    public readonly int TrackPosition;
+    public readonly bool IsStation;
+    public readonly bool IsCrossing;
     public int DistanceToNextNode;
 
-    public TrackNode(TrackNodeKey trackNodeKey)
+    public TrackNode(TrackNodeKey trackNodeKey, int trackPosition, bool isStation, bool isCrossing)
     {
         TrackNodeKey = trackNodeKey;
+        TrackPosition = trackPosition;
+        IsStation = isStation;
+        IsCrossing = isCrossing;
         DistanceToNextNode = -1;
     }
 }

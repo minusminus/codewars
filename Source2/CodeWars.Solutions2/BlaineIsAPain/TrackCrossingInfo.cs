@@ -1,11 +1,10 @@
 ﻿namespace CodeWars.Solutions2.BlaineIsAPain;
 
 /// <summary>
-/// Track node description.
+/// Track crossing info.
+/// Contains list of indexes of TrackNode in TrackNodes.
 /// </summary>
-internal class TrackNodeDescription
+public class TrackCrossingInfo
 {
-    public bool IsStation;
-    public bool IsCrossing;
     public readonly List<int> TrackPositions = new();
 }
