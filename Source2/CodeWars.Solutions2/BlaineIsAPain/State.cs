@@ -2,8 +2,6 @@
 
 /// <summary>
 /// Simulated system state.
-/// 
-/// Train1 is always shorter than Train2.
 /// </summary>
 public class State
 {
