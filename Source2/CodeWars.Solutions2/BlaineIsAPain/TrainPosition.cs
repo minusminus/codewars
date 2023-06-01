@@ -2,7 +2,7 @@
 
 /// <summary>
 /// Describes train position on track.
-/// Start should be clockwise greater than End.
+/// Start is expected to be clockwise greater than End.
 /// </summary>
 public readonly struct TrainPosition
 {

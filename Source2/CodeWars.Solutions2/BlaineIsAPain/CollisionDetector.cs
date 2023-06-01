@@ -20,17 +20,31 @@ public static class CollisionDetector
         var positionShorter = state.TrainShorter.PositionOnTrack(state.TrackLength);
         var positionLonger = state.TrainLonger.PositionOnTrack(state.TrackLength);
 
-        if (PositionsCollideOnStraightTrack(positionLonger, positionShorter, state.TrackLength)) return true;
-
-        //collision on crossing
-
-        return false;
+        return PositionsCollideOnStraightTrack(positionLonger, positionShorter)
+            || PositionsCollideOnCrossings(state, positionLonger, positionShorter);
     }
 
-    private static bool PositionsCollideOnStraightTrack(in TrainPosition longer, in TrainPosition shorter, int trackLength)
+    private static bool PositionsCollideOnStraightTrack(in TrainPosition longer, in TrainPosition shorter) =>
+        //trains collide on straight track if:
+        //shorter Start or End is on longer
+        longer.PositionOnTrain(shorter.Start) || longer.PositionOnTrain(shorter.End);
+
+    private static bool PositionsCollideOnCrossings(State state, in TrainPosition longer, in TrainPosition shorter)
     {
-        for (int i = longer.End; i != (longer.Start + 1).Mod(trackLength); i = (i + 1).Mod(trackLength))
-            if ((i == shorter.Start) || (i == shorter.End)) return true;
+        //nodes are scanned backward from shorter train's last:
+        //- if shorter train is on a specified node
+        //- and the node is crossing
+        //for such node all crossing track positions are checked on longer train
+        //if longer train is on any then trains collide
+
+        int lastNodeIndex = (state.TrainShorter.LastNodeIndex == -1) ? state.TrackNodes.Count - 1 : state.TrainShorter.LastNodeIndex;
+        while ((lastNodeIndex >= 0) && shorter.PositionOnTrain(state.TrackNodes[lastNodeIndex].TrackPosition))
+        {
+            if (state.TrackNodes[lastNodeIndex].IsCrossing)
+                foreach (var position in state.TrackCrossings[state.TrackNodes[lastNodeIndex].TrackNodeKey].TrackPositions)
+                    if (longer.PositionOnTrain(position)) return true;
+            lastNodeIndex--;
+        }
         return false;
     }
 }
