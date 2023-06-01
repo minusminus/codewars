@@ -6,5 +6,10 @@
 /// </summary>
 public class TrackCrossingInfo
 {
-    public readonly List<int> TrackPositions = new();
+    public readonly List<int> TrackPositions;
+
+    public TrackCrossingInfo(List<int>? trackPositions = null)
+    {
+        TrackPositions = trackPositions ?? new List<int>();
+    }
 }

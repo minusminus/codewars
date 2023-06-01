@@ -37,14 +37,21 @@ public static class CollisionDetector
         //for such node all crossing track positions are checked on longer train
         //if longer train is on any then trains collide
 
-        int lastNodeIndex = (state.TrainShorter.LastNodeIndex == -1) ? state.TrackNodes.Count - 1 : state.TrainShorter.LastNodeIndex;
-        while ((lastNodeIndex >= 0) && shorter.PositionOnTrain(state.TrackNodes[lastNodeIndex].TrackPosition))
+        int lastNodeIndex = (state.TrainShorter.LastNodeIndex == -1) ? FindNodeBeforePosition(state, state.TrainShorter.StartingPosition) : state.TrainShorter.LastNodeIndex;
+        while (shorter.PositionOnTrain(state.TrackNodes[lastNodeIndex].TrackPosition))
         {
             if (state.TrackNodes[lastNodeIndex].IsCrossing)
                 foreach (var position in state.TrackCrossings[state.TrackNodes[lastNodeIndex].TrackNodeKey].TrackPositions)
                     if (longer.PositionOnTrain(position)) return true;
-            lastNodeIndex--;
+            lastNodeIndex = (lastNodeIndex - 1).Mod(state.TrackLength);
         }
         return false;
+    }
+
+    private static int FindNodeBeforePosition(State state, int position)
+    {
+        for (int i = state.TrackNodes.Count - 1; i >= 0; i--)
+            if (state.TrackNodes[i].TrackPosition <= position) return i;
+        return state.TrackNodes.Count - 1;
     }
 }

@@ -8,11 +8,11 @@ public class State
     public readonly Train TrainShorter;
     public readonly Train TrainLonger;
     public readonly List<TrackNode> TrackNodes = new();
-    public readonly Dictionary<TrackNodeKey, TrackCrossingInfo> TrackCrossings = new();
+    public readonly Dictionary<TrackNodeKey, TrackCrossingInfo> TrackCrossings;
     public int TrackLength;
     public int TimePassed;
 
-    public State(Train train1, Train train2)
+    public State(Train train1, Train train2, Dictionary<TrackNodeKey, TrackCrossingInfo>? trackCrossings = null)
     {
         if(train1.Length <=  train2.Length)
         {
@@ -24,6 +24,7 @@ public class State
             TrainShorter = train2;
             TrainLonger = train1;
         }
+        TrackCrossings = trackCrossings ?? new Dictionary<TrackNodeKey, TrackCrossingInfo>();
         TimePassed = 0;
     }
 }
