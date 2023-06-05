@@ -3,13 +3,12 @@
 namespace CodeWars.Solutions2.BlaineIsAPain;
 
 /// <summary>
-/// Detects collisions on track.
+/// Detects collisions on current state.
 /// </summary>
 public static class CollisionDetector
 {
-    public static bool Detect(State state, out int collisionAfter)
+    public static bool Detect(State state)
     {
-        collisionAfter = 0;
         if (CollisionInCurrentState(state)) return true;
 
         return false;
@@ -37,21 +36,33 @@ public static class CollisionDetector
         //for such node all crossing track positions are checked on longer train
         //if longer train is on any then trains collide
 
-        int lastNodeIndex = (state.TrainShorter.LastNodeIndex == -1) ? FindNodeBeforePosition(state, state.TrainShorter.StartingPosition) : state.TrainShorter.LastNodeIndex;
+        int lastNodeIndex = (state.TrainShorter.LastNodeIndex == -1) ? FindNodeBeforePosition(state, state.TrainShorter.Direction, state.TrainShorter.StartingPosition) : state.TrainShorter.LastNodeIndex;
         while (shorter.PositionOnTrain(state.TrackNodes[lastNodeIndex].TrackPosition))
         {
             if (state.TrackNodes[lastNodeIndex].IsCrossing)
                 foreach (var position in state.TrackCrossings[state.TrackNodes[lastNodeIndex].TrackNodeKey].TrackPositions)
                     if (longer.PositionOnTrain(position)) return true;
-            lastNodeIndex = (lastNodeIndex - 1).Mod(state.TrackLength);
+            lastNodeIndex = GetPrevNode(state.TrainShorter.Direction, lastNodeIndex, state.TrackNodes.Count);
         }
         return false;
     }
 
-    private static int FindNodeBeforePosition(State state, int position)
+    private static int FindNodeBeforePosition(State state, TrainDirection trainDirection, int position)
     {
-        for (int i = state.TrackNodes.Count - 1; i >= 0; i--)
-            if (state.TrackNodes[i].TrackPosition <= position) return i;
-        return state.TrackNodes.Count - 1;
+        if (trainDirection == TrainDirection.Clockwise)
+        {
+            for (int i = state.TrackNodes.Count - 1; i >= 0; i--)
+                if (state.TrackNodes[i].TrackPosition <= position) return i;
+            return state.TrackNodes.Count - 1;
+        } 
+        else
+        {
+            for (int i = 0; i < state.TrackNodes.Count; i++)
+                if (state.TrackNodes[i].TrackPosition >= position) return i;
+            return 0;
+        }
     }
+
+    private static int GetPrevNode(TrainDirection trainDirection, int nodeIndex, int nodesCount) => 
+        (nodeIndex - (trainDirection == TrainDirection.Clockwise ? 1 : -1)).Mod(nodesCount - 1);
 }

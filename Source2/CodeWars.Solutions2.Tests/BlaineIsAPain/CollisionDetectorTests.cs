@@ -55,14 +55,12 @@ internal class CollisionDetectorTests
     [TestCase("Aaaaa", 5, "Bbbb", 90)]
     [TestCase("Aaaaa", 5, "Bbbb", 10)]
     [TestCase("Aaaaa", 5, "Bbbb", 1)]
-    public void Detect_Track0_DoesNotCollideInCurrentState__ReturnsFalseAndZero(string train1, int position1, string train2, int position2)
+    [TestCase("aaaaA", 20, "Bbbb", 25)]
+    [TestCase("aaaaA", 20, "Bbbb", 21)]
+    [TestCase("aaaaA", 20, "Bbbb", 12)]
+    public void Detect_Track0_DoesNotCollideInCurrentState__ReturnsFalse(string train1, int position1, string train2, int position2)
     {
-        State state = CreateState(0, train1, position1, train2, position2);
-
-        bool result = CollisionDetector.Detect(state, out int collisionAfter);
-
-        result.ShouldBeFalse();
-        collisionAfter.ShouldBe(0);
+        CollisionDetector.Detect(CreateState(0, train1, position1, train2, position2)).ShouldBeFalse();
     }
 
     [TestCase("Aaaaa", 5, "Bbbb", 6)]
@@ -72,14 +70,11 @@ internal class CollisionDetectorTests
     [TestCase("Aaaaa", 98, "Bbbb", 0)]
     [TestCase("Aaaaa", 98, "Bbbb", 2)]
     [TestCase("Aaaaa", 98, "Bbbb", 95)]
-    public void Detect_Track0_CollideInCurrentState__ReturnsTrueAndZero(string train1, int position1, string train2, int position2)
+    [TestCase("aaaaA", 20, "Bbbb", 19)]
+    [TestCase("aaaaA", 20, "Bbbb", 13)]
+    public void Detect_Track0_CollideInCurrentState__ReturnsTrue(string train1, int position1, string train2, int position2)
     {
-        State state = CreateState(0, train1, position1, train2, position2);
-
-        bool result = CollisionDetector.Detect(state, out int collisionAfter);
-
-        result.ShouldBeTrue();
-        collisionAfter.ShouldBe(0);
+        CollisionDetector.Detect(CreateState(0, train1, position1, train2, position2)).ShouldBeTrue();
     }
 
     //straight
@@ -87,15 +82,22 @@ internal class CollisionDetectorTests
     [TestCase("Aaaaa", 15, "Bbbb", 20)]
     [TestCase("Aaaaa", 24, "Bbbb", 20)]
     [TestCase("Aaaaa", 97, "Bbbb", 2)]
+    [TestCase("aaaaA", 20, "Bbbb", 25)]
+    [TestCase("aaaaA", 20, "Bbbb", 21)]
+    [TestCase("aaaaA", 20, "Bbbb", 12)]
     //through crossing
-    public void Detect_Track1_DoesNotCollideInCurrentState__ReturnsFalseAndZero(string train1, int position1, string train2, int position2)
+    [TestCase("Aaaaa", 20, "Bbbb", 35)]
+    [TestCase("Aaaaa", 25, "Bbbb", 30)]
+    [TestCase("Aaaaa", 30, "Bbbb", 26)]
+    [TestCase("Aaaaa", 31, "Bbbb", 70)]
+    [TestCase("Aaaaa", 30, "Bbbb", 71)]
+    [TestCase("aaaaA", 29, "Bbbb", 31)]
+    [TestCase("aaaaA", 30, "Bbbb", 31)]
+    [TestCase("aaaaA", 29, "Bbbb", 30)]
+    [TestCase("aaaaA", 34, "Bbbb", 26)]
+    public void Detect_Track1_DoesNotCollideInCurrentState__ReturnsFalse(string train1, int position1, string train2, int position2)
     {
-        State state = CreateState(1, train1, position1, train2, position2);
-
-        bool result = CollisionDetector.Detect(state, out int collisionAfter);
-
-        result.ShouldBeFalse();
-        collisionAfter.ShouldBe(0);
+        CollisionDetector.Detect(CreateState(1, train1, position1, train2, position2)).ShouldBeFalse();
     }
 
     //straight collision
@@ -106,28 +108,21 @@ internal class CollisionDetectorTests
     [TestCase("Aaaaa", 98, "Bbbb", 0)]
     [TestCase("Aaaaa", 98, "Bbbb", 2)]
     [TestCase("Aaaaa", 98, "Bbbb", 95)]
+    [TestCase("aaaaA", 20, "Bbbb", 19)]
+    [TestCase("aaaaA", 20, "Bbbb", 13)]
     //through crossing
     [TestCase("Aaaaa", 30, "Bbbb", 70)]
-    [TestCase("Aaaaa", 31, "Bbbb", 70)]
-    [TestCase("Aaaaa", 30, "Bbbb", 71)]
-    [TestCase("Aaaaa", 31, "Bbbb", 71)]
-    [TestCase("Aaaaa", 34, "Bbbb", 70)]
-    [TestCase("Aaaaa", 34, "Bbbb", 71)]
-    public void Detect_Track1_CollideInCurrentState__ReturnsTrueAndZero(string train1, int position1, string train2, int position2)
+    [TestCase("Aaaaa", 26, "Bbbb", 70)]
+    [TestCase("Aaaaa", 26, "Bbbb", 69)]
+    [TestCase("aaaaA", 30, "Bbbb", 70)]
+    [TestCase("aaaaA", 31, "Bbbb", 70)]
+    [TestCase("aaaaA", 30, "Bbbb", 69)]
+    public void Detect_Track1_CollideInCurrentState__ReturnsTrue(string train1, int position1, string train2, int position2)
     {
-        State state = CreateState(0, train1, position1, train2, position2);
-
-        bool result = CollisionDetector.Detect(state, out int collisionAfter);
-
-        result.ShouldBeTrue();
-        collisionAfter.ShouldBe(0);
+        CollisionDetector.Detect(CreateState(1, train1, position1, train2, position2)).ShouldBeTrue();
     }
 
-    private State CreateState(int trackDefinition, string train1, int position1, string train2, int position2)
-    {
-        State state = new(new Train(train1, position1), new Train(train2, position2), _trackCrossings[trackDefinition]);
-        state.TrackLength = _trackLengths[trackDefinition];
-        state.TrackNodes.AddRange(_trackNodes[trackDefinition]);
-        return state;
-    }
+    private State CreateState(int trackDefinition, string train1, int position1, string train2, int position2) => 
+        new(new Train(train1, position1), new Train(train2, position2),
+            _trackLengths[trackDefinition], _trackNodes[trackDefinition], _trackCrossings[trackDefinition]);
 }

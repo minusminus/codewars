@@ -6,10 +6,10 @@
 /// </summary>
 public class TrackCrossingInfo
 {
-    public readonly List<int> TrackPositions;
+    public readonly IReadOnlyList<int> TrackPositions;
 
     public TrackCrossingInfo(List<int>? trackPositions = null)
     {
-        TrackPositions = trackPositions ?? new List<int>();
+        TrackPositions = (trackPositions ?? new List<int>()).AsReadOnly();
     }
 }
