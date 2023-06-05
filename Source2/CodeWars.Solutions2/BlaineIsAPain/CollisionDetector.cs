@@ -36,7 +36,7 @@ public static class CollisionDetector
             if (state.TrackNodes[lastNodeIndex].IsCrossing)
                 foreach (var position in state.TrackCrossings[state.TrackNodes[lastNodeIndex].TrackNodeKey].TrackPositions)
                     if (longer.PositionOnTrain(position)) return true;
-            lastNodeIndex = GetPrevNode(state.TrainShorter.Direction, lastNodeIndex, state.TrackNodes.Count);
+            lastNodeIndex = GetPrevNodeIndex(state.TrainShorter.Direction, lastNodeIndex, state.TrackNodes.Count);
         }
         return false;
     }
@@ -57,6 +57,6 @@ public static class CollisionDetector
         }
     }
 
-    private static int GetPrevNode(TrainDirection trainDirection, int nodeIndex, int nodesCount) => 
+    private static int GetPrevNodeIndex(TrainDirection trainDirection, int nodeIndex, int nodesCount) => 
         (nodeIndex - (trainDirection == TrainDirection.Clockwise ? 1 : -1)).Mod(nodesCount - 1);
 }
