@@ -1,4 +1,4 @@
-﻿namespace CodeWars.Solutions2.BlaineIsAPain;
+﻿namespace CodeWars.Solutions2.BlaineIsAPain.Data;
 
 public enum TrainDirection { Clockwise, Counterclockwise };
 

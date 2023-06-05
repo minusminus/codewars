@@ -1,4 +1,5 @@
-﻿using CodeWars.Solutions2.Tools;
+﻿using CodeWars.Solutions2.BlaineIsAPain.Data;
+using CodeWars.Solutions2.Tools;
 
 namespace CodeWars.Solutions2.BlaineIsAPain;
 
@@ -9,26 +10,19 @@ public static class CollisionDetector
 {
     public static bool Detect(State state)
     {
-        if (CollisionInCurrentState(state)) return true;
-
-        return false;
-    }
-
-    private static bool CollisionInCurrentState(State state)
-    {
         var positionShorter = state.TrainShorter.PositionOnTrack(state.TrackLength);
         var positionLonger = state.TrainLonger.PositionOnTrack(state.TrackLength);
 
-        return PositionsCollideOnStraightTrack(positionLonger, positionShorter)
-            || PositionsCollideOnCrossings(state, positionLonger, positionShorter);
+        return TrainsCollideOnStraightTrack(positionLonger, positionShorter)
+            || TrainsCollideOnCrossings(state, positionLonger, positionShorter);
     }
 
-    private static bool PositionsCollideOnStraightTrack(in TrainPosition longer, in TrainPosition shorter) =>
+    private static bool TrainsCollideOnStraightTrack(in TrainPosition longer, in TrainPosition shorter) =>
         //trains collide on straight track if:
         //shorter Start or End is on longer
         longer.PositionOnTrain(shorter.Start) || longer.PositionOnTrain(shorter.End);
 
-    private static bool PositionsCollideOnCrossings(State state, in TrainPosition longer, in TrainPosition shorter)
+    private static bool TrainsCollideOnCrossings(State state, in TrainPosition longer, in TrainPosition shorter)
     {
         //nodes are scanned backward from shorter train's last:
         //- if shorter train is on a specified node

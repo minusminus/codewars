@@ -1,4 +1,5 @@
 ﻿using CodeWars.Solutions2.BlaineIsAPain;
+using CodeWars.Solutions2.BlaineIsAPain.Data;
 
 namespace CodeWars.Solutions2.Tests.BlaineIsAPain;
 

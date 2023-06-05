@@ -1,6 +1,6 @@
-﻿using CodeWars.Solutions2.BlaineIsAPain;
+﻿using CodeWars.Solutions2.BlaineIsAPain.Data;
 
-namespace CodeWars.Solutions2.Tests.BlaineIsAPain;
+namespace CodeWars.Solutions2.Tests.BlaineIsAPain.Data;
 
 internal class TrainTests
 {
@@ -8,7 +8,7 @@ internal class TrainTests
     [TestCase("aaaaA", 20, TrainDirection.Clockwise, false)]
     [TestCase("Xxxxx", 30, TrainDirection.Counterclockwise, true)]
     [TestCase("xxxxX", 40, TrainDirection.Clockwise, true)]
-    public void Create__CreatesCorrectly(string definition, int startingPosition, 
+    public void Create__CreatesCorrectly(string definition, int startingPosition,
         TrainDirection expectedDirection, bool expectedExpress)
     {
         var testObj = new Train(definition, startingPosition);

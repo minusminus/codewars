@@ -1,6 +1,6 @@
-﻿using CodeWars.Solutions2.BlaineIsAPain;
+﻿using CodeWars.Solutions2.BlaineIsAPain.Data;
 
-namespace CodeWars.Solutions2.Tests.BlaineIsAPain;
+namespace CodeWars.Solutions2.Tests.BlaineIsAPain.Data;
 
 internal class TrainPositionExtensionsTests
 {
@@ -19,6 +19,6 @@ internal class TrainPositionExtensionsTests
     [TestCase(5, 15, 14, false)]
     public void PositionOnTrain__ReturnsCorrectly(int start, int end, int position, bool expected)
     {
-        TrainPositionExtensions.PositionOnTrain(new TrainPosition(start, end), position).ShouldBe(expected);
+        new TrainPosition(start, end).PositionOnTrain(position).ShouldBe(expected);
     }
 }
