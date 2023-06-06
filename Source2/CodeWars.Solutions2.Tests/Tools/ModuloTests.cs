@@ -2,6 +2,7 @@
 
 namespace CodeWars.Solutions2.Tests.Tools;
 
+[TestFixture]
 internal class ModuloTests
 {
     [TestCase(10, 2, 0)]

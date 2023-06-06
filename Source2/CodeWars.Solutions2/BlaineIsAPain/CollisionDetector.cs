@@ -1,5 +1,4 @@
 ﻿using CodeWars.Solutions2.BlaineIsAPain.Data;
-using CodeWars.Solutions2.Tools;
 
 namespace CodeWars.Solutions2.BlaineIsAPain;
 
@@ -36,27 +35,18 @@ public static class CollisionDetector
             if (state.TrackNodes[lastNodeIndex].IsCrossing)
                 foreach (var position in state.TrackCrossings[state.TrackNodes[lastNodeIndex].TrackNodeKey].TrackPositions)
                     if (longer.PositionOnTrain(position)) return true;
-            lastNodeIndex = GetPrevNodeIndex(state.TrainShorter.Direction, lastNodeIndex, state.TrackNodes.Count);
+            lastNodeIndex = GetPrevNodeIndex(state, state.TrainShorter.Direction, lastNodeIndex);
         }
         return false;
     }
 
-    private static int FindNodeBeforePosition(State state, TrainDirection trainDirection, int position)
-    {
-        if (trainDirection == TrainDirection.Clockwise)
-        {
-            for (int i = state.TrackNodes.Count - 1; i >= 0; i--)
-                if (state.TrackNodes[i].TrackPosition <= position) return i;
-            return state.TrackNodes.Count - 1;
-        } 
-        else
-        {
-            for (int i = 0; i < state.TrackNodes.Count; i++)
-                if (state.TrackNodes[i].TrackPosition >= position) return i;
-            return 0;
-        }
-    }
+    private static int FindNodeBeforePosition(State state, TrainDirection trainDirection, int position) => 
+        (trainDirection == TrainDirection.Clockwise)
+            ? state.FindNodeBeforePositionClockwise(position)
+            : state.FindNodeBeforePositionCounterclockwise(position);
 
-    private static int GetPrevNodeIndex(TrainDirection trainDirection, int nodeIndex, int nodesCount) => 
-        (nodeIndex - (trainDirection == TrainDirection.Clockwise ? 1 : -1)).Mod(nodesCount - 1);
+    private static int GetPrevNodeIndex(State state, TrainDirection trainDirection, int nodeIndex) =>
+        (trainDirection == TrainDirection.Clockwise)
+            ? state.NextNodeIndexCounterclockwise(nodeIndex)
+            : state.NextNodeIndexClockwise(nodeIndex);
 }

@@ -1,7 +1,7 @@
 ﻿namespace CodeWars.Solutions2.Tools;
 
 /// <summary>
-/// Poprawne matematycznie modulo.
+/// Mathematically correct modulo.
 /// </summary>
 public static class Modulo
 {

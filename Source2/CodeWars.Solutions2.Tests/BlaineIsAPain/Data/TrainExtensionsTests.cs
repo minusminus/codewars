@@ -2,6 +2,7 @@
 
 namespace CodeWars.Solutions2.Tests.BlaineIsAPain.Data;
 
+[TestFixture]
 internal class TrainExtensionsTests
 {
     [TestCase("aaaA", 1)]

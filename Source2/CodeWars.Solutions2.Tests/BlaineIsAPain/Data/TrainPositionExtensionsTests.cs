@@ -2,6 +2,7 @@
 
 namespace CodeWars.Solutions2.Tests.BlaineIsAPain.Data;
 
+[TestFixture]
 internal class TrainPositionExtensionsTests
 {
     //straight on track
