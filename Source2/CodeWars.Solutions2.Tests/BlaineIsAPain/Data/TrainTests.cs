@@ -22,5 +22,6 @@ internal class TrainTests
         testObj.IsExpress.ShouldBe(expectedExpress);
         testObj.Length.ShouldBe(definition.Length);
         testObj.CarsCount.ShouldBe(definition.Length - 1);
+        testObj.WaitTimeOnStation.ShouldBe(0);
     }
 }

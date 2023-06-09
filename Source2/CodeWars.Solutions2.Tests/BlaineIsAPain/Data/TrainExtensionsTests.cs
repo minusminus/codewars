@@ -16,6 +16,10 @@ internal class TrainExtensionsTests
     [TestCase("aaaA", 10, 15, 20, 5)]
     [TestCase("Aaaa", 10, 5, 20, 5)]
     [TestCase("Aaaa", 10, 15, 20, 15)]
+    [TestCase("Aaaa", 1, 1, 20, 0)]
+    [TestCase("Aaaa", 1, 2, 20, 19)]
+    [TestCase("aaaA", 19, 1, 20, 0)]
+    [TestCase("aaaA", 19, 2, 20, 1)]
     public void MoveForward__ReturnsCorrectly(string trainDefinition, int startingPosition, int units, int trackLength, int expectedPosition)
     {
         new Train(trainDefinition, startingPosition).MoveForward(units, trackLength).ShouldBe(expectedPosition);

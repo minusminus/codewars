@@ -1,58 +1,10 @@
 ﻿using CodeWars.Solutions2.BlaineIsAPain;
-using CodeWars.Solutions2.BlaineIsAPain.Data;
 
 namespace CodeWars.Solutions2.Tests.BlaineIsAPain;
 
 [TestFixture]
 internal class CollisionDetectorTests
 {
-    /* Track 0:
-     * length: 100
-     * S(10)-S(30)-S(80)
-     * 
-     * Track 1:
-     * length: 100
-     * S(10)    S(60)---
-     * |    \   /       |
-     * |     X(30, 70)  |
-     * |    /   \       |
-     * S(90)    S(50)---
-     * 
-     * 
-     */
-    private readonly List<TrackNode>[] _trackNodes =
-    {
-        new List<TrackNode>()
-        {
-            new TrackNode(new TrackNodeKey(1, 10), 10, true, false),
-            new TrackNode(new TrackNodeKey(1, 30), 30, true, false),
-            new TrackNode(new TrackNodeKey(1, 80), 80, true, false),
-        },
-        new List<TrackNode>()
-        {
-            new TrackNode(new TrackNodeKey(1, 10), 10, true, false),
-            new TrackNode(new TrackNodeKey(2, 30), 30, false, true),
-            new TrackNode(new TrackNodeKey(3, 50), 50, true, false),
-            new TrackNode(new TrackNodeKey(1, 60), 60, true, false),
-            new TrackNode(new TrackNodeKey(2, 30), 70, false, true),
-            new TrackNode(new TrackNodeKey(3, 90), 90, true, false),
-        },
-    };
-    private readonly Dictionary<TrackNodeKey, TrackCrossingInfo>[] _trackCrossings =
-    {
-        new Dictionary<TrackNodeKey, TrackCrossingInfo>(),
-        new Dictionary<TrackNodeKey, TrackCrossingInfo>()
-        {
-            { new TrackNodeKey(2, 30), new TrackCrossingInfo(new List<int>(){30, 70}) }
-        },
-    };
-    private readonly int[] _trackLengths =
-    {
-        100,
-        100,
-    };
-
-
     [TestCase("Aaaaa", 5, "Bbbb", 20)]
     [TestCase("Aaaaa", 5, "Bbbb", 90)]
     [TestCase("Aaaaa", 5, "Bbbb", 10)]
@@ -62,7 +14,7 @@ internal class CollisionDetectorTests
     [TestCase("aaaaA", 20, "Bbbb", 12)]
     public void Detect_Track0_DoesNotCollideInCurrentState__ReturnsFalse(string train1, int position1, string train2, int position2)
     {
-        CollisionDetector.Detect(CreateState(0, train1, position1, train2, position2)).ShouldBeFalse();
+        CollisionDetector.Detect(PredefinedTracks.CreateState(0, train1, position1, train2, position2)).ShouldBeFalse();
     }
 
     [TestCase("Aaaaa", 5, "Bbbb", 6)]
@@ -76,7 +28,7 @@ internal class CollisionDetectorTests
     [TestCase("aaaaA", 20, "Bbbb", 13)]
     public void Detect_Track0_CollideInCurrentState__ReturnsTrue(string train1, int position1, string train2, int position2)
     {
-        CollisionDetector.Detect(CreateState(0, train1, position1, train2, position2)).ShouldBeTrue();
+        CollisionDetector.Detect(PredefinedTracks.CreateState(0, train1, position1, train2, position2)).ShouldBeTrue();
     }
 
     //straight
@@ -99,7 +51,7 @@ internal class CollisionDetectorTests
     [TestCase("aaaaA", 34, "Bbbb", 26)]
     public void Detect_Track1_DoesNotCollideInCurrentState__ReturnsFalse(string train1, int position1, string train2, int position2)
     {
-        CollisionDetector.Detect(CreateState(1, train1, position1, train2, position2)).ShouldBeFalse();
+        CollisionDetector.Detect(PredefinedTracks.CreateState(1, train1, position1, train2, position2)).ShouldBeFalse();
     }
 
     //straight collision
@@ -121,10 +73,6 @@ internal class CollisionDetectorTests
     [TestCase("aaaaA", 30, "Bbbb", 69)]
     public void Detect_Track1_CollideInCurrentState__ReturnsTrue(string train1, int position1, string train2, int position2)
     {
-        CollisionDetector.Detect(CreateState(1, train1, position1, train2, position2)).ShouldBeTrue();
+        CollisionDetector.Detect(PredefinedTracks.CreateState(1, train1, position1, train2, position2)).ShouldBeTrue();
     }
-
-    private State CreateState(int trackDefinition, string train1, int position1, string train2, int position2) => 
-        new(new Train(train1, position1), new Train(train2, position2),
-            _trackLengths[trackDefinition], _trackNodes[trackDefinition], _trackCrossings[trackDefinition]);
 }

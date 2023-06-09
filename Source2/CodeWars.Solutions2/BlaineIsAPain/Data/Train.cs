@@ -15,6 +15,7 @@ public class Train
     public readonly int CarsCount;
     public int CurrentPosition;
     public int LastNodeIndex;
+    public int WaitTimeOnStation;
 
     public Train(string definition, int startingPosition)
     {
@@ -26,5 +27,6 @@ public class Train
         CarsCount = definition.Length - 1;
         CurrentPosition = startingPosition;
         LastNodeIndex = -1;
+        WaitTimeOnStation = 0;
     }
 }
