@@ -1,14 +1,15 @@
 ﻿using CodeWars.Solutions2.BlaineIsAPain.Data;
-using System.Data.Common;
 
 namespace CodeWars.Solutions2.BlaineIsAPain;
 
 /// <summary>
 /// Loads track from string into TrackNodes and TrackCrossings, calculates track length.
+/// 
+/// Zero point (top left track point) can be only '/'
 /// </summary>
 public static class TrackLoader
 {
-    private class TrackIndex
+    private struct TrackIndex
     {
         public int Row, Column;
 
@@ -20,10 +21,6 @@ public static class TrackLoader
     private const char Station = 'S';
     private static readonly HashSet<char> NodeSymbols = new() { Station, '+', 'X' };
     private static readonly List<(int row, int column)> ClockwiseIndexes = new() { (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1) };
-    private static readonly Dictionary<char, (int row, int column)> NextTrackPositions = new()
-    {
-        {'-', () }
-    };
 
     public static void Load(string trackDescription)
     {
@@ -41,28 +38,24 @@ public static class TrackLoader
     private static void ReadTrack(in string[] track, TrackIndex startingPoint)
     {
         List<TrackNode> trackNodes = new();
-        TrackIndex index = new(startingPoint.Row, startingPoint.Column);
-        int trackLength = 0;
-        char previousTrackPoint = EmptyTrackChar;
+        TrackIndex currentIndex = new(startingPoint.Row, startingPoint.Column);
+        TrackIndex previousIndex = new(currentIndex.Row, currentIndex.Column - 1);
+        int trackPosition = 0;
 
         do
         {
-            char currentTrackPoint = track.TrackPointAtIndex(index);
+            char currentTrackPoint = track.TrackPointAtIndex(currentIndex);
             
-            if (CheckForNextNode(currentTrackPoint, track, trackLength, index, out TrackNode? nextNode))
+            if (IsNodeOnCurrentTrackPosition(currentTrackPoint, track, trackPosition, currentIndex, out TrackNode? nextNode))
                 trackNodes.Add(nextNode!);
 
-            if (previousTrackPoint == EmptyTrackChar)
-                GoToNextFromStartingPoint(track, index);
+            (currentIndex, previousIndex) = GoToNextTrackPoint(track, currentIndex, previousIndex);
 
-            if (!currentTrackPoint.IsTrackNode())
-                previousTrackPoint = currentTrackPoint;
-
-            trackLength++;
-        } while ((index.Row != startingPoint.Row) || (index.Column != startingPoint.Column));
+            trackPosition++;
+        } while ((currentIndex.Row != startingPoint.Row) || (currentIndex.Column != startingPoint.Column));
     }
 
-    private static bool CheckForNextNode(in char currentTrackPoint, in string[] track, in int currentTrackPosition, TrackIndex index, out TrackNode? nextNode)
+    private static bool IsNodeOnCurrentTrackPosition(in char currentTrackPoint, in string[] track, in int currentTrackPosition, TrackIndex index, out TrackNode? nextNode)
     {
         nextNode = null;
         if (!NodeSymbols.Contains(currentTrackPoint)) return false;
@@ -78,15 +71,28 @@ public static class TrackLoader
         return tracksAround;
     }
 
-    private static void GoToNextFromStartingPoint(in string[] track, TrackIndex index)
+    private static (TrackIndex newCurrent, TrackIndex newPrevious) GoToNextTrackPoint(in string[] track, TrackIndex currentPoint, TrackIndex previousPoint)
     {
-        foreach (var (row, column) in ClockwiseIndexes.Take(5))
-            if (track.TrackPointAtIndex(index.Row + row, index.Column + column).IsTrack())
-            {
-                index.Row += row;
-                index.Column += column;
-                return;
-            }
+        int x = currentPoint.Column - previousPoint.Column;
+        int y = currentPoint.Row - previousPoint.Row;
+
+        if (track.TrackPointAtIndex(currentPoint.Row + y, currentPoint.Column + x).IsTrack())
+            return (new TrackIndex(currentPoint.Row + y, currentPoint.Column + x), currentPoint);
+        //nie ma tracka na wektorze - mamy zakręt i szukamy tracka 2 pola w kierunku określonym przez wektor i zakręt:
+        //wektor w górę (y<0) i zakręt '/' - Cw, zakręt '\' - cCw
+        //wektor w dół (y>0) i zakręt '/' - Cw, zakręt '\' - cCw
+        //wektor w prawo (x>0) i zakręt '/' - cCw, zakręt '\' - cW
+        //wektor w lewo (x<0) i zakręt '/' - cCw, zakręt '\' - cW
+
+        //trzeba jeszcze rozpatrzeć sytuację ze skrętem na skrzyżowanie (idąc z lewego dołu w górę), gdzie wektor pokaże track
+        //ale trzeba wejść na skrzyżowanie po prawej:
+        //   | /   ||  \ |     ||
+        //  /+/   /+/   \+\    \+\
+        // / |    ||     | \    ||
+        //jeżeli dla zakrętu wektor wskazuje na track, to:
+        //- jeżeli nie ma obok skrzyżowania, to idziemy na wektor
+        //- jeżeli jest skrzyżowanie to na skrzyżowanie
+        //skrzyżowania szukamy 1 pole w kierunku określanym przez wektor i zakręt j.w.
     }
 
     private static bool IsTrack(this char trackPoint) =>
