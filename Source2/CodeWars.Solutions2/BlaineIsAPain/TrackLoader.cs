@@ -19,6 +19,11 @@ public static class TrackLoader
     private const char EmptyTrackChar = ' ';
     private const char Station = 'S';
     private static readonly HashSet<char> NodeSymbols = new() { Station, '+', 'X' };
+    private static readonly List<(int row, int column)> ClockwiseIndexes = new() { (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1) };
+    private static readonly Dictionary<char, (int row, int column)> NextTrackPositions = new()
+    {
+        {'-', () }
+    };
 
     public static void Load(string trackDescription)
     {
@@ -42,48 +47,58 @@ public static class TrackLoader
 
         do
         {
-            if(CheckForNextNode(track, trackLength, index, out TrackNode? nextNode))
+            char currentTrackPoint = track.TrackPointAtIndex(index);
+            
+            if (CheckForNextNode(currentTrackPoint, track, trackLength, index, out TrackNode? nextNode))
                 trackNodes.Add(nextNode!);
 
-            char currentTrackPoint = track.TrackAtIndex(index);
-            GoToNextTrackPoint(track, index, previousTrackPoint);
-            previousTrackPoint = currentTrackPoint;
+            if (previousTrackPoint == EmptyTrackChar)
+                GoToNextFromStartingPoint(track, index);
+
+            if (!currentTrackPoint.IsTrackNode())
+                previousTrackPoint = currentTrackPoint;
 
             trackLength++;
         } while ((index.Row != startingPoint.Row) || (index.Column != startingPoint.Column));
     }
 
-    private static bool CheckForNextNode(in string[] track, in int currentTrackPosition, TrackIndex index, out TrackNode? nextNode)
+    private static bool CheckForNextNode(in char currentTrackPoint, in string[] track, in int currentTrackPosition, TrackIndex index, out TrackNode? nextNode)
     {
         nextNode = null;
-        char trackElement = track.TrackAtIndex(index);
-        if (!NodeSymbols.Contains(trackElement)) return false;
-        nextNode = new(new TrackNodeKey(index.Row, index.Column), currentTrackPosition, trackElement == Station, IsCrossing(track, index));
+        if (!NodeSymbols.Contains(currentTrackPoint)) return false;
+        nextNode = new(new TrackNodeKey(index.Row, index.Column), currentTrackPosition, currentTrackPoint == Station, CountTracksAround(track, index) > 2);
         return true;
     }
 
-    private static bool IsCrossing(in string[] track, TrackIndex index)
+    private static int CountTracksAround(in string[] track, TrackIndex index)
     {
         int tracksAround = 0;
-        for (int row = -1; row <= 1; row++)
-            for (int column = -1; column <= 1; column++)
-                if ((row != 0) || (column != 0))
-                    tracksAround += CharIsTrack(track, index.Row + row, index.Column + column) ? 1 : 0;
-        return (tracksAround > 2);
-
-        static bool CharIsTrack(in string[] track, int row, int column) =>
-            track.TrackAtIndex(row, column) != EmptyTrackChar;
+        foreach (var (row, column) in ClockwiseIndexes)
+            tracksAround += track.TrackPointAtIndex(index.Row + row, index.Column + column).IsTrack() ? 1 : 0;
+        return tracksAround;
     }
 
-    private static void GoToNextTrackPoint(in string[] track, TrackIndex index, in char previousTrackPoint)
+    private static void GoToNextFromStartingPoint(in string[] track, TrackIndex index)
     {
-
+        foreach (var (row, column) in ClockwiseIndexes.Take(5))
+            if (track.TrackPointAtIndex(index.Row + row, index.Column + column).IsTrack())
+            {
+                index.Row += row;
+                index.Column += column;
+                return;
+            }
     }
 
-    private static char TrackAtIndex(this string[] track, TrackIndex index) =>
-        track.TrackAtIndex(index.Row, index.Column);
+    private static bool IsTrack(this char trackPoint) =>
+        trackPoint != EmptyTrackChar;
 
-    private static char TrackAtIndex(this string[] track, int row, int column) =>
+    private static bool IsTrackNode(this char trackPoint) =>
+        NodeSymbols.Contains(trackPoint);
+
+    private static char TrackPointAtIndex(this string[] track, TrackIndex index) =>
+        track.TrackPointAtIndex(index.Row, index.Column);
+
+    private static char TrackPointAtIndex(this string[] track, int row, int column) =>
         (row >= 0) && (row < track.Length) && (column >= 0) && (column < track[row].Length)
             ? track[row][column]
             : EmptyTrackChar;
