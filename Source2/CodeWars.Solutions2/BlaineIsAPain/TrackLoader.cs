@@ -6,6 +6,8 @@ namespace CodeWars.Solutions2.BlaineIsAPain;
 /// Loads track from string into TrackNodes and TrackCrossings, calculates track length.
 /// 
 /// Zero point (top left track point) can be only '/'
+///
+/// UNFINISHED
 /// </summary>
 public static class TrackLoader
 {
@@ -93,6 +95,32 @@ public static class TrackLoader
         //- jeżeli nie ma obok skrzyżowania, to idziemy na wektor
         //- jeżeli jest skrzyżowanie to na skrzyżowanie
         //skrzyżowania szukamy 1 pole w kierunku określanym przez wektor i zakręt j.w.
+
+        Dictionary<(int x, int y), Dictionary<char, (int x, int y)>> nextPositions = new()
+        {
+            {(1,0), new()
+                {
+                    {'/', (0,-1) },
+                    {'-', (1,0) },
+                    {'\\', (0,1) },
+                    {'+', (1,0) },
+                    {'S', (1,0) },
+                }},
+            {(1,1), null },
+            {(0,1), null },
+            {(-1,1), null },
+            {(-1,0), new()
+                {
+                    {'/', (0,1) },
+                    {'-', (-1,0) },
+                    {'\\', (0,-1) },
+                    {'+', (-1,0) },
+                    {'S', (-1,0) },
+                }},
+            {(-1,-1), null },
+            {(0,-1), null },
+            {(1,-1), null },
+        };
     }
 
     private static bool IsTrack(this char trackPoint) =>
